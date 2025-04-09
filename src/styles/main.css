@@ -1,0 +1,91 @@
+/* Custom fonts */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500;600;700&family=Cormorant+Garamond:wght@300;400;500;600&display=swap');
+@import "tailwindcss";
+
+
+@theme {
+  --color-primary: #33423C;
+  --color-primary-hover: #2A372F;
+  --color-accent: #DCCDC3;
+  --color-secondary: #6A7D72;
+  --color-secondary-hover: #5B6D62;
+  --color-light: #F6F2ED;
+  --color-light-accent: #E6DFD7;
+  --color-text: #33423C;
+  --color-text-light: #F6F2ED;
+  
+  --font-montserrat: 'Montserrat', sans-serif;
+  --font-cormorant: 'Cormorant Garamond', serif;
+}
+
+@layer base {
+  html {
+    font-family: var(--font-montserrat);
+    font-weight: 300;
+    scroll-behavior: smooth;
+    background-color: var(--color-light);
+    color: var(--color-text);
+  }
+  
+  h1, h2, h3, h4, h5 {
+    font-family: var(--font-montserrat);
+    font-weight: 200;
+  }
+  
+  h1 {
+    font-size: 3.5rem;
+    line-height: 1.1;
+  }
+  
+  h2 {
+    font-size: 2.5rem;
+    line-height: 1.2;
+  }
+  
+  strong, b {
+    font-weight: 400;
+  }
+}
+
+/* Custom components */
+@layer components {
+  .container-custom {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+  
+  .btn-primary {
+    @apply bg-[#33423C] hover:bg-[#2A372F] text-[#F6F2ED] font-medium py-3 px-6 rounded-none transition duration-300;
+  }
+  
+  .btn-secondary {
+    @apply bg-transparent border border-[#33423C] hover:bg-[#DCCDC3] text-[#33423C] font-medium py-3 px-6 rounded-none transition duration-300;
+  }
+  
+  .accent-text {
+    @apply font-cormorant text-xl italic;
+  }
+  
+  .section-title {
+    @apply text-3xl md:text-4xl lg:text-5xl font-light text-[#33423C] mb-6;
+  }
+  
+  .section-subtitle {
+    @apply text-lg md:text-xl text-[#6A7D72] mb-8 max-w-3xl mx-auto font-light;
+  }
+}
+
+/* Custom utilities */
+@layer utilities {
+  .fade-in {
+    @apply transition-opacity duration-500;
+  }
+  
+  .hover-grow {
+    @apply transition-transform duration-300 hover:scale-105;
+  }
+  
+  .elegant-shadow {
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+  }
+}
+
