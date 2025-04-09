@@ -279,7 +279,7 @@
   
   <script setup lang="ts">
   import { ref } from 'vue'
-  import { CheckCircleIcon } from '@heroicons/vue/24/outline'
+  import { Dialog, DialogPanel, TransitionChild, TransitionRoot } from '@headlessui/vue'
   import BookingModal from '@/components/BookingModal.vue'
   
   // Tabs state

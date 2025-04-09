@@ -10,7 +10,7 @@
           </router-link>
   
           <!-- Mobile menu button -->
-          <button @click="isMenuOpen = !isMenuOpen" class="md:hidden text-[#33423C] focus:outline-none">
+          <button @click="toggleMenu" class="md:hidden text-[#33423C] focus:outline-none">
             <svg v-if="!isMenuOpen" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16" />
             </svg>
@@ -45,7 +45,7 @@
               :to="item.path" 
               class="text-[#33423C] hover:text-[#6A7D72] uppercase text-sm tracking-wider font-light py-2 transition duration-300"
               :class="{ 'font-normal border-b border-[#DCCDC3] w-max': isActiveRoute(item.path) }"
-              @click="isMenuOpen = false"
+              @click="closeMenu"
             >
               {{ item.name }}
             </router-link>
@@ -67,7 +67,7 @@
   </template>
   
   <script setup lang="ts">
-  import { ref, computed } from 'vue'
+  import { ref } from 'vue'
   import { useRoute } from 'vue-router'
   import BookingModal from '@/components/BookingModal.vue'
   
@@ -96,5 +96,13 @@
 
   const closeBookingModal = () => {
     showBookingModal.value = false
+  }
+
+  const toggleMenu = () => {
+    isMenuOpen.value = !isMenuOpen.value
+  }
+
+  const closeMenu = () => {
+    isMenuOpen.value = false
   }
   </script>

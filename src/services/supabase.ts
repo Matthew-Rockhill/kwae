@@ -1,10 +1,14 @@
 import { createClient } from '@supabase/supabase-js'
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
+const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY
+
+if (!supabaseUrl || !supabaseKey) {
+  throw new Error('Missing Supabase environment variables')
+}
 
 // Create a single supabase client for interacting with your database
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+export const supabase = createClient(supabaseUrl, supabaseKey)
 
 // Portfolio service
 export const portfolioService = {
@@ -14,12 +18,8 @@ export const portfolioService = {
       .select('*')
       .order('created_at', { ascending: false })
     
-    if (error) {
-      console.error('Error fetching portfolio items:', error)
-      return []
-    }
-    
-    return data || []
+    if (error) throw error
+    return data
   },
   
   async getPortfolioItemsByCategory(category: string) {
@@ -40,50 +40,39 @@ export const portfolioService = {
 
 // Contact form service
 export const contactService = {
-  async submitContactForm(formData: any) {
+  async submitContactForm(formData: {
+    firstName: string
+    lastName: string
+    email: string
+    phone: string
+    message: string
+  }) {
     const { data, error } = await supabase
       .from('contact_submissions')
-      .insert([{
-        first_name: formData.firstName,
-        last_name: formData.lastName,
-        email: formData.email,
-        phone: formData.phone,
-        inquiry_type: formData.inquiryType,
-        message: formData.message,
-        created_at: new Date().toISOString()
-      }])
+      .insert([formData])
     
-    if (error) {
-      console.error('Error submitting contact form:', error)
-      throw error
-    }
-    
+    if (error) throw error
     return data
   }
 }
 
 // Booking service
 export const bookingService = {
-  async submitBookingForm(formData: any) {
+  async submitBookingForm(formData: {
+    firstName: string
+    lastName: string
+    email: string
+    phone: string
+    preferredDate: string
+    eventLocation: string
+    packageType: string
+    additionalNotes: string
+  }) {
     const { data, error } = await supabase
-      .from('booking_submissions')
-      .insert([{
-        first_name: formData.firstName,
-        last_name: formData.lastName,
-        email: formData.email,
-        phone: formData.phone,
-        package_type: formData.packageType,
-        event_date: formData.eventDate,
-        event_location: formData.eventLocation,
-        additional_notes: formData.additionalNotes,
-        created_at: new Date().toISOString()
-      }])
+      .from('booking_requests')
+      .insert([formData])
     
-    if (error) {
-      console.error('Error submitting booking form:', error)
-      throw error
-    }
-    
+    if (error) throw error
     return data
   }
 }

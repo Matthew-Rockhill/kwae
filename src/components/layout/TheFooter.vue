@@ -1,42 +1,45 @@
 <template>
-  <footer class="bg-[#33423C]">
-    <div class="mx-auto max-w-7xl px-6 py-12 md:flex md:items-center md:justify-between lg:px-8">
-      <div class="flex justify-center space-x-4 md:order-2">
-        <a v-for="item in socialLinks" :key="item.name" 
-           :href="item.href" 
-           target="_blank"
-           class="text-[#F6F2ED] hover:text-[#DCCDC3] transition-colors duration-300">
-          <span class="sr-only">{{ item.name }}</span>
-          <font-awesome-icon :icon="['fab', item.icon]" class="h-20 w-20" style="font-size: 2.0rem;" />
-        </a>
+  <footer class="bg-[#33423C] text-[#F6F2ED] py-12">
+    <div class="container-custom">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div>
+          <h3 class="text-xl font-light mb-4">Kristin With An Eye</h3>
+          <p class="text-[#DCCDC3] text-sm">
+            Capturing authentic moments and telling stories through photography.
+          </p>
+        </div>
+        <div>
+          <h3 class="text-xl font-light mb-4">Quick Links</h3>
+          <ul class="space-y-2">
+            <li><router-link to="/" class="text-[#DCCDC3] hover:text-white transition-colors">Home</router-link></li>
+            <li><router-link to="/about" class="text-[#DCCDC3] hover:text-white transition-colors">About</router-link></li>
+            <li><router-link to="/portfolio" class="text-[#DCCDC3] hover:text-white transition-colors">Portfolio</router-link></li>
+            <li><router-link to="/packages" class="text-[#DCCDC3] hover:text-white transition-colors">Packages</router-link></li>
+            <li><router-link to="/contact" class="text-[#DCCDC3] hover:text-white transition-colors">Contact</router-link></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-xl font-light mb-4">Connect</h3>
+          <div class="flex space-x-4">
+            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="text-[#DCCDC3] hover:text-white transition-colors">
+              <font-awesome-icon :icon="['fab', 'instagram']" class="h-12 w-12" />
+            </a>
+            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" class="text-[#DCCDC3] hover:text-white transition-colors">
+              <font-awesome-icon :icon="['fab', 'facebook']" class="h-12 w-12" />
+            </a>
+            <a href="https://pinterest.com" target="_blank" rel="noopener noreferrer" class="text-[#DCCDC3] hover:text-white transition-colors">
+              <font-awesome-icon :icon="['fab', 'pinterest']" class="h-12 w-12" />
+            </a>
+          </div>
+        </div>
       </div>
-      <p class="mt-8 text-center text-sm text-[#F6F2ED]/70 md:order-1 md:mt-0">
-        © {{ currentYear }} Kristin With An Eye. All rights reserved.
-      </p>
+      <div class="mt-8 pt-8 border-t border-[#6A7D72] text-center text-sm text-[#DCCDC3]">
+        <p>&copy; {{ new Date().getFullYear() }} Kristin With An Eye. All rights reserved.</p>
+      </div>
     </div>
   </footer>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-
-const currentYear = new Date().getFullYear()
-
-const socialLinks = [
-  {
-    name: 'Instagram',
-    href: 'https://instagram.com/kristinwithaneye',
-    icon: 'instagram'
-  },
-  {
-    name: 'Facebook',
-    href: 'https://facebook.com/kristinwithaneye',
-    icon: 'facebook'
-  },
-  {
-    name: 'Pinterest',
-    href: 'https://pinterest.com/kristinwithaneye',
-    icon: 'pinterest'
-  }
-]
+// No imports needed as we're using global components
 </script>
