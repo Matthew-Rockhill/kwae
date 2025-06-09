@@ -156,7 +156,7 @@
 import { ref, reactive } from 'vue'
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import { ArrowPathIcon } from '@heroicons/vue/24/outline'
-import { bookingService } from '@/services/supabase'
+import { XMarkIcon } from '@heroicons/vue/24/outline'
 
 const props = defineProps<{
   isOpen: boolean
@@ -168,8 +168,11 @@ const emit = defineEmits<{
   (e: 'close'): void
 }>()
 
-// Form state
-const form = reactive({
+const isSubmitting = ref(false)
+const submitSuccess = ref(false)
+const submitError = ref('')
+
+const formData = reactive({
   firstName: '',
   lastName: '',
   email: '',
@@ -184,64 +187,108 @@ const errors = reactive({
   firstName: '',
   lastName: '',
   email: '',
-  phone: ''
+  phone: '',
+  eventDate: '',
+  eventLocation: '',
+  additionalNotes: '',
+  packageType: ''
 })
 
-const submitting = ref(false)
-
-// Form validation
 const validateForm = () => {
   let isValid = true
+  
+  // Reset errors
   errors.firstName = ''
   errors.lastName = ''
   errors.email = ''
   errors.phone = ''
-
-  if (!form.firstName.trim()) {
+  errors.eventDate = ''
+  errors.eventLocation = ''
+  errors.additionalNotes = ''
+  errors.packageType = ''
+  
+  // Validate first name
+  if (!formData.firstName.trim()) {
     errors.firstName = 'First name is required'
     isValid = false
   }
-
-  if (!form.lastName.trim()) {
+  
+  // Validate last name
+  if (!formData.lastName.trim()) {
     errors.lastName = 'Last name is required'
     isValid = false
   }
-
-  if (!form.email.trim()) {
+  
+  // Validate email
+  if (!formData.email.trim()) {
     errors.email = 'Email is required'
     isValid = false
-  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
+  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
     errors.email = 'Please enter a valid email address'
     isValid = false
   }
-
-  if (!form.phone.trim()) {
+  
+  // Validate phone
+  if (!formData.phone.trim()) {
     errors.phone = 'Phone number is required'
     isValid = false
   }
-
+  
+  // Validate event date
+  if (!formData.eventDate.trim()) {
+    errors.eventDate = 'Date is required'
+    isValid = false
+  }
+  
+  // Validate event location
+  if (!formData.eventLocation.trim()) {
+    errors.eventLocation = 'Event location is required'
+    isValid = false
+  }
+  
+  // Validate additional notes
+  if (!formData.additionalNotes.trim()) {
+    errors.additionalNotes = 'Additional notes are required'
+    isValid = false
+  }
+  
+  // Validate package type
+  if (!formData.packageType.trim()) {
+    errors.packageType = 'Please select a package'
+    isValid = false
+  }
+  
   return isValid
+}
+
+const handleSubmit = async () => {
+  if (!validateForm()) return
+  
+  isSubmitting.value = true
+  submitError.value = ''
+  
+  try {
+    // Here you would typically send the form data to your backend
+    // For now, we'll just simulate a successful submission
+    await new Promise(resolve => setTimeout(resolve, 1000))
+    submitSuccess.value = true
+    formData.firstName = ''
+    formData.lastName = ''
+    formData.email = ''
+    formData.phone = ''
+    formData.eventDate = ''
+    formData.eventLocation = ''
+    formData.additionalNotes = ''
+  } catch (error) {
+    submitError.value = 'Failed to submit booking. Please try again.'
+  } finally {
+    isSubmitting.value = false
+  }
 }
 
 const closeModal = () => {
   emit('close')
-}
-
-// Form submission
-const submitForm = async () => {
-  if (!validateForm()) return
-
-  submitting.value = true
-
-  try {
-    await bookingService.submitBookingForm(form)
-    closeModal()
-    // You might want to show a success toast here
-  } catch (error) {
-    console.error('Error submitting booking:', error)
-    // You might want to show an error message here
-  } finally {
-    submitting.value = false
-  }
+  submitSuccess.value = false
+  submitError.value = ''
 }
 </script> 

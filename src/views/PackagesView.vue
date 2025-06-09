@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <!-- Page Header -->
+    <div>
+      <!-- Page Header -->
     <section class="relative py-20 bg-[#F6F2ED]">
       <div class="container-custom">
         <div class="max-w-3xl mx-auto text-center">
@@ -13,12 +13,12 @@
             it with authenticity and heart.
           </p>
         </div>
-      </div>
-    </section>
-
+        </div>
+      </section>
+      
     <!-- Personal Photography Section -->
     <section class="py-16 md:py-24 bg-white">
-      <div class="container-custom">
+        <div class="container-custom">
         <div class="text-center max-w-3xl mx-auto mb-16">
           <h2 class="text-3xl md:text-4xl font-extralight text-[#33423C] mb-4">For Your Personal Story</h2>
           <p class="text-[#6A7D72] text-lg font-light">
@@ -37,7 +37,7 @@
               <h3 class="text-2xl font-light text-[#33423C] mb-2">Dust & Light</h3>
               <p class="text-[#6A7D72] text-sm italic mb-4">Mini Session</p>
               <p class="text-2xl font-semibold text-[#33423C]">From R1,500</p>
-            </div>
+                  </div>
             <div class="p-8">
               <p class="text-[#6A7D72] mb-6">A short and sweet storytelling session — perfect for fleeting moments or seasonal milestones.</p>
               <div class="space-y-4 mb-8">
@@ -52,11 +52,11 @@
                     <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
                   </svg>
                   <span class="text-[#33423C] font-light">50 edited high-resolution images</span>
-                </div>
+                  </div>
                 <div class="flex items-start gap-3">
                   <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#6A7D72] mt-0.5" viewBox="0 0 20 20" fill="currentColor">
                     <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                  </svg>
+                        </svg>
                   <span class="text-[#33423C] font-light">Private online gallery</span>
                 </div>
               </div>
@@ -65,7 +65,7 @@
               </button>
             </div>
           </div>
-
+          
           <!-- Field & Frame -->
           <div class="bg-white shadow-lg">
             <div class="p-8 bg-gradient-to-br from-[#DCCDC3] to-[#E6DFD7]">
@@ -73,7 +73,7 @@
               <p class="text-[#6A7D72] text-sm italic mb-4">Standard Session</p>
               <p class="text-2xl font-semibold text-[#33423C]">From R2,500</p>
             </div>
-            <div class="p-8">
+              <div class="p-8">
               <p class="text-[#6A7D72] mb-6">A relaxed, grounded shoot to capture connection and personality in a beautiful setting.</p>
               <div class="space-y-4 mb-8">
                 <div class="flex items-start gap-3">
@@ -85,7 +85,7 @@
                 <div class="flex items-start gap-3">
                   <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#6A7D72] mt-0.5" viewBox="0 0 20 20" fill="currentColor">
                     <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                  </svg>
+                      </svg>
                   <span class="text-[#33423C] font-light">80+ edited images</span>
                 </div>
                 <div class="flex items-start gap-3">
@@ -100,7 +100,7 @@
               </button>
             </div>
           </div>
-
+          
           <!-- Soil & Sun -->
           <div class="bg-white shadow-lg">
             <div class="p-8 bg-gradient-to-br from-[#DCCDC3] to-[#E6DFD7]">
@@ -108,21 +108,21 @@
               <p class="text-[#6A7D72] text-sm italic mb-4">Full Session</p>
               <p class="text-2xl font-semibold text-[#33423C]">From R4,000</p>
             </div>
-            <div class="p-8">
+                  <div class="p-8">
               <p class="text-[#6A7D72] mb-6">A golden-hour session for those wanting a fuller, more flexible storytelling experience.</p>
               <div class="space-y-4 mb-8">
                 <div class="flex items-start gap-3">
                   <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#6A7D72] mt-0.5" viewBox="0 0 20 20" fill="currentColor">
                     <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                  </svg>
+                          </svg>
                   <span class="text-[#33423C] font-light">90-minute session (sunrise or sunset recommended)</span>
-                </div>
+                    </div>
                 <div class="flex items-start gap-3">
                   <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#6A7D72] mt-0.5" viewBox="0 0 20 20" fill="currentColor">
                     <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
                   </svg>
                   <span class="text-[#33423C] font-light">100+ edited images</span>
-                </div>
+                  </div>
                 <div class="flex items-start gap-3">
                   <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#6A7D72] mt-0.5" viewBox="0 0 20 20" fill="currentColor">
                     <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
@@ -132,9 +132,9 @@
                 <div class="flex items-start gap-3">
                   <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#6A7D72] mt-0.5" viewBox="0 0 20 20" fill="currentColor">
                     <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                  </svg>
+                          </svg>
                   <span class="text-[#33423C] font-light">Private gallery with full-resolution downloads</span>
-                </div>
+                    </div>
                 <div class="flex items-start gap-3">
                   <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#6A7D72] mt-0.5" viewBox="0 0 20 20" fill="currentColor">
                     <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
@@ -157,13 +157,13 @@
           <button class="bg-[#33423C] hover:bg-[#2A3630] text-[#F6F2ED] transition-all duration-300 px-8 py-3 rounded-none uppercase tracking-wider">
             Start a Conversation
           </button>
+          </div>
         </div>
-      </div>
-    </section>
-    
+      </section>
+      
     <!-- Lifestyle Photography Section -->
     <section class="py-16 md:py-24 bg-[#F6F2ED]">
-      <div class="container-custom">
+        <div class="container-custom">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
           <!-- Left Column: Content -->
           <div>
@@ -187,9 +187,9 @@
               <div class="flex items-start gap-3">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#6A7D72] mt-0.5" viewBox="0 0 20 20" fill="currentColor">
                   <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                </svg>
+                  </svg>
                 <span class="text-[#33423C] font-light">Edited, high-res images for print & social media</span>
-              </div>
+                </div>
               <div class="flex items-start gap-3">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#6A7D72] mt-0.5" viewBox="0 0 20 20" fill="currentColor">
                   <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
@@ -213,12 +213,12 @@
               <button class="w-full bg-[#33423C] hover:bg-[#2A3630] text-[#F6F2ED] transition-all duration-300 px-8 py-3 rounded-none uppercase tracking-wider">
                 Enquire About Your Event
               </button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </section>
-    
+      </section>
+      
     <!-- Organisation Section -->
     <section class="py-16 md:py-24 bg-white">
       <div class="container-custom">
@@ -337,26 +337,26 @@
         <p class="text-lg md:text-xl max-w-2xl mx-auto mb-10 text-[#33423C]/90">
           "Every story is unique, and I'd love to help you tell yours. If you're unsure which package fits
           your needs or if you'd like a custom quote, let's chat!"
-        </p>
-        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          </p>
+          <div class="flex flex-col sm:flex-row gap-4 justify-center">
           <router-link to="/contact">
             <button class="bg-[#33423C] hover:bg-[#2A3630] text-[#F6F2ED] transition-all duration-300 px-8 py-3 rounded-none uppercase tracking-wider">
               Contact Me
             </button>
-          </router-link>
+            </router-link>
           <a 
             href="https://instagram.com/kristinwithaneye" 
             target="_blank" 
             class="bg-transparent hover:bg-[#33423C]/20 text-[#33423C] border border-[#33423C] transition-all duration-300 px-8 py-3 rounded-none uppercase tracking-wider inline-block"
           >
-            Follow My Work @kristinwithaneye
-          </a>
+              Follow My Work @kristinwithaneye
+            </a>
+          </div>
         </div>
-      </div>
-    </section>
-  </div>
-</template>
-
-<script setup lang="ts">
+      </section>
+    </div>
+  </template>
+  
+  <script setup lang="ts">
 // Add any necessary script logic here
-</script>
+  </script>

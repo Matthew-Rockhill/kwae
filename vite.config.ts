@@ -17,6 +17,7 @@ export default defineConfig({
   },
   css: {
     devSourcemap: true,
+    postcss: './postcss.config.js'
   },
   server: {
     host: true

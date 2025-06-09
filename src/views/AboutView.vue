@@ -120,61 +120,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { 
-  HeartIcon,
-  BookOpenIcon,
-  HomeIcon,
-  ClockIcon,
-  UserGroupIcon,
-  MapPinIcon,
-  CheckCircleIcon
-} from '@heroicons/vue/24/outline'
+// Remove unused variables
+// const approaches = ref([])
+// const milestones = ref([])
 
-// Sample approaches (replace with real data later)
-const approaches = ref([
-  {
-    title: "Authentic Moments",
-    description: "I focus on genuine emotions and real connections, creating images that reflect who you truly are and the beauty of your relationships.",
-    icon: HeartIcon
-  },
-  {
-    title: "Natural Storytelling",
-    description: "I tell stories through images, focusing on the narrative elements that make your session unique and meaningful to you.",
-    icon: BookOpenIcon
-  },
-  {
-    title: "Comfortable Experience",
-    description: "I create a relaxed environment where you can be yourself, resulting in photographs that capture your genuine personality.",
-    icon: HomeIcon
-  }
-])
-
-// Sample milestones (replace with real data later)
-const milestones = ref([
-  {
-    year: "2016",
-    title: "Beginning of the Journey",
-    description: "Started self-teaching photography after the birth of my first son, wanting to capture every precious moment of his growth and development.",
-    icon: ClockIcon
-  },
-  {
-    year: "2018",
-    title: "First Client Sessions",
-    description: "Started taking photos for friends and family, developing my style and approach to capturing authentic moments.",
-    icon: UserGroupIcon
-  },
-  {
-    year: "2020",
-    title: "NGO Collaborations",
-    description: "Began partnering with local non-profits to tell their stories through photography, combining my passion for social causes with my love of visual storytelling.",
-    icon: MapPinIcon
-  },
-  {
-    year: "2022",
-    title: "Kristin With An Eye Launch",
-    description: "Officially launched my photography business, focusing on authentic storytelling for families and purpose-driven organizations.",
-    icon: CheckCircleIcon
-  }
-])
+// Keep other necessary code
 </script>

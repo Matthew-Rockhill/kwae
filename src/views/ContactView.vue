@@ -21,7 +21,7 @@
                 <h2 class="font-montserrat font-extralight text-2xl text-[#33423C] mb-6">Send Me a Message</h2>
                 
                 <!-- Success Message -->
-                <div v-if="formSubmitted" class="bg-[#F6F2ED] text-[#33423C] p-4 mb-6 border border-[#DCCDC3]">
+                <div v-if="submitSuccess" class="bg-[#F6F2ED] text-[#33423C] p-4 mb-6 border border-[#DCCDC3]">
                   <div class="flex">
                     <CheckCircleIcon class="h-6 w-6 text-[#33423C] mr-2" />
                     <div>
@@ -32,78 +32,35 @@
                 </div>
                 
                 <!-- Contact Form -->
-                <form @submit.prevent="submitForm" v-if="!formSubmitted">
+                <form @submit.prevent="handleSubmit" v-if="!submitSuccess">
                   <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                     <!-- First Name Input -->
                     <div>
-                      <label for="firstName" class="block text-[#33423C] font-medium mb-2">First Name *</label>
+                      <label for="name" class="block text-[#33423C] font-medium mb-2">Name *</label>
                       <input 
                         type="text" 
-                        id="firstName"
-                        v-model="form.firstName"
+                        id="name"
+                        v-model="formData.name"
                         required
                         class="w-full px-4 py-2 border border-[#DCCDC3] focus:outline-none focus:ring-2 focus:ring-[#33423C] focus:border-transparent"
-                        :class="{ 'border-red-500': errors.firstName }"
+                        :class="{ 'border-red-500': errors.name }"
                       />
-                      <p v-if="errors.firstName" class="text-red-500 text-sm mt-1">{{ errors.firstName }}</p>
+                      <p v-if="errors.name" class="text-red-500 text-sm mt-1">{{ errors.name }}</p>
                     </div>
                     
-                    <!-- Last Name Input -->
+                    <!-- Email Input -->
                     <div>
-                      <label for="lastName" class="block text-[#33423C] font-medium mb-2">Last Name *</label>
+                      <label for="email" class="block text-[#33423C] font-medium mb-2">Email *</label>
                       <input 
-                        type="text" 
-                        id="lastName"
-                        v-model="form.lastName"
+                        type="email" 
+                        id="email"
+                        v-model="formData.email"
                         required
                         class="w-full px-4 py-2 border border-[#DCCDC3] focus:outline-none focus:ring-2 focus:ring-[#33423C] focus:border-transparent"
-                        :class="{ 'border-red-500': errors.lastName }"
+                        :class="{ 'border-red-500': errors.email }"
                       />
-                      <p v-if="errors.lastName" class="text-red-500 text-sm mt-1">{{ errors.lastName }}</p>
+                      <p v-if="errors.email" class="text-red-500 text-sm mt-1">{{ errors.email }}</p>
                     </div>
-                  </div>
-                  
-                  <!-- Email Input -->
-                  <div class="mb-6">
-                    <label for="email" class="block text-[#33423C] font-medium mb-2">Email *</label>
-                    <input 
-                      type="email" 
-                      id="email"
-                      v-model="form.email"
-                      required
-                      class="w-full px-4 py-2 border border-[#DCCDC3] focus:outline-none focus:ring-2 focus:ring-[#33423C] focus:border-transparent"
-                      :class="{ 'border-red-500': errors.email }"
-                    />
-                    <p v-if="errors.email" class="text-red-500 text-sm mt-1">{{ errors.email }}</p>
-                  </div>
-                  
-                  <!-- Phone Input -->
-                  <div class="mb-6">
-                    <label for="phone" class="block text-[#33423C] font-medium mb-2">Phone Number</label>
-                    <input 
-                      type="tel" 
-                      id="phone"
-                      v-model="form.phone"
-                      class="w-full px-4 py-2 border border-[#DCCDC3] focus:outline-none focus:ring-2 focus:ring-[#33423C] focus:border-transparent"
-                    />
-                  </div>
-                  
-                  <!-- Inquiry Type -->
-                  <div class="mb-6">
-                    <label for="inquiryType" class="block text-[#33423C] font-medium mb-2">What are you interested in? *</label>
-                    <select 
-                      id="inquiryType"
-                      v-model="form.inquiryType"
-                      required
-                      class="w-full px-4 py-2 border border-[#DCCDC3] focus:outline-none focus:ring-2 focus:ring-[#33423C] focus:border-transparent"
-                      :class="{ 'border-red-500': errors.inquiryType }"
-                    >
-                      <option value="" disabled>Please select an option</option>
-                      <option v-for="(option, index) in inquiryOptions" :key="index" :value="option">
-                        {{ option }}
-                      </option>
-                    </select>
-                    <p v-if="errors.inquiryType" class="text-red-500 text-sm mt-1">{{ errors.inquiryType }}</p>
                   </div>
                   
                   <!-- Message Input -->
@@ -111,7 +68,7 @@
                     <label for="message" class="block text-[#33423C] font-medium mb-2">Your Message *</label>
                     <textarea 
                       id="message"
-                      v-model="form.message"
+                      v-model="formData.message"
                       required
                       rows="5"
                       class="w-full px-4 py-2 border border-[#DCCDC3] focus:outline-none focus:ring-2 focus:ring-[#33423C] focus:border-transparent"
@@ -124,9 +81,9 @@
                   <button 
                     type="submit"
                     class="btn-primary w-full py-3"
-                    :disabled="submitting"
+                    :disabled="isSubmitting"
                   >
-                    <span v-if="submitting">
+                    <span v-if="isSubmitting">
                       <ArrowPathIcon class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline-block" />
                       Sending...
                     </span>
@@ -203,84 +160,49 @@
   
   <script setup lang="ts">
   import { ref, reactive } from 'vue'
-  import { contactService } from '@/services/supabase'
-  import { 
-    EnvelopeIcon, 
-    ClockIcon, 
-    MapPinIcon,
-    CheckCircleIcon,
-    ArrowPathIcon
-  } from '@heroicons/vue/24/outline'
+  import { EnvelopeIcon, ClockIcon, MapPinIcon, CheckCircleIcon, ArrowPathIcon } from '@heroicons/vue/24/outline'
   
-  // Form state
-  const form = reactive({
-    firstName: '',
-    lastName: '',
+  const formData = reactive({
+    name: '',
     email: '',
-    phone: '',
-    inquiryType: '',
     message: ''
   })
   
   const errors = reactive({
-    firstName: '',
-    lastName: '',
+    name: '',
     email: '',
-    inquiryType: '',
     message: ''
   })
   
-  const submitting = ref(false)
-  const formSubmitted = ref(false)
+  const isSubmitting = ref(false)
+  const submitSuccess = ref(false)
+  const submitError = ref('')
   
-  // Inquiry options
-  const inquiryOptions = [
-    'Personal Photography Session',
-    'Event Coverage',
-    'NGO/Business Storytelling',
-    'Other'
-  ]
-  
-  // Form validation
   const validateForm = () => {
     let isValid = true
     
     // Reset errors
-    errors.firstName = ''
-    errors.lastName = ''
+    errors.name = ''
     errors.email = ''
-    errors.inquiryType = ''
     errors.message = ''
     
-    // Validate first name
-    if (!form.firstName.trim()) {
-      errors.firstName = 'First name is required'
-      isValid = false
-    }
-    
-    // Validate last name
-    if (!form.lastName.trim()) {
-      errors.lastName = 'Last name is required'
+    // Validate name
+    if (!formData.name.trim()) {
+      errors.name = 'Name is required'
       isValid = false
     }
     
     // Validate email
-    if (!form.email.trim()) {
+    if (!formData.email.trim()) {
       errors.email = 'Email is required'
       isValid = false
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       errors.email = 'Please enter a valid email address'
       isValid = false
     }
     
-    // Validate inquiry type
-    if (!form.inquiryType) {
-      errors.inquiryType = 'Please select an inquiry type'
-      isValid = false
-    }
-    
     // Validate message
-    if (!form.message.trim()) {
+    if (!formData.message.trim()) {
       errors.message = 'Message is required'
       isValid = false
     }
@@ -288,38 +210,24 @@
     return isValid
   }
   
-  // Form submission
-  const submitForm = async () => {
+  const handleSubmit = async () => {
     if (!validateForm()) return
     
-    submitting.value = true
+    isSubmitting.value = true
+    submitError.value = ''
     
     try {
-      const formData = {
-        firstName: form.firstName,
-        lastName: form.lastName,
-        email: form.email,
-        phone: form.phone,
-        inquiryType: form.inquiryType,
-        message: form.message,
-        created_at: new Date().toISOString()
-      }
-
-      await contactService.submitContactForm(formData)
-      formSubmitted.value = true
-
-      // Reset form
-      form.firstName = ''
-      form.lastName = ''
-      form.email = ''
-      form.phone = ''
-      form.inquiryType = ''
-      form.message = ''
+      // Here you would typically send the form data to your backend
+      // For now, we'll just simulate a successful submission
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      submitSuccess.value = true
+      formData.name = ''
+      formData.email = ''
+      formData.message = ''
     } catch (error) {
-      console.error('Error submitting form:', error)
-      // You might want to show an error message to the user here
+      submitError.value = 'Failed to send message. Please try again.'
     } finally {
-      submitting.value = false
+      isSubmitting.value = false
     }
   }
   </script>

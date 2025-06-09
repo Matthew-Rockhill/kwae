@@ -97,11 +97,7 @@
   
   <script setup lang="ts">
   import { ref } from 'vue'
-  import { useRouter } from 'vue-router'
-  
-  const router = useRouter()
-  
-  // Sample portfolio items (replace with real data later)
+
   const portfolioItems = ref([
     {
       title: 'The Smith Family',
@@ -119,16 +115,4 @@
       image: '/images/portfolio-3.jpg'
     }
   ])
-  
-  // Split items into featured and secondary
-  const featuredItem = ref(portfolioItems.value[0])
-  const secondaryItems = ref(portfolioItems.value.slice(1))
-  
-  // This is a simple function to simulate checking if an image exists
-  // In a real implementation, you might want to use more sophisticated methods
-  const imageExists = (imagePath: string) => {
-    // For development purposes, we'll assume images don't exist
-    // In a real environment, you'd want to actually check if the image exists
-    return false
-  }
   </script>
