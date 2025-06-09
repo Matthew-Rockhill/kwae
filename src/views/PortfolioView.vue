@@ -543,9 +543,23 @@
     }
   }
   
-  onMounted(() => {
-    loading.value = true
-    // For now, we're only handling branding images
-    loading.value = false
+  onMounted(async () => {
+    try {
+      const category = route.query.category as string || route.params.category as string
+      if (category && portfolios[category]) {
+        portfolioData.value = portfolios[category]
+      } else {
+        // Default to showing all categories or first category
+        portfolioData.value = {
+          title: 'Portfolio',
+          description: 'Browse through my photography work.',
+          images: Object.values(portfolios).flatMap(portfolio => portfolio.images)
+        }
+      }
+    } catch (err) {
+      error.value = 'Failed to load portfolio data'
+    } finally {
+      loading.value = false
+    }
   })
   </script>

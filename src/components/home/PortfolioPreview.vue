@@ -96,23 +96,5 @@
   </template>
   
   <script setup lang="ts">
-  import { ref } from 'vue'
-
-  const portfolioItems = ref([
-    {
-      title: 'The Smith Family',
-      category: 'Family',
-      image: '/images/portfolio-1.jpg'
-    },
-    {
-      title: 'Clean Water Initiative',
-      category: 'NGO Storytelling',
-      image: '/images/portfolio-2.jpg'
-    },
-    {
-      title: 'Emma & John',
-      category: 'Maternity',
-      image: '/images/portfolio-3.jpg'
-    }
-  ])
+  // No additional script logic needed for static portfolio preview
   </script>

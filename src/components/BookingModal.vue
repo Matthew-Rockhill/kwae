@@ -37,7 +37,7 @@
                     <input 
                       type="text" 
                       id="firstName"
-                      v-model="form.firstName"
+                      v-model="formData.firstName"
                       required
                       class="w-full px-4 py-2 border border-[#DCCDC3] focus:outline-none focus:ring-2 focus:ring-[#33423C] focus:border-transparent"
                       :class="{ 'border-red-500': errors.firstName }"
@@ -51,7 +51,7 @@
                     <input 
                       type="text" 
                       id="lastName"
-                      v-model="form.lastName"
+                      v-model="formData.lastName"
                       required
                       class="w-full px-4 py-2 border border-[#DCCDC3] focus:outline-none focus:ring-2 focus:ring-[#33423C] focus:border-transparent"
                       :class="{ 'border-red-500': errors.lastName }"
@@ -66,7 +66,7 @@
                   <input 
                     type="email" 
                     id="email"
-                    v-model="form.email"
+                    v-model="formData.email"
                     required
                     class="w-full px-4 py-2 border border-[#DCCDC3] focus:outline-none focus:ring-2 focus:ring-[#33423C] focus:border-transparent"
                     :class="{ 'border-red-500': errors.email }"
@@ -80,7 +80,7 @@
                   <input 
                     type="tel" 
                     id="phone"
-                    v-model="form.phone"
+                    v-model="formData.phone"
                     required
                     class="w-full px-4 py-2 border border-[#DCCDC3] focus:outline-none focus:ring-2 focus:ring-[#33423C] focus:border-transparent"
                     :class="{ 'border-red-500': errors.phone }"
@@ -94,7 +94,7 @@
                   <input 
                     type="date" 
                     id="eventDate"
-                    v-model="form.eventDate"
+                    v-model="formData.eventDate"
                     class="w-full px-4 py-2 border border-[#DCCDC3] focus:outline-none focus:ring-2 focus:ring-[#33423C] focus:border-transparent"
                   />
                 </div>
@@ -105,7 +105,7 @@
                   <input 
                     type="text" 
                     id="eventLocation"
-                    v-model="form.eventLocation"
+                    v-model="formData.eventLocation"
                     placeholder="Where will the session take place?"
                     class="w-full px-4 py-2 border border-[#DCCDC3] focus:outline-none focus:ring-2 focus:ring-[#33423C] focus:border-transparent"
                   />
@@ -116,7 +116,7 @@
                   <label for="additionalNotes" class="block text-[#33423C] font-medium mb-2">Additional Notes</label>
                   <textarea 
                     id="additionalNotes"
-                    v-model="form.additionalNotes"
+                    v-model="formData.additionalNotes"
                     rows="3"
                     placeholder="Any specific requirements or questions?"
                     class="w-full px-4 py-2 border border-[#DCCDC3] focus:outline-none focus:ring-2 focus:ring-[#33423C] focus:border-transparent"
@@ -134,9 +134,9 @@
                   <button
                     type="submit"
                     class="btn-primary px-4 py-2"
-                    :disabled="submitting"
+                    :disabled="isSubmitting"
                   >
-                    <span v-if="submitting">
+                    <span v-if="isSubmitting">
                       <ArrowPathIcon class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline-block" />
                       Submitting...
                     </span>
@@ -162,10 +162,11 @@ const props = defineProps<{
   isOpen: boolean
   packageTitle: string
   packageType: string
+  onClose?: () => void
 }>()
 
 const emit = defineEmits<{
-  (e: 'close'): void
+  close: []
 }>()
 
 const isSubmitting = ref(false)
@@ -179,8 +180,7 @@ const formData = reactive({
   phone: '',
   eventDate: '',
   eventLocation: '',
-  additionalNotes: '',
-  packageType: props.packageType
+  additionalNotes: ''
 })
 
 const errors = reactive({
@@ -190,8 +190,7 @@ const errors = reactive({
   phone: '',
   eventDate: '',
   eventLocation: '',
-  additionalNotes: '',
-  packageType: ''
+  additionalNotes: ''
 })
 
 const validateForm = () => {
@@ -205,7 +204,6 @@ const validateForm = () => {
   errors.eventDate = ''
   errors.eventLocation = ''
   errors.additionalNotes = ''
-  errors.packageType = ''
   
   // Validate first name
   if (!formData.firstName.trim()) {
@@ -246,22 +244,10 @@ const validateForm = () => {
     isValid = false
   }
   
-  // Validate additional notes
-  if (!formData.additionalNotes.trim()) {
-    errors.additionalNotes = 'Additional notes are required'
-    isValid = false
-  }
-  
-  // Validate package type
-  if (!formData.packageType.trim()) {
-    errors.packageType = 'Please select a package'
-    isValid = false
-  }
-  
   return isValid
 }
 
-const handleSubmit = async () => {
+const submitForm = async () => {
   if (!validateForm()) return
   
   isSubmitting.value = true
