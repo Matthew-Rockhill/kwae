@@ -156,7 +156,6 @@
 import { ref, reactive } from 'vue'
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import { ArrowPathIcon } from '@heroicons/vue/24/outline'
-import { XMarkIcon } from '@heroicons/vue/24/outline'
 
 const props = defineProps<{
   isOpen: boolean
@@ -180,7 +179,8 @@ const formData = reactive({
   phone: '',
   eventDate: '',
   eventLocation: '',
-  additionalNotes: ''
+  additionalNotes: '',
+  packageType: props.packageType
 })
 
 const errors = reactive({

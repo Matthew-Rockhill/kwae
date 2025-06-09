@@ -182,15 +182,13 @@
   const route = useRoute()
   const activeCategory = ref(route.params.category || 'branding')
   const activeSubcategory = ref<LifestyleSubcategory>('rockpooling') // Default subcategory for lifestyle
-  const showLightbox = ref(false)
-  const currentImageIndex = ref(0)
   const visibleCount = ref(12) // Number of images to show initially
   const totalItems = ref(0) // Total number of items available
   
   // Portfolio state
   const portfolio = ref<any[]>([])
-  const loadedItems = ref(9)
   const loading = ref(false)
+  const error = ref('')
   
   // Categories
   const categories = [
@@ -203,6 +201,60 @@
   // Lightbox state
   const lightboxOpen = ref(false)
   const currentLightboxIndex = ref(0)
+  
+  // Data for different categories
+  interface PortfolioImage {
+    id: number
+    url: string
+    alt: string
+  }
+
+  interface PortfolioCategory {
+    title: string
+    description: string
+    images: PortfolioImage[]
+  }
+
+  interface PortfolioData {
+    [key: string]: PortfolioCategory
+  }
+
+  const portfolios: PortfolioData = {
+    'family': {
+      title: 'Family Photography',
+      description: 'Capturing intimate moments and personal stories.',
+      images: [
+        { id: 1, url: '/images/portfolio/family/1.jpg', alt: 'Family photo 1' },
+        { id: 2, url: '/images/portfolio/family/2.jpg', alt: 'Family photo 2' }
+      ]
+    },
+    'lifestyle': {
+      title: 'Lifestyle Photography',
+      description: 'Documenting authentic moments and special occasions.',
+      images: [
+        { id: 1, url: '/images/portfolio/lifestyle/1.jpg', alt: 'Lifestyle photo 1' },
+        { id: 2, url: '/images/portfolio/lifestyle/2.jpg', alt: 'Lifestyle photo 2' }
+      ]
+    },
+    'ngo': {
+      title: 'NGO Storytelling',
+      description: 'Telling stories of impact and mission.',
+      images: [
+        { id: 1, url: '/images/portfolio/ngo/1.jpg', alt: 'NGO photo 1' },
+        { id: 2, url: '/images/portfolio/ngo/2.jpg', alt: 'NGO photo 2' }
+      ]
+    },
+    'branding': {
+      title: 'Branding Photography',
+      description: 'Visual identity and brand storytelling.',
+      images: [
+        { id: 1, url: '/images/portfolio/branding/1.jpg', alt: 'Branding photo 1' },
+        { id: 2, url: '/images/portfolio/branding/2.jpg', alt: 'Branding photo 2' }
+      ]
+    }
+  }
+
+  const portfolioData = ref<PortfolioCategory | null>(null)
   
   // Branding images data
   const brandingImages = [
@@ -526,18 +578,18 @@
       // Existing branding load more logic
       const currentCount = portfolio.value.filter(item => item.category === activeCategory.value).length
       const newCount = currentCount + 12
-      loadPortfolioItems(activeCategory.value, newCount)
+      loadPortfolioItems(newCount)
     }
   }
   
-  const loadPortfolioItems = async (category: string | string[], count: number) => {
+  const loadPortfolioItems = async (count: number) => {
     try {
       loading.value = true
       // For now, we'll just update the total count
       // In a real implementation, this would fetch from an API
       totalItems.value = count
-    } catch (error) {
-      console.error('Error loading portfolio items:', error)
+    } catch (err) {
+      console.error('Error loading portfolio items:', err)
     } finally {
       loading.value = false
     }
