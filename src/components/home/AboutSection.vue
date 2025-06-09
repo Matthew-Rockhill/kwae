@@ -4,7 +4,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <!-- Left Column: Content -->
           <div class="order-2 lg:order-1">
-            <h2 class="text-3xl md:text-4xl font-extralight text-[#33423C] mb-6">
+            <h2 class="text-2xl md:text-3xl font-extralight text-[#33423C] mb-6 whitespace-nowrap">
               The Heart Behind <span class="font-cormorant italic font-normal text-[#6A7D72]">Kristin With An Eye</span>
             </h2>
             
@@ -38,18 +38,32 @@
             </div>
           </div>
           
-          <!-- Right Column: Image -->
+          <!-- Right Column: Images -->
           <div class="order-1 lg:order-2 relative">
-            <div class="relative overflow-hidden">
-              <!-- <img 
-                src="/images/about-home.jpg" 
-                alt="Kristin, the photographer" 
-                class="w-full h-auto object-cover"
-              /> -->
+            <div class="grid grid-cols-2 gap-4">
+              <!-- First Image -->
+              <div class="relative overflow-hidden rounded-lg shadow-xl">
+                <img 
+                  src="@/assets/images/about-1.jpg" 
+                  alt="Family photography session" 
+                  class="w-full h-[500px] object-cover object-center transform hover:scale-105 transition-transform duration-500"
+                />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+              </div>
               
-              <!-- Decorative elements -->
-              <div class="absolute -bottom-4 -right-4 w-24 h-24 bg-[#DCCDC3] -z-10"></div>
+              <!-- Second Image -->
+              <div class="relative overflow-hidden rounded-lg shadow-xl">
+                <img 
+                  src="@/assets/images/about-2.jpg" 
+                  alt="Nature photography" 
+                  class="w-full h-[500px] object-cover object-center transform hover:scale-105 transition-transform duration-500"
+                />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+              </div>
             </div>
+            
+            <!-- Decorative elements -->
+            <div class="absolute -bottom-4 -right-4 w-24 h-24 bg-[#DCCDC3] -z-10"></div>
             <div class="absolute -top-4 -left-4 w-24 h-24 bg-[#6A7D72] -z-10"></div>
           </div>
         </div>
