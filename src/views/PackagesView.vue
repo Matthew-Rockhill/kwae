@@ -20,10 +20,9 @@
     <section class="py-16 md:py-24 bg-white">
         <div class="container-custom">
         <div class="text-center max-w-3xl mx-auto mb-16">
-          <h2 class="text-3xl md:text-4xl font-extralight text-[#33423C] mb-4">For Your Personal Story</h2>
+          <h2 class="text-3xl md:text-4xl font-extralight text-[#33423C] mb-4">Portrait & Family Sessions</h2>
           <p class="text-[#6A7D72] text-lg font-light">
-            Whether it's intimate family moments, celebrating milestones, or capturing the joy of special occasions, 
-            every personal story deserves to be told with authenticity and heart.
+            Earthy, heart-led storytelling for individuals, couples, and families.
           </p>
           <p class="text-[#6A7D72] text-sm font-light mt-4 italic">
             *Travel beyond 50km from Cape Town may include an additional fee.
@@ -31,126 +30,21 @@
         </div>
         
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <!-- Dust & Light -->
-          <div class="bg-white shadow-lg">
-            <div class="p-8 bg-gradient-to-br from-[#DCCDC3] to-[#E6DFD7]">
-              <h3 class="text-2xl font-light text-[#33423C] mb-2">Dust & Light</h3>
-              <p class="text-[#6A7D72] text-sm italic mb-4">Mini Session</p>
-              <p class="text-2xl font-semibold text-[#33423C]">From R1,500</p>
-                  </div>
-            <div class="p-8">
-              <p class="text-[#6A7D72] mb-6">A short and sweet storytelling session — perfect for fleeting moments or seasonal milestones.</p>
-              <div class="space-y-4 mb-8">
-                <div class="flex items-start gap-3">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#6A7D72] mt-0.5" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                  </svg>
-                  <span class="text-[#33423C] font-light">30-minute session</span>
-                </div>
-                <div class="flex items-start gap-3">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#6A7D72] mt-0.5" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                  </svg>
-                  <span class="text-[#33423C] font-light">50 edited high-resolution images</span>
-                  </div>
-                <div class="flex items-start gap-3">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#6A7D72] mt-0.5" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                        </svg>
-                  <span class="text-[#33423C] font-light">Private online gallery</span>
-                </div>
-              </div>
-              <button class="w-full bg-[#33423C] hover:bg-[#2A3630] text-[#F6F2ED] transition-all duration-300 px-8 py-3 rounded-none uppercase tracking-wider">
-                Book Now
-              </button>
-            </div>
-          </div>
-          
-          <!-- Field & Frame -->
-          <div class="bg-white shadow-lg">
-            <div class="p-8 bg-gradient-to-br from-[#DCCDC3] to-[#E6DFD7]">
-              <h3 class="text-2xl font-light text-[#33423C] mb-2">Field & Frame</h3>
-              <p class="text-[#6A7D72] text-sm italic mb-4">Standard Session</p>
-              <p class="text-2xl font-semibold text-[#33423C]">From R2,500</p>
-            </div>
-              <div class="p-8">
-              <p class="text-[#6A7D72] mb-6">A relaxed, grounded shoot to capture connection and personality in a beautiful setting.</p>
-              <div class="space-y-4 mb-8">
-                <div class="flex items-start gap-3">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#6A7D72] mt-0.5" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                  </svg>
-                  <span class="text-[#33423C] font-light">60-minute session</span>
-                </div>
-                <div class="flex items-start gap-3">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#6A7D72] mt-0.5" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                      </svg>
-                  <span class="text-[#33423C] font-light">80+ edited images</span>
-                </div>
-                <div class="flex items-start gap-3">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#6A7D72] mt-0.5" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                  </svg>
-                  <span class="text-[#33423C] font-light">Private online gallery</span>
-                </div>
-              </div>
-              <button class="w-full bg-[#33423C] hover:bg-[#2A3630] text-[#F6F2ED] transition-all duration-300 px-8 py-3 rounded-none uppercase tracking-wider">
-                Book Now
-              </button>
-            </div>
-          </div>
-          
-          <!-- Soil & Sun -->
-          <div class="bg-white shadow-lg">
-            <div class="p-8 bg-gradient-to-br from-[#DCCDC3] to-[#E6DFD7]">
-              <h3 class="text-2xl font-light text-[#33423C] mb-2">Soil & Sun</h3>
-              <p class="text-[#6A7D72] text-sm italic mb-4">Full Session</p>
-              <p class="text-2xl font-semibold text-[#33423C]">From R4,000</p>
-            </div>
-                  <div class="p-8">
-              <p class="text-[#6A7D72] mb-6">A golden-hour session for those wanting a fuller, more flexible storytelling experience.</p>
-              <div class="space-y-4 mb-8">
-                <div class="flex items-start gap-3">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#6A7D72] mt-0.5" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                          </svg>
-                  <span class="text-[#33423C] font-light">90-minute session (sunrise or sunset recommended)</span>
-                    </div>
-                <div class="flex items-start gap-3">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#6A7D72] mt-0.5" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                  </svg>
-                  <span class="text-[#33423C] font-light">100+ edited images</span>
-                  </div>
-                <div class="flex items-start gap-3">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#6A7D72] mt-0.5" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                  </svg>
-                  <span class="text-[#33423C] font-light">Multiple locations (within 50km)</span>
-                </div>
-                <div class="flex items-start gap-3">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#6A7D72] mt-0.5" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                          </svg>
-                  <span class="text-[#33423C] font-light">Private gallery with full-resolution downloads</span>
-                    </div>
-                <div class="flex items-start gap-3">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#6A7D72] mt-0.5" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                  </svg>
-                  <span class="text-[#33423C] font-light">24-hour sneak peek available</span>
-                </div>
-              </div>
-              <button class="w-full bg-[#33423C] hover:bg-[#2A3630] text-[#F6F2ED] transition-all duration-300 px-8 py-3 rounded-none uppercase tracking-wider">
-                Book Now
-              </button>
-            </div>
-          </div>
+          <PackageCard
+            v-for="pkg in portraitPackages"
+            :key="pkg.title"
+            :title="pkg.title"
+            :subtitle="pkg.subtitle"
+            :price="pkg.price"
+            :description="pkg.description"
+            :features="pkg.features"
+            :buttons="pkg.buttons"
+            @button-click="handleButtonClick"
+          />
         </div>
 
         <div class="text-center mt-16">
-          <h3 class="text-xl font-light text-[#6A7D72] mb-4">🌿 Need something custom?</h3>
+          <h3 class="text-xl font-light text-[#6A7D72] mb-4">Need something custom?</h3>
           <p class="text-[#6A7D72] mb-8">
             Every story is unique. Let's create something that fits your rhythm.
           </p>
@@ -163,169 +57,61 @@
       
     <!-- Lifestyle Photography Section -->
     <section class="py-16 md:py-24 bg-[#F6F2ED]">
-        <div class="container-custom">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
-          <!-- Left Column: Content -->
-          <div>
-            <h2 class="text-3xl md:text-4xl font-extralight text-[#33423C] mb-6">
-              Lifestyle <span class="font-cormorant italic font-normal text-[#6A7D72]">Photography</span>
-            </h2>
-            <p class="text-[#33423C] text-lg font-light leading-relaxed mb-6">
-              Capture the authentic moments of your special occasions and everyday life with a documentary-style approach.
-            </p>
-            <p class="text-[#33423C] text-lg font-light leading-relaxed mb-8">
-              Perfect for birthdays, baby showers, gatherings, or any special event where you want to preserve 
-              the genuine emotions and connections.
-            </p>
-            <div class="space-y-4 mb-8">
-              <div class="flex items-start gap-3">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#6A7D72] mt-0.5" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                </svg>
-                <span class="text-[#33423C] font-light">Candid, documentary-style coverage</span>
-              </div>
-              <div class="flex items-start gap-3">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#6A7D72] mt-0.5" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                  </svg>
-                <span class="text-[#33423C] font-light">Edited, high-res images for print & social media</span>
-                </div>
-              <div class="flex items-start gap-3">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#6A7D72] mt-0.5" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                </svg>
-                <span class="text-[#33423C] font-light">Custom pricing based on event duration & location</span>
-              </div>
-            </div>
-            <p class="text-[#6A7D72] text-sm font-light italic">
-              *Travel beyond 50km from Cape Town may include an additional fee.
-            </p>
-          </div>
-
-          <!-- Right Column: Pricing Card -->
-          <div class="bg-white shadow-lg">
-            <div class="p-8 bg-gradient-to-br from-[#DCCDC3] to-[#E6DFD7]">
-              <h3 class="text-2xl font-light text-[#33423C] mb-2">Events & Celebrations</h3>
-              <p class="text-[#6A7D72] text-sm italic mb-4">Birthdays, Baby Showers, Gatherings</p>
-              <p class="text-2xl font-semibold text-[#33423C]">From R1,500/hour</p>
-            </div>
-            <div class="p-8">
-              <button class="w-full bg-[#33423C] hover:bg-[#2A3630] text-[#F6F2ED] transition-all duration-300 px-8 py-3 rounded-none uppercase tracking-wider">
-                Enquire About Your Event
-              </button>
-              </div>
-            </div>
-          </div>
+      <div class="container-custom">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+          <h2 class="text-3xl md:text-4xl font-extralight text-[#33423C] mb-4">
+            Lifestyle, Events & <span class="font-cormorant italic font-normal text-[#6A7D72]">Weddings</span>
+          </h2>
+          <p class="text-[#6A7D72] text-lg font-light">
+            For celebrations, content creation, and soulful wedding documentation.
+          </p>
+          <p class="text-[#6A7D72] text-sm font-light mt-4 italic">
+            *Travel beyond 50km from Cape Town may include an additional fee.
+          </p>
         </div>
-      </section>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <PackageCard
+            v-for="pkg in lifestylePackages"
+            :key="pkg.title"
+            :title="pkg.title"
+            :subtitle="pkg.subtitle"
+            :price="pkg.price"
+            :description="pkg.description"
+            :features="pkg.features"
+            :buttons="pkg.buttons"
+            @button-click="handleButtonClick"
+          />
+        </div>
+      </div>
+    </section>
       
     <!-- Organisation Section -->
     <section class="py-16 md:py-24 bg-white">
       <div class="container-custom">
         <div class="text-center max-w-3xl mx-auto mb-16">
-          <h2 class="text-3xl md:text-4xl font-extralight text-[#33423C] mb-4">For Your Mission & Impact</h2>
+          <h2 class="text-3xl md:text-4xl font-extralight text-[#33423C] mb-4">Storytelling for Organisations — The Impact Box</h2>
           <p class="text-[#6A7D72] text-lg font-light">
-            Amplifying the work of organisations, NGOs, and businesses through powerful visual storytelling 
-            that connects hearts and inspires action.
+            For NGOs, foundations, and changemakers seeking authentic, visual storytelling.
+          </p>
+          <p class="text-[#6A7D72] text-sm font-light mt-4 italic">
+            Each package includes access to an Impact Toolkit — a resource to help amplify your story through images, words, and strategy.
           </p>
         </div>
         
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <!-- Raw Thread -->
-          <div class="bg-white rounded-lg shadow-lg overflow-hidden transform transition-all duration-300 hover:scale-[1.02] hover:shadow-xl">
-            <div class="p-6 bg-gradient-to-br from-[#DCCDC3] to-[#E6DFD7]">
-              <h3 class="text-xl font-light text-[#33423C] text-center mb-2">Raw Thread</h3>
-              <p class="text-[#6A7D72] text-sm italic text-center mb-4">Best for: Events, short-term projects, or a social media refresh</p>
-              <p class="text-2xl font-semibold text-[#33423C] text-center">From R3,500</p>
-            </div>
-            <div class="p-6">
-              <ul class="space-y-3 mb-6">
-                <li class="flex items-start gap-3">
-                  <span class="w-5 h-5 bg-[#6A7D72] rounded-full flex items-center justify-center text-white text-xs flex-shrink-0 mt-0.5">✓</span>
-                  <span class="text-[#33423C] text-sm">Half-day shoot</span>
-                </li>
-                <li class="flex items-start gap-3">
-                  <span class="w-5 h-5 bg-[#6A7D72] rounded-full flex items-center justify-center text-white text-xs flex-shrink-0 mt-0.5">✓</span>
-                  <span class="text-[#33423C] text-sm">50 edited images</span>
-                </li>
-                <li class="flex items-start gap-3">
-                  <span class="w-5 h-5 bg-[#6A7D72] rounded-full flex items-center justify-center text-white text-xs flex-shrink-0 mt-0.5">✓</span>
-                  <span class="text-[#33423C] text-sm">Basic captioning or visual theme guidance</span>
-                </li>
-              </ul>
-              <button class="w-full bg-[#33423C] text-white py-3 rounded-lg text-sm uppercase tracking-wider hover:bg-[#6A7D72] transition-colors">
-                Get in Touch
-              </button>
-            </div>
-          </div>
-          
-          <!-- The Narrative Journey -->
-          <div class="bg-white rounded-lg shadow-lg overflow-hidden transform transition-all duration-300 hover:scale-[1.02] hover:shadow-xl">
-            <div class="p-6 bg-gradient-to-br from-[#DCCDC3] to-[#E6DFD7]">
-              <h3 class="text-xl font-light text-[#33423C] text-center mb-2">The Narrative Journey</h3>
-              <p class="text-[#6A7D72] text-sm italic text-center mb-4">Best for: Campaigns, annual reports, or programme milestones</p>
-              <p class="text-2xl font-semibold text-[#33423C] text-center">From R6,500</p>
-            </div>
-            <div class="p-6">
-              <ul class="space-y-3 mb-6">
-                <li class="flex items-start gap-3">
-                  <span class="w-5 h-5 bg-[#6A7D72] rounded-full flex items-center justify-center text-white text-xs flex-shrink-0 mt-0.5">✓</span>
-                  <span class="text-[#33423C] text-sm">Full-day shoot</span>
-                </li>
-                <li class="flex items-start gap-3">
-                  <span class="w-5 h-5 bg-[#6A7D72] rounded-full flex items-center justify-center text-white text-xs flex-shrink-0 mt-0.5">✓</span>
-                  <span class="text-[#33423C] text-sm">50–70 edited images</span>
-                </li>
-                <li class="flex items-start gap-3">
-                  <span class="w-5 h-5 bg-[#6A7D72] rounded-full flex items-center justify-center text-white text-xs flex-shrink-0 mt-0.5">✓</span>
-                  <span class="text-[#33423C] text-sm">Written narrative overview or story captions</span>
-                </li>
-                <li class="flex items-start gap-3">
-                  <span class="w-5 h-5 bg-[#6A7D72] rounded-full flex items-center justify-center text-white text-xs flex-shrink-0 mt-0.5">✓</span>
-                  <span class="text-[#33423C] text-sm">Planning call to align story direction</span>
-                </li>
-              </ul>
-              <button class="w-full bg-[#33423C] text-white py-3 rounded-lg text-sm uppercase tracking-wider hover:bg-[#6A7D72] transition-colors">
-                Get in Touch
-              </button>
-            </div>
-          </div>
-          
-          <!-- The Footpath Journey -->
-          <div class="bg-white rounded-lg shadow-lg overflow-hidden transform transition-all duration-300 hover:scale-[1.02] hover:shadow-xl">
-            <div class="p-6 bg-gradient-to-br from-[#DCCDC3] to-[#E6DFD7]">
-              <h3 class="text-xl font-light text-[#33423C] text-center mb-2">The Footpath Journey</h3>
-              <p class="text-[#6A7D72] text-sm italic text-center mb-4">Long-Term Partnership</p>
-              <p class="text-2xl font-semibold text-[#33423C] text-center">From R4,500 per visit</p>
-              <p class="text-sm text-[#6A7D72] text-center mt-2">Custom retainers: R6,000–R12,000/month</p>
-            </div>
-            <div class="p-6">
-              <ul class="space-y-3 mb-6">
-                <li class="flex items-start gap-3">
-                  <span class="w-5 h-5 bg-[#6A7D72] rounded-full flex items-center justify-center text-white text-xs flex-shrink-0 mt-0.5">✓</span>
-                  <span class="text-[#33423C] text-sm">Monthly or quarterly sessions</span>
-                </li>
-                <li class="flex items-start gap-3">
-                  <span class="w-5 h-5 bg-[#6A7D72] rounded-full flex items-center justify-center text-white text-xs flex-shrink-0 mt-0.5">✓</span>
-                  <span class="text-[#33423C] text-sm">Ongoing image library</span>
-                </li>
-                <li class="flex items-start gap-3">
-                  <span class="w-5 h-5 bg-[#6A7D72] rounded-full flex items-center justify-center text-white text-xs flex-shrink-0 mt-0.5">✓</span>
-                  <span class="text-[#33423C] text-sm">Visual + written story support for reports, donors & social media</span>
-                </li>
-                <li class="flex items-start gap-3">
-                  <span class="w-5 h-5 bg-[#6A7D72] rounded-full flex items-center justify-center text-white text-xs flex-shrink-0 mt-0.5">✓</span>
-                  <span class="text-[#33423C] text-sm">Optional story-mapping and mentoring sessions</span>
-                </li>
-              </ul>
-              <div class="bg-[#F6F2ED] p-4 rounded-lg mb-6 text-sm text-[#6A7D72] italic">
-                Best for: Foundations & NGOs with ongoing programming. Pricing is tailored to each organisation's needs and budget.
-              </div>
-              <button class="w-full bg-[#33423C] text-white py-3 rounded-lg text-sm uppercase tracking-wider hover:bg-[#6A7D72] transition-colors">
-                Get in Touch
-              </button>
-            </div>
-          </div>
+          <PackageCard
+            v-for="pkg in organizationPackages"
+            :key="pkg.title"
+            :title="pkg.title"
+            :subtitle="pkg.subtitle"
+            :price="pkg.price"
+            :additional-pricing="pkg.additionalPricing"
+            :description="pkg.description"
+            :features="pkg.features"
+            :buttons="pkg.buttons"
+            @button-click="handleButtonClick"
+          />
         </div>
       </div>
     </section>
@@ -358,5 +144,139 @@
   </template>
   
   <script setup lang="ts">
-// Add any necessary script logic here
+import PackageCard from '@/components/PackageCard.vue'
+
+// Package data
+const portraitPackages = [
+  {
+    title: 'Dust & Light',
+    subtitle: 'Mini Session',
+    price: 'R1,500',
+    description: 'A short and sweet storytelling session - perfect for seasonal milestones or quick connection.',
+    features: [
+      '30-minute session',
+      '30 edited high-resolution images',
+      'Private online gallery'
+    ],
+    buttons: [
+      { text: 'Book Now', action: 'book-dust-light', variant: 'primary' as const }
+    ]
+  },
+  {
+    title: 'Field & Frame',
+    subtitle: 'Full Session',
+    price: 'R2,500',
+    description: 'A grounded shoot to capture movement, connection, and personality in a beautiful setting.',
+    features: [
+      '60-minute session',
+      '60 to 80 edited images',
+      'Private online gallery'
+    ],
+    buttons: [
+      { text: 'Book Now', action: 'book-field-frame', variant: 'primary' as const }
+    ]
+  },
+  {
+    title: 'Soil & Sun',
+    subtitle: 'Golden Hour Session',
+    price: 'R4,000',
+    description: 'A flexible storytelling experience during the best light of the day.',
+    features: [
+      '90-minute session (sunrise or sunset)',
+      '100+ edited images',
+      'Multiple locations (within 50km)',
+      'Sneak peek within 24 hours',
+      'Private online gallery'
+    ],
+    buttons: [
+      { text: 'Book Now', action: 'book-soil-sun', variant: 'primary' as const }
+    ]
+  }
+]
+
+const lifestylePackages = [
+  {
+    title: 'Lifestyle & Events',
+    subtitle: 'Birthdays, Gatherings & Content',
+    price: 'From R1,500/hour',
+    description: 'Perfect for birthdays, baby showers, gatherings, or creative content creation.',
+    features: [
+      'Candid, documentary-style coverage',
+      'Edited, high-res images for print & social media',
+      'Custom pricing based on event duration & location',
+      'Professional editing included'
+    ],
+    buttons: [
+      { text: 'Book Now', action: 'book-lifestyle-event', variant: 'primary' as const }
+    ]
+  },
+  {
+    title: 'Wedding Photography',
+    subtitle: 'Authentic Wedding Storytelling',
+    price: 'Custom Packages',
+    description: 'Authentic, natural storytelling for your wedding day. Whether you\'re planning an intimate elopement or a full celebration, I offer custom wedding photography with a documentary approach, capturing quiet moments, golden light, and real connection.',
+    features: [
+      'Flexible coverage options (4 hours to full-day)',
+      'High-resolution, edited image gallery',
+      'Optional sneak peeks and printed albums',
+      'Custom packages available'
+    ],
+    buttons: [
+      { text: 'Request a Wedding Quote', action: 'wedding-quote', variant: 'primary' as const }
+    ]
+  }
+]
+
+const organizationPackages = [
+  {
+    title: 'Raw Thread',
+    subtitle: 'Short Story Package',
+    price: 'R4,000',
+    description: 'Ideal for events, new launches, or a content refresh.',
+    features: [
+      'Half-day shoot',
+      '50 edited images',
+      'Social media captioning or visual theme guidance'
+    ],
+    buttons: [
+      { text: 'Book Now', action: 'book-raw-thread', variant: 'primary' as const }
+    ]
+  },
+  {
+    title: 'The Narrative Journey',
+    subtitle: 'Campaigns & Reports',
+    price: 'R6,500',
+    description: 'For deeper storytelling: campaigns, milestones, or annual reports.',
+    features: [
+      'Full-day shoot',
+      '50–70 edited images',
+      'Written narrative overview or social media caption set',
+      'Planning call to align direction'
+    ],
+    buttons: [
+      { text: 'Book Now', action: 'book-narrative', variant: 'primary' as const }
+    ]
+  },
+  {
+    title: 'The Footpath Journey',
+    subtitle: 'Long-Term Partnership',
+    price: 'From R4,500 per visit',
+    additionalPricing: 'Retainer options: R6,000–R12,000/month',
+    description: 'Ideal for organisations with ongoing work and a story to tell across seasons.',
+    features: [
+      'Monthly or quarterly sessions',
+      'Ongoing image library',
+      'Visual + written story support for reports, donors & social',
+      'Optional story-mapping and mentoring'
+    ],
+    buttons: [
+      { text: 'Book Now', action: 'book-footpath', variant: 'primary' as const }
+    ]
+  }
+]
+
+const handleButtonClick = (action: string) => {
+  console.log('Button clicked:', action)
+  // Handle different actions here
+}
   </script>

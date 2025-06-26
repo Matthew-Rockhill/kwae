@@ -64,9 +64,12 @@
                   :src="item.thumbnailUrl" 
                   :alt="item.title" 
                   class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  :class="{
+                    'brightness-110 contrast-105 saturate-105': activeCategory === 'lifestyle' && (activeSubcategory === 'rockpooling' || activeSubcategory === 'traditional-wedding')
+                  }"
                 />
-                <!-- Overlay Gradient and Content for non-branding and non-family only -->
-                <template v-if="activeCategory !== 'branding' && activeCategory !== 'family'">
+                <!-- Overlay Gradient and Content for NGO only -->
+                <template v-if="activeCategory === 'ngo'">
                   <div class="absolute inset-0 bg-gradient-to-t from-[#33423C]/90 via-[#33423C]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   <div class="absolute inset-0 flex flex-col justify-end p-6 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-4 group-hover:translate-y-0">
                     <span class="text-[#DCCDC3] text-sm uppercase tracking-wider mb-2">{{ item.category }}</span>
@@ -80,8 +83,8 @@
                 </div>
                 </template>
               </div>
-              <!-- Static Content for non-branding and non-family only -->
-              <template v-if="activeCategory !== 'branding' && activeCategory !== 'family'">
+              <!-- Static Content for NGO only -->
+              <template v-if="activeCategory === 'ngo'">
                 <div class="p-4">
                   <span class="text-[#6A7D72] text-sm uppercase tracking-wider">{{ item.category }}</span>
                   <h3 class="text-[#33423C] text-lg font-light mt-1">{{ item.title }}</h3>
@@ -103,59 +106,16 @@
       </section>
       
       <!-- Lightbox -->
-      <div v-if="lightboxOpen" class="fixed inset-0 z-50 bg-black/90 flex items-center justify-center">
-        <div class="relative w-full max-w-6xl px-4">
-          <!-- Close Button -->
-          <button 
-            @click="closeLightbox" 
-            class="absolute top-4 right-4 text-white hover:text-[#DCCDC3] transition-colors z-10 transform hover:scale-110"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-          
-          <!-- Navigation Buttons -->
-          <button 
-            @click="prevImage" 
-            class="absolute left-4 top-1/2 -translate-y-1/2 text-white hover:text-[#DCCDC3] transition-colors z-10 transform hover:scale-110"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-            </svg>
-          </button>
-          
-          <button 
-            @click="nextImage" 
-            class="absolute right-4 top-1/2 -translate-y-1/2 text-white hover:text-[#DCCDC3] transition-colors z-10 transform hover:scale-110"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
-          
-          <!-- Image Container -->
-          <div class="relative">
-            <img 
-              v-if="currentLightboxItem"
-              :src="currentLightboxItem.fullUrl" 
-              :alt="currentLightboxItem.title"
-              class="max-h-[80vh] mx-auto rounded-lg shadow-2xl"
-            />
-            
-            <!-- Image Caption -->
-            <div class="text-center text-white mt-6">
-              <template v-if="activeCategory !== 'branding' && activeCategory !== 'family'">
-                <h3 class="text-2xl font-light mb-2">{{ currentLightboxItem?.title }}</h3>
-                <p class="text-gray-300 max-w-2xl mx-auto">{{ currentLightboxItem?.description }}</p>
-              </template>
-              <template v-else>
-                <!-- No description for branding and family -->
-              </template>
-            </div>
-          </div>
-        </div>
-      </div>
+      <ImageLightbox
+        :is-open="lightboxOpen"
+        :current-image="currentLightboxImage"
+        :current-index="currentLightboxIndex"
+        :total-images="totalLightboxImages"
+        :show-navigation="true"
+        @close="closeLightbox"
+        @prev="prevImage"
+        @next="nextImage"
+      />
       
       <!-- CTA Section -->
       <section class="py-16 md:py-20 bg-[#F6F2ED] text-[#33423C]">
@@ -178,6 +138,7 @@
   <script setup lang="ts">
   import { ref, computed, onMounted } from 'vue'
   import { useRoute } from 'vue-router'
+  import ImageLightbox from '@/components/ImageLightbox.vue'
   
   const route = useRoute()
   const activeCategory = ref(route.params.category || 'branding')
@@ -525,6 +486,32 @@
   
   const currentLightboxItem = computed(() => {
       return filteredPortfolio.value[currentLightboxIndex.value]
+  })
+
+  const currentLightboxImage = computed(() => {
+    const item = currentLightboxItem.value
+    if (!item) return undefined
+    
+    return {
+      src: item.fullUrl || item.thumbnailUrl,
+      alt: item.title || 'Gallery image',
+      title: (activeCategory.value !== 'branding' && activeCategory.value !== 'family') ? item.title : undefined,
+      description: (activeCategory.value !== 'branding' && activeCategory.value !== 'family') ? item.description : undefined
+    }
+  })
+
+  const totalLightboxImages = computed(() => {
+    if (activeCategory.value === 'branding') {
+      return brandingImages.length
+    } else if (activeCategory.value === 'family') {
+      return familyImages.value.length
+    } else if (activeCategory.value === 'lifestyle') {
+      return lifestyleImages.value[activeSubcategory.value].length
+    } else if (activeCategory.value === 'ngo') {
+      return ngoImages.value.length
+    } else {
+      return portfolio.value.filter(item => item.category === activeCategory.value).length
+    }
   })
   
   // Methods
