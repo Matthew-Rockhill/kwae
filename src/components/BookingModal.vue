@@ -24,22 +24,27 @@
             leave-from="opacity-100 scale-100"
             leave-to="opacity-0 scale-95"
           >
-            <DialogPanel class="w-full max-w-2xl transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
-              <DialogTitle as="h3" class="font-montserrat text-2xl font-medium text-[#33423C] mb-4">
+            <DialogPanel class="w-full max-w-2xl transform overflow-hidden rounded-2xl bg-[var(--color-light)] p-6 text-left align-middle shadow-xl transition-all">
+              <DialogTitle as="h3" class="font-montserrat text-2xl font-medium text-[var(--color-text)] mb-4">
                 Book Your {{ packageTitle }} Session
               </DialogTitle>
+              
+              <p class="text-[var(--color-text)]/70 text-sm mb-6">
+                Fill out the form below and I'll get back to you within 24-48 hours at 
+                <a href="mailto:hello@kristinmathilde.com" class="text-[var(--color-secondary)] hover:underline">hello@kristinmathilde.com</a>
+              </p>
 
               <form @submit.prevent="submitForm" class="mt-4">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                   <!-- First Name Input -->
                   <div>
-                    <label for="firstName" class="block text-[#33423C] font-medium mb-2">First Name *</label>
+                    <label for="firstName" class="block text-[var(--color-text)] font-medium mb-2">First Name *</label>
                     <input 
                       type="text" 
                       id="firstName"
                       v-model="formData.firstName"
                       required
-                      class="w-full px-4 py-2 border border-[#DCCDC3] focus:outline-none focus:ring-2 focus:ring-[#33423C] focus:border-transparent"
+                      class="w-full px-4 py-2 border border-[var(--color-card-header)] focus:outline-none focus:ring-2 focus:ring-[var(--color-secondary)] focus:border-transparent rounded-lg"
                       :class="{ 'border-red-500': errors.firstName }"
                     />
                     <p v-if="errors.firstName" class="text-red-500 text-sm mt-1">{{ errors.firstName }}</p>
@@ -47,13 +52,13 @@
                   
                   <!-- Last Name Input -->
                   <div>
-                    <label for="lastName" class="block text-[#33423C] font-medium mb-2">Last Name *</label>
+                    <label for="lastName" class="block text-[var(--color-text)] font-medium mb-2">Last Name *</label>
                     <input 
                       type="text" 
                       id="lastName"
                       v-model="formData.lastName"
                       required
-                      class="w-full px-4 py-2 border border-[#DCCDC3] focus:outline-none focus:ring-2 focus:ring-[#33423C] focus:border-transparent"
+                      class="w-full px-4 py-2 border border-[var(--color-card-header)] focus:outline-none focus:ring-2 focus:ring-[var(--color-secondary)] focus:border-transparent rounded-lg"
                       :class="{ 'border-red-500': errors.lastName }"
                     />
                     <p v-if="errors.lastName" class="text-red-500 text-sm mt-1">{{ errors.lastName }}</p>
@@ -62,13 +67,13 @@
 
                 <!-- Email Input -->
                 <div class="mb-6">
-                  <label for="email" class="block text-[#33423C] font-medium mb-2">Email *</label>
+                  <label for="email" class="block text-[var(--color-text)] font-medium mb-2">Email *</label>
                   <input 
                     type="email" 
                     id="email"
                     v-model="formData.email"
                     required
-                    class="w-full px-4 py-2 border border-[#DCCDC3] focus:outline-none focus:ring-2 focus:ring-[#33423C] focus:border-transparent"
+                    class="w-full px-4 py-2 border border-[var(--color-card-header)] focus:outline-none focus:ring-2 focus:ring-[var(--color-secondary)] focus:border-transparent rounded-lg"
                     :class="{ 'border-red-500': errors.email }"
                   />
                   <p v-if="errors.email" class="text-red-500 text-sm mt-1">{{ errors.email }}</p>
@@ -76,13 +81,13 @@
 
                 <!-- Phone Input -->
                 <div class="mb-6">
-                  <label for="phone" class="block text-[#33423C] font-medium mb-2">Phone Number *</label>
+                  <label for="phone" class="block text-[var(--color-text)] font-medium mb-2">Phone Number *</label>
                   <input 
                     type="tel" 
                     id="phone"
                     v-model="formData.phone"
                     required
-                    class="w-full px-4 py-2 border border-[#DCCDC3] focus:outline-none focus:ring-2 focus:ring-[#33423C] focus:border-transparent"
+                    class="w-full px-4 py-2 border border-[var(--color-card-header)] focus:outline-none focus:ring-2 focus:ring-[var(--color-secondary)] focus:border-transparent rounded-lg"
                     :class="{ 'border-red-500': errors.phone }"
                   />
                   <p v-if="errors.phone" class="text-red-500 text-sm mt-1">{{ errors.phone }}</p>
@@ -90,43 +95,43 @@
 
                 <!-- Event Date -->
                 <div class="mb-6">
-                  <label for="eventDate" class="block text-[#33423C] font-medium mb-2">Preferred Date</label>
+                  <label for="eventDate" class="block text-[var(--color-text)] font-medium mb-2">Preferred Date</label>
                   <input 
                     type="date" 
                     id="eventDate"
                     v-model="formData.eventDate"
-                    class="w-full px-4 py-2 border border-[#DCCDC3] focus:outline-none focus:ring-2 focus:ring-[#33423C] focus:border-transparent"
+                    class="w-full px-4 py-2 border border-[var(--color-card-header)] focus:outline-none focus:ring-2 focus:ring-[var(--color-secondary)] focus:border-transparent rounded-lg"
                   />
                 </div>
 
                 <!-- Event Location -->
                 <div class="mb-6">
-                  <label for="eventLocation" class="block text-[#33423C] font-medium mb-2">Event Location</label>
+                  <label for="eventLocation" class="block text-[var(--color-text)] font-medium mb-2">Event Location</label>
                   <input 
                     type="text" 
                     id="eventLocation"
                     v-model="formData.eventLocation"
                     placeholder="Where will the session take place?"
-                    class="w-full px-4 py-2 border border-[#DCCDC3] focus:outline-none focus:ring-2 focus:ring-[#33423C] focus:border-transparent"
+                    class="w-full px-4 py-2 border border-[var(--color-card-header)] focus:outline-none focus:ring-2 focus:ring-[var(--color-secondary)] focus:border-transparent rounded-lg"
                   />
                 </div>
 
                 <!-- Additional Notes -->
                 <div class="mb-6">
-                  <label for="additionalNotes" class="block text-[#33423C] font-medium mb-2">Additional Notes</label>
+                  <label for="additionalNotes" class="block text-[var(--color-text)] font-medium mb-2">Additional Notes</label>
                   <textarea 
                     id="additionalNotes"
                     v-model="formData.additionalNotes"
                     rows="3"
                     placeholder="Any specific requirements or questions?"
-                    class="w-full px-4 py-2 border border-[#DCCDC3] focus:outline-none focus:ring-2 focus:ring-[#33423C] focus:border-transparent"
+                    class="w-full px-4 py-2 border border-[var(--color-card-header)] focus:outline-none focus:ring-2 focus:ring-[var(--color-secondary)] focus:border-transparent rounded-lg"
                   ></textarea>
                 </div>
 
                 <div class="mt-6 flex justify-end gap-4">
                   <button
                     type="button"
-                    class="px-4 py-2 text-[#33423C] hover:text-[#6A7D72] transition-colors"
+                    class="px-4 py-2 text-[var(--color-text)] hover:text-[var(--color-secondary)] transition-colors"
                     @click="closeModal"
                   >
                     Cancel

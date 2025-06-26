@@ -2,10 +2,10 @@
     <section class="py-24 md:py-32 bg-white">
       <div class="container-custom">
         <div class="text-center max-w-3xl mx-auto mb-16">
-          <h2 class="text-3xl md:text-4xl font-extralight text-[#33423C] mb-6">
-            A Glimpse into <span class="font-cormorant italic font-normal text-[#6A7D72]">My Work</span>
+          <h2 class="text-3xl md:text-4xl font-extralight text-[var(--color-text)] mb-6">
+            A Glimpse into <span class="font-cormorant italic font-normal text-[var(--color-text)]">My Work</span>
           </h2>
-          <p class="text-[#6A7D72] text-lg font-light leading-relaxed">
+          <p class="text-[var(--color-text)]/70 text-lg font-light leading-relaxed">
             Explore some of my favorite stories captured through the lens. From intimate family moments 
             to long-term visual storytelling for organisations, I bring a sense of authenticity and beauty to 
             every project.
@@ -22,13 +22,13 @@
                 alt="Family Photography" 
                 class="w-full h-full object-cover"
               />
-              <div class="absolute inset-0 bg-gradient-to-t from-[#33423C]/80 via-[#33423C]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div class="absolute inset-0 bg-gradient-to-t from-[var(--color-text)]/80 via-[var(--color-text)]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               <div class="absolute inset-0 flex flex-col justify-end p-8 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-4 group-hover:translate-y-0">
-                <span class="text-[#DCCDC3] text-sm uppercase tracking-wider mb-2">Family</span>
+                <span class="text-[var(--color-accent)] text-sm uppercase tracking-wider mb-2">Family</span>
                 <h3 class="text-white text-2xl font-light">Capturing Family Moments</h3>
               </div>
             </div>
-            <div class="pointer-events-none absolute inset-px rounded-lg ring-1 shadow-sm ring-[#33423C]/5 lg:rounded-l-[2rem]" />
+            <div class="pointer-events-none absolute inset-px rounded-lg ring-1 shadow-sm ring-[var(--color-text)]/5 lg:rounded-l-[2rem]" />
           </router-link>
 
           <!-- Square Card (NGO) -->
@@ -39,9 +39,9 @@
                 alt="NGO Storytelling" 
                 class="w-full h-full object-cover"
               />
-              <div class="absolute inset-0 bg-gradient-to-t from-[#33423C]/80 via-[#33423C]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div class="absolute inset-0 bg-gradient-to-t from-[var(--color-text)]/80 via-[var(--color-text)]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               <div class="absolute inset-0 flex flex-col justify-end p-6 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-4 group-hover:translate-y-0">
-                <span class="text-[#DCCDC3] text-sm uppercase tracking-wider mb-2">NGO Storytelling</span>
+                <span class="text-[var(--color-accent)] text-sm uppercase tracking-wider mb-2">NGO Storytelling</span>
                 <h3 class="text-white text-xl font-light">Documenting Impact</h3>
               </div>
             </div>
@@ -56,12 +56,12 @@
                 alt="Branding Photography" 
                 class="w-full h-full object-cover"
               />
-              <div class="absolute inset-0 bg-gradient-to-t from-[#33423C]/80 via-[#33423C]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div class="absolute inset-0 bg-gradient-to-t from-[var(--color-text)]/80 via-[var(--color-text)]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               <div class="absolute inset-0 flex flex-col justify-end p-6 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-4 group-hover:translate-y-0">
-                <span class="text-[#DCCDC3] text-sm uppercase tracking-wider mb-2">Branding</span>
+                <span class="text-[var(--color-accent)] text-sm uppercase tracking-wider mb-2">Branding</span>
                 <h3 class="text-white text-xl font-light">Visual Identity</h3>
-              </div>
-            </div>
+          </div>
+                </div>
             <div class="pointer-events-none absolute inset-px rounded-lg ring-1 shadow-sm ring-[#33423C]/5" />
           </router-link>
 
@@ -73,9 +73,9 @@
                 alt="Lifestyle Photography" 
                 class="w-full h-full object-cover"
               />
-              <div class="absolute inset-0 bg-gradient-to-t from-[#33423C]/80 via-[#33423C]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div class="absolute inset-0 bg-gradient-to-t from-[var(--color-text)]/80 via-[var(--color-text)]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               <div class="absolute inset-0 flex flex-col justify-end p-8 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-4 group-hover:translate-y-0">
-                <span class="text-[#DCCDC3] text-sm uppercase tracking-wider mb-2">Lifestyle</span>
+                <span class="text-[var(--color-accent)] text-sm uppercase tracking-wider mb-2">Lifestyle</span>
                 <h3 class="text-white text-2xl font-light">Everyday Stories</h3>
               </div>
             </div>
@@ -86,9 +86,9 @@
         <!-- CTA Button -->
         <div class="text-center mt-12">
           <router-link to="/portfolio">
-            <button class="btn-primary">
+            <BaseButton variant="primary">
               SEE MORE WORK
-            </button>
+            </BaseButton>
           </router-link>
         </div>
       </div>
@@ -96,5 +96,5 @@
   </template>
   
   <script setup lang="ts">
-  // No additional script logic needed for static portfolio preview
+  import BaseButton from '@/components/ui/BaseButton.vue'
   </script>

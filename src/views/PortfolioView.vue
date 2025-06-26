@@ -1,109 +1,70 @@
 <template>
     <div>
       <!-- Page Header -->
-      <section class="relative py-20 bg-[#F6F2ED]">
-        <div class="container-custom text-center">
-          <h1 class="font-montserrat font-extralight text-4xl md:text-5xl text-[#33423C] mb-4">Capturing Stories, One Frame at a Time</h1>
-          <p class="text-lg text-[#6A7D72] max-w-3xl mx-auto">
+      <BaseSection background="light" padding="xl">
+        <div class="text-center">
+          <BaseHeading :level="1" align="center" class="mb-4">
+            Capturing Stories, <span class="font-cormorant italic font-normal text-[var(--color-text)]">One Frame at a Time</span>
+          </BaseHeading>
+          <BaseText size="lg" color="primary" :opacity="70" class="max-w-3xl mx-auto" align="center">
             Each story I capture is unique. Take a moment to explore the projects I've been honored to be
             a part of, from family sessions to NGO partnerships. The images here showcase my commitment
             to telling authentic stories and finding beauty in the most humble places.
-          </p>
+          </BaseText>
         </div>
-      </section>
+      </BaseSection>
       
       <!-- Portfolio Filters -->
-      <section class="pt-12 pb-4 bg-white sticky top-0 z-10 shadow-sm">
-        <div class="container-custom">
-          <div class="flex flex-wrap justify-center gap-4">
-            <button 
-              v-for="category in categories" 
-              :key="category.id"
-              @click="activeCategory = category.id"
-              class="px-5 py-2 transition-all duration-300 transform hover:scale-105"
-              :class="activeCategory === category.id ? 
-                'bg-[#33423C] text-[#F6F2ED]' : 
-                'bg-[#F6F2ED] text-[#33423C] hover:bg-[#DCCDC3]/20'"
-            >
-              {{ category.name }}
-            </button>
-          </div>
-        </div>
-      </section>
+      <StickyFilterBar>
+        <FilterButton
+          v-for="category in categories" 
+          :key="category.id"
+          :active="activeCategory === category.id"
+          @click="activeCategory = category.id"
+        >
+          {{ category.name }}
+        </FilterButton>
+      </StickyFilterBar>
       
       <!-- Add subcategory selector for lifestyle -->
       <div v-if="activeCategory === 'lifestyle'" class="flex justify-center items-center space-x-4 mb-4 mt-4 min-h-[60px]">
-        <button
+        <FilterButton
           v-for="subcategory in (['rockpooling', 'events', 'traditional-wedding'] as LifestyleSubcategory[])"
           :key="subcategory"
+          :active="activeSubcategory === subcategory"
           @click="activeSubcategory = subcategory"
-          :class="[
-            'px-4 py-2 rounded-full transition-all duration-300 capitalize',
-            activeSubcategory === subcategory
-              ? 'bg-[#6A7D72] text-white'
-              : 'bg-white/10 text-[#6A7D72] hover:bg-white/20'
-          ]"
+          class="capitalize"
         >
           {{ subcategory.replace('-', ' ') }}
-        </button>
+        </FilterButton>
       </div>
       
       <!-- Portfolio Gallery -->
-      <section class="py-12 bg-white">
-        <div class="container-custom">
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div 
-              v-for="(item, index) in filteredPortfolio" 
-              :key="index"
-              class="group relative overflow-hidden rounded-lg bg-[#F6F2ED] transform transition-all duration-500 hover:scale-[1.02] hover:shadow-xl"
-              @click="openLightbox(index)"
-            >
-              <!-- Image Container -->
-              <div class="relative aspect-[4/3] overflow-hidden">
-                <img 
-                  :src="item.thumbnailUrl" 
-                  :alt="item.title" 
-                  class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                  :class="{
-                    'brightness-110 contrast-105 saturate-105': activeCategory === 'lifestyle' && (activeSubcategory === 'rockpooling' || activeSubcategory === 'traditional-wedding')
-                  }"
-                />
-                <!-- Overlay Gradient and Content for NGO only -->
-                <template v-if="activeCategory === 'ngo'">
-                  <div class="absolute inset-0 bg-gradient-to-t from-[#33423C]/90 via-[#33423C]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                  <div class="absolute inset-0 flex flex-col justify-end p-6 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-4 group-hover:translate-y-0">
-                    <span class="text-[#DCCDC3] text-sm uppercase tracking-wider mb-2">{{ item.category }}</span>
-                    <h3 class="text-white text-xl font-light mb-2">{{ item.title }}</h3>
-                    <p class="text-gray-200 text-sm line-clamp-2">{{ item.description }}</p>
-                  </div>
-                  <div class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <button class="bg-white/10 backdrop-blur-sm text-white px-3 py-1 rounded-full text-sm hover:bg-white/20 transition-colors">
-                      View Details
-                    </button>
-                </div>
-                </template>
-              </div>
-              <!-- Static Content for NGO only -->
-              <template v-if="activeCategory === 'ngo'">
-                <div class="p-4">
-                  <span class="text-[#6A7D72] text-sm uppercase tracking-wider">{{ item.category }}</span>
-                  <h3 class="text-[#33423C] text-lg font-light mt-1">{{ item.title }}</h3>
-                </div>
-              </template>
-            </div>
-          </div>
-          
-          <!-- Show More Button -->
-          <div class="text-center mt-12" v-if="hasMoreItems">
-            <button 
-              @click="loadMore" 
-              class="btn-secondary transform transition-transform duration-300 hover:scale-105"
-            >
-              Load More
-            </button>
-          </div>
+      <BaseSection background="light" padding="lg">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <PortfolioCard
+            v-for="(item, index) in filteredPortfolio" 
+            :key="index"
+            :image="item"
+            :category="activeCategory"
+            :subcategory="activeSubcategory"
+            :show-overlay="activeCategory === 'ngo'"
+            :show-static-content="activeCategory === 'ngo'"
+            @click="openLightbox(index)"
+          />
         </div>
-      </section>
+        
+        <!-- Show More Button -->
+        <div class="text-center mt-12" v-if="hasMoreItems">
+          <BaseButton 
+            variant="secondary"
+            @click="loadMore"
+            class="transform transition-transform duration-300 hover:scale-105"
+          >
+            Load More
+          </BaseButton>
+        </div>
+      </BaseSection>
       
       <!-- Lightbox -->
       <ImageLightbox
@@ -118,20 +79,24 @@
       />
       
       <!-- CTA Section -->
-      <section class="py-16 md:py-20 bg-[#F6F2ED] text-[#33423C]">
-        <div class="container-custom text-center">
-          <h2 class="text-3xl md:text-4xl font-light mb-6">Ready to Tell Your Story?</h2>
-          <p class="text-lg md:text-xl max-w-2xl mx-auto mb-10 text-[#6A7D72]">
+      <BaseSection background="accent" padding="lg">
+        <div class="text-center">
+          <BaseHeading :level="2" align="center" class="mb-6">
+            Ready to <span class="font-cormorant italic font-normal text-[var(--color-text)]">Tell Your Story?</span>
+          </BaseHeading>
+          <BaseText size="lg" color="primary" :opacity="70" class="max-w-2xl mx-auto mb-10" align="center">
             Let's work together to capture your authentic moments and create beautiful memories that last a lifetime.
-          </p>
-          <router-link 
-            to="/contact" 
-            class="btn-primary transform transition-transform duration-300 hover:scale-105"
-          >
-            Book Your Story
+          </BaseText>
+          <router-link to="/contact">
+            <BaseButton 
+              variant="primary"
+              class="transform transition-transform duration-300 hover:scale-105"
+            >
+              Book Your Story
+            </BaseButton>
           </router-link>
         </div>
-      </section>
+      </BaseSection>
     </div>
   </template>
   
@@ -139,6 +104,13 @@
   import { ref, computed, onMounted } from 'vue'
   import { useRoute } from 'vue-router'
   import ImageLightbox from '@/components/ImageLightbox.vue'
+  import BaseSection from '@/components/ui/BaseSection.vue'
+  import BaseHeading from '@/components/ui/BaseHeading.vue'
+  import BaseText from '@/components/ui/BaseText.vue'
+  import BaseButton from '@/components/ui/BaseButton.vue'
+  import FilterButton from '@/components/ui/FilterButton.vue'
+  import PortfolioCard from '@/components/ui/PortfolioCard.vue'
+  import StickyFilterBar from '@/components/ui/StickyFilterBar.vue'
   
   const route = useRoute()
   const activeCategory = ref(route.params.category || 'branding')

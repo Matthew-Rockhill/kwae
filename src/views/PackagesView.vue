@@ -1,30 +1,28 @@
 <template>
     <div>
       <!-- Page Header -->
-    <section class="relative py-20 bg-[#F6F2ED]">
-      <div class="container-custom">
-        <div class="max-w-3xl mx-auto text-center">
-          <h1 class="text-4xl md:text-5xl font-extralight text-[#33423C] mb-6">
-            Photography <span class="font-cormorant italic font-normal text-[#6A7D72]">Packages</span>
-          </h1>
-          <p class="text-[#6A7D72] text-lg font-light leading-relaxed">
-            Every moment has a story worth telling. Whether it's the quiet connection between family members, 
-            the joy of a celebration, or the powerful impact of your organisation's work, I'm here to capture 
-            it with authenticity and heart.
-          </p>
-        </div>
-        </div>
-      </section>
+    <BaseSection background="light" padding="xl">
+      <div class="max-w-3xl mx-auto text-center">
+        <BaseHeading :level="1" align="center" class="mb-6">
+          Photography <span class="font-cormorant italic text-4xl md:text-5xl font-extralight text-[var(--color-text)]">Packages</span>
+        </BaseHeading>
+        <BaseText size="lg" weight="light" color="muted" leading="relaxed" align="center">
+          Every moment has a story worth telling. Whether it's the quiet connection between family members, 
+          the joy of a celebration, or the powerful impact of your organisation's work, I'm here to capture 
+          it with authenticity and heart.
+        </BaseText>
+      </div>
+    </BaseSection>
       
     <!-- Personal Photography Section -->
-    <section class="py-16 md:py-24 bg-white">
+    <section class="py-16 md:py-24 bg-[var(--color-accent)]">
         <div class="container-custom">
         <div class="text-center max-w-3xl mx-auto mb-16">
-          <h2 class="text-3xl md:text-4xl font-extralight text-[#33423C] mb-4">Portrait & Family Sessions</h2>
-          <p class="text-[#6A7D72] text-lg font-light">
+          <h2 class="text-3xl md:text-4xl font-extralight text-[var(--color-text)] mb-4">Portrait & Family Sessions</h2>
+          <p class="text-[var(--color-text)]/70 text-lg font-light">
             Earthy, heart-led storytelling for individuals, couples, and families.
           </p>
-          <p class="text-[#6A7D72] text-sm font-light mt-4 italic">
+          <p class="text-[var(--color-text)]/60 text-sm font-light mt-4 italic">
             *Travel beyond 50km from Cape Town may include an additional fee.
           </p>
         </div>
@@ -42,30 +40,20 @@
             @button-click="handleButtonClick"
           />
         </div>
-
-        <div class="text-center mt-16">
-          <h3 class="text-xl font-light text-[#6A7D72] mb-4">Need something custom?</h3>
-          <p class="text-[#6A7D72] mb-8">
-            Every story is unique. Let's create something that fits your rhythm.
-          </p>
-          <button class="bg-[#33423C] hover:bg-[#2A3630] text-[#F6F2ED] transition-all duration-300 px-8 py-3 rounded-none uppercase tracking-wider">
-            Start a Conversation
-          </button>
-          </div>
         </div>
       </section>
       
     <!-- Lifestyle Photography Section -->
-    <section class="py-16 md:py-24 bg-[#F6F2ED]">
+    <section class="py-16 md:py-24 bg-[var(--color-light)]">
       <div class="container-custom">
         <div class="text-center max-w-3xl mx-auto mb-16">
-          <h2 class="text-3xl md:text-4xl font-extralight text-[#33423C] mb-4">
-            Lifestyle, Events & <span class="font-cormorant italic font-normal text-[#6A7D72]">Weddings</span>
+          <h2 class="text-3xl md:text-4xl font-extralight text-[var(--color-text)] mb-4">
+            Lifestyle, Events & <span class="font-cormorant italic text-3xl md:text-4xl font-extralight text-[var(--color-text)]">Weddings</span>
           </h2>
-          <p class="text-[#6A7D72] text-lg font-light">
+          <p class="text-[var(--color-text)]/70 text-lg font-light">
             For celebrations, content creation, and soulful wedding documentation.
           </p>
-          <p class="text-[#6A7D72] text-sm font-light mt-4 italic">
+          <p class="text-[var(--color-text)]/60 text-sm font-light mt-4 italic">
             *Travel beyond 50km from Cape Town may include an additional fee.
           </p>
         </div>
@@ -87,14 +75,14 @@
     </section>
       
     <!-- Organisation Section -->
-    <section class="py-16 md:py-24 bg-white">
+    <section class="py-16 md:py-24 bg-[var(--color-accent)]">
       <div class="container-custom">
         <div class="text-center max-w-3xl mx-auto mb-16">
-          <h2 class="text-3xl md:text-4xl font-extralight text-[#33423C] mb-4">Storytelling for Organisations — The Impact Box</h2>
-          <p class="text-[#6A7D72] text-lg font-light">
+          <h2 class="text-3xl md:text-4xl font-extralight text-[var(--color-text)] mb-4">Storytelling for Organisations — The Impact Box</h2>
+          <p class="text-[var(--color-text)]/70 text-lg font-light">
             For NGOs, foundations, and changemakers seeking authentic, visual storytelling.
           </p>
-          <p class="text-[#6A7D72] text-sm font-light mt-4 italic">
+          <p class="text-[var(--color-text)]/60 text-sm font-light mt-4 italic">
             Each package includes access to an Impact Toolkit — a resource to help amplify your story through images, words, and strategy.
           </p>
         </div>
@@ -106,7 +94,7 @@
             :title="pkg.title"
             :subtitle="pkg.subtitle"
             :price="pkg.price"
-            :additional-pricing="pkg.additionalPricing"
+
             :description="pkg.description"
             :features="pkg.features"
             :buttons="pkg.buttons"
@@ -117,34 +105,35 @@
     </section>
     
     <!-- CTA Section -->
-    <section class="py-16 md:py-20 bg-[#DCCDC3] text-[#33423C]">
-      <div class="container-custom text-center">
-        <h2 class="text-3xl md:text-4xl font-extralight mb-6">Interested in working together?</h2>
-        <p class="text-lg md:text-xl max-w-2xl mx-auto mb-10 text-[#33423C]/90">
+    <BaseSection background="light" padding="lg">
+      <div class="text-center">
+        <BaseHeading :level="2" align="center" class="mb-6">Interested in working together?</BaseHeading>
+        <BaseText size="lg" color="primary" opacity="90" class="max-w-2xl mx-auto mb-10" align="center">
           "Every story is unique, and I'd love to help you tell yours. If you're unsure which package fits
           your needs or if you'd like a custom quote, let's chat!"
-          </p>
-          <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        </BaseText>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
           <router-link to="/contact">
-            <button class="bg-[#33423C] hover:bg-[#2A3630] text-[#F6F2ED] transition-all duration-300 px-8 py-3 rounded-none uppercase tracking-wider">
-              Contact Me
-            </button>
-            </router-link>
+            <BaseButton variant="primary">Contact Me</BaseButton>
+          </router-link>
           <a 
-            href="https://instagram.com/kristinwithaneye" 
-            target="_blank" 
-            class="bg-transparent hover:bg-[#33423C]/20 text-[#33423C] border border-[#33423C] transition-all duration-300 px-8 py-3 rounded-none uppercase tracking-wider inline-block"
+            href="https://www.instagram.com/kristin_with.an.eye/" 
+            target="_blank"
           >
-              Follow My Work @kristinwithaneye
-            </a>
-          </div>
+            <BaseButton variant="secondary">Follow My Work @kristin_with.an.eye</BaseButton>
+          </a>
         </div>
-      </section>
+      </div>
+    </BaseSection>
     </div>
   </template>
   
   <script setup lang="ts">
 import PackageCard from '@/components/PackageCard.vue'
+import BaseSection from '@/components/ui/BaseSection.vue'
+import BaseHeading from '@/components/ui/BaseHeading.vue'
+import BaseText from '@/components/ui/BaseText.vue'
+import BaseButton from '@/components/ui/BaseButton.vue'
 
 // Package data
 const portraitPackages = [
@@ -260,8 +249,7 @@ const organizationPackages = [
   {
     title: 'The Footpath Journey',
     subtitle: 'Long-Term Partnership',
-    price: 'From R4,500 per visit',
-    additionalPricing: 'Retainer options: R6,000–R12,000/month',
+    price: 'From R6,000/month',
     description: 'Ideal for organisations with ongoing work and a story to tell across seasons.',
     features: [
       'Monthly or quarterly sessions',

@@ -6,15 +6,15 @@
     <PackagesPreview />
     
     <!-- Modern Testimonials Section -->
-    <section class="py-24 md:py-32 bg-gradient-to-br from-white via-[#FDFBF8] to-[#F6F2ED]">
+    <BaseSection background="accent" padding="xl">
       <div class="container-custom">
         <div class="text-center max-w-3xl mx-auto mb-20">
-          <h2 class="text-4xl md:text-5xl font-extralight text-[#33423C] mb-6">
-            Stories From <span class="font-cormorant italic font-normal text-[#6A7D72]">The Heart</span>
-          </h2>
-          <p class="text-[#6A7D72] text-xl font-light leading-relaxed">
+          <BaseHeading :level="2" align="center" class="mb-6">
+            Stories From <span class="font-cormorant italic font-normal text-[var(--color-text)]">The Heart</span>
+          </BaseHeading>
+          <BaseText size="xl" color="primary" :opacity="70" weight="light" leading="relaxed" align="center">
             Every session tells a story. Here's what clients say about their experience.
-          </p>
+          </BaseText>
         </div>
         
         <!-- Testimonials Carousel -->
@@ -26,21 +26,21 @@
                 <!-- Testimonial Slide 1 - Anton Cuyler -->
                 <div class="w-full flex-shrink-0">
                   <div class="p-8 md:p-16 text-center">
-                    <div class="text-[#DCCDC3] mb-8 flex justify-center">
+                    <div class="text-[var(--color-orange)] mb-8 flex justify-center">
                       <svg class="w-16 h-16" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M9.983 3v7.391c0 5.704-3.731 9.57-8.983 10.609l-.995-2.151c2.432-.917 3.995-3.638 3.995-5.849h-4v-10h9.983zm14.017 0v7.391c0 5.704-3.748 9.571-9 10.609l-.996-2.151c2.433-.917 3.996-3.638 3.996-5.849h-3.983v-10h9.983z"/>
                       </svg>
                     </div>
-                    <p class="text-[#33423C] text-xl md:text-2xl font-light leading-relaxed mb-8 italic max-w-4xl mx-auto">
-                      "Kristin with an eye doesn't simply take photographs. She tells stories that live and breathe through every frame. Her work is a compelling fusion of visual imagery and heartfelt narrative."
+                    <p class="text-[var(--color-text)] text-xl md:text-2xl font-light leading-relaxed mb-8 italic max-w-4xl mx-auto">
+                      "Kristin with an eye doesn't simply take photographs. She tells stories that live and breathed through every frame. Her work is a compelling fusion of visual imagery and heartfelt narrative."
                     </p>
                     <div class="flex items-center justify-center">
-                      <div class="w-16 h-16 rounded-full bg-gradient-to-br from-[#DCCDC3] to-[#6A7D72] flex items-center justify-center mr-4">
+                      <div class="w-16 h-16 rounded-full bg-[var(--color-secondary)] flex items-center justify-center mr-4">
                         <span class="text-white font-bold text-xl">A</span>
                       </div>
                       <div class="text-left">
-                        <h4 class="font-semibold text-[#33423C] text-lg">Anton Cuyler</h4>
-                        <p class="text-[#6A7D72] text-sm">CEO/Founder, The Sozo Foundation</p>
+                        <h4 class="font-semibold text-[var(--color-text)] text-lg">Anton Cuyler</h4>
+                        <p class="text-[var(--color-text)]/70 text-sm">CEO/Founder, The Sozo Foundation</p>
                       </div>
                     </div>
                   </div>
@@ -49,21 +49,21 @@
                 <!-- Testimonial Slide 2 - Denise Malan -->
                 <div class="w-full flex-shrink-0">
                   <div class="p-8 md:p-16 text-center">
-                    <div class="text-[#DCCDC3] mb-8 flex justify-center">
+                    <div class="text-[var(--color-orange)] mb-8 flex justify-center">
                       <svg class="w-16 h-16" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M9.983 3v7.391c0 5.704-3.731 9.57-8.983 10.609l-.995-2.151c2.432-.917 3.995-3.638 3.995-5.849h-4v-10h9.983zm14.017 0v7.391c0 5.704-3.748 9.571-9 10.609l-.996-2.151c2.433-.917 3.996-3.638 3.996-5.849h-3.983v-10h9.983z"/>
                       </svg>
                     </div>
-                    <p class="text-[#33423C] text-xl md:text-2xl font-light leading-relaxed mb-8 italic max-w-4xl mx-auto">
+                    <p class="text-[var(--color-text)] text-xl md:text-2xl font-light leading-relaxed mb-8 italic max-w-4xl mx-auto">
                       "We had a family photoshoot that was incredibly enjoyable in one of the most stunning parts of Cape Town during sunset. Her creativity shines through in every shot — she has a true gift for capturing beautiful, genuine moments."
                     </p>
                     <div class="flex items-center justify-center">
-                      <div class="w-16 h-16 rounded-full bg-gradient-to-br from-[#DCCDC3] to-[#6A7D72] flex items-center justify-center mr-4">
+                      <div class="w-16 h-16 rounded-full bg-[var(--color-secondary)] flex items-center justify-center mr-4">
                         <span class="text-white font-bold text-xl">D</span>
                       </div>
                       <div class="text-left">
-                        <h4 class="font-semibold text-[#33423C] text-lg">Denise Malan</h4>
-                        <p class="text-[#6A7D72] text-sm">Family Session</p>
+                        <h4 class="font-semibold text-[var(--color-text)] text-lg">Denise Malan</h4>
+                        <p class="text-[var(--color-text)]/70 text-sm">Family Session</p>
                       </div>
                     </div>
                   </div>
@@ -72,21 +72,21 @@
                 <!-- Testimonial Slide 3 - Aurelie Bukongo -->
                 <div class="w-full flex-shrink-0">
                   <div class="p-8 md:p-16 text-center">
-                    <div class="text-[#DCCDC3] mb-8 flex justify-center">
+                    <div class="text-[var(--color-orange)] mb-8 flex justify-center">
                       <svg class="w-16 h-16" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M9.983 3v7.391c0 5.704-3.731 9.57-8.983 10.609l-.995-2.151c2.432-.917 3.995-3.638 3.995-5.849h-4v-10h9.983zm14.017 0v7.391c0 5.704-3.748 9.571-9 10.609l-.996-2.151c2.433-.917 3.996-3.638 3.996-5.849h-3.983v-10h9.983z"/>
                       </svg>
                     </div>
-                    <p class="text-[#33423C] text-xl md:text-2xl font-light leading-relaxed mb-8 italic max-w-4xl mx-auto">
+                    <p class="text-[var(--color-text)] text-xl md:text-2xl font-light leading-relaxed mb-8 italic max-w-4xl mx-auto">
                       "From candid emotions to beautifully posed portraits, Kristin made sure no moment was missed. Looking at these photos, we are instantly transported back to the magic of our wedding day."
                     </p>
                     <div class="flex items-center justify-center">
-                      <div class="w-16 h-16 rounded-full bg-gradient-to-br from-[#DCCDC3] to-[#6A7D72] flex items-center justify-center mr-4">
+                      <div class="w-16 h-16 rounded-full bg-[var(--color-secondary)] flex items-center justify-center mr-4">
                         <span class="text-white font-bold text-xl">A</span>
                       </div>
                       <div class="text-left">
-                        <h4 class="font-semibold text-[#33423C] text-lg">Aurelie Bukongo</h4>
-                        <p class="text-[#6A7D72] text-sm">Wedding Photography</p>
+                        <h4 class="font-semibold text-[var(--color-text)] text-lg">Aurelie Bukongo</h4>
+                        <p class="text-[var(--color-text)]/70 text-sm">Wedding Photography</p>
                       </div>
                     </div>
                   </div>
@@ -94,61 +94,29 @@
               </div>
             </div>
 
-            <!-- Carousel Navigation - Bottom Center -->
-            <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center space-x-4">
-              <!-- Previous Button -->
-              <button 
-                @click="prevSlide" 
-                class="w-10 h-10 bg-white/90 hover:bg-white rounded-full shadow-lg flex items-center justify-center transition-all duration-200 hover:scale-110"
-              >
-                <svg class="w-5 h-5 text-[#33423C]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-                </svg>
-              </button>
 
-              <!-- Carousel Indicators -->
-              <div class="flex space-x-2">
-                <button 
-                  v-for="(slide, index) in 3" 
-                  :key="index"
-                  @click="currentSlide = index"
-                  class="w-3 h-3 rounded-full transition-all duration-200"
-                  :class="currentSlide === index ? 'bg-[#33423C]' : 'bg-white/50 hover:bg-white/80'"
-                ></button>
-              </div>
-
-              <!-- Next Button -->
-              <button 
-                @click="nextSlide" 
-                class="w-10 h-10 bg-white/90 hover:bg-white rounded-full shadow-lg flex items-center justify-center transition-all duration-200 hover:scale-110"
-              >
-                <svg class="w-5 h-5 text-[#33423C]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                </svg>
-              </button>
-            </div>
           </div>
         </div>
 
       </div>
-    </section>
+    </BaseSection>
     
     <!-- Contact CTA Section -->
-    <section class="py-16 md:py-24 bg-[#F6F2ED] text-[#33423C]">
+    <BaseSection background="light" padding="lg">
       <div class="container-custom text-center">
-        <h2 class="text-3xl md:text-4xl font-extralight mb-8">
-          Ready to <span class="font-cormorant italic font-normal text-[#6A7D72]">Tell Your Story?</span>
-        </h2>
-        <p class="text-lg max-w-2xl mx-auto mb-10 text-[#6A7D72] font-light">
+        <BaseHeading :level="2" align="center" class="mb-8">
+          Ready to <span class="font-cormorant italic font-normal text-[var(--color-text)]">Tell Your Story?</span>
+        </BaseHeading>
+        <BaseText size="lg" color="primary" :opacity="70" weight="light" class="max-w-2xl mx-auto mb-10" align="center">
           Let's work together to capture your authentic moments and create beautiful memories that last a lifetime.
-        </p>
+        </BaseText>
         <router-link to="/contact">
-          <button class="bg-[#33423C] hover:bg-[#6A7D72] text-[#F6F2ED] font-medium py-3 px-8 transition duration-300 uppercase tracking-wider">
+          <BaseButton variant="primary">
             Book Your Session Today
-          </button>
+          </BaseButton>
         </router-link>
       </div>
-    </section>
+    </BaseSection>
   </div>
 </template>
 
@@ -158,6 +126,10 @@ import HeroSection from '@/components/home/HeroSection.vue'
 import AboutSection from '@/components/home/AboutSection.vue'
 import PortfolioPreview from '@/components/home/PortfolioPreview.vue'
 import PackagesPreview from '@/components/home/PackagesPreview.vue'
+import BaseSection from '@/components/ui/BaseSection.vue'
+import BaseHeading from '@/components/ui/BaseHeading.vue'
+import BaseText from '@/components/ui/BaseText.vue'
+import BaseButton from '@/components/ui/BaseButton.vue'
 
 // Carousel functionality
 const currentSlide = ref(0)
@@ -165,10 +137,6 @@ const totalSlides = 3
 
 const nextSlide = () => {
   currentSlide.value = (currentSlide.value + 1) % totalSlides
-}
-
-const prevSlide = () => {
-  currentSlide.value = currentSlide.value === 0 ? totalSlides - 1 : currentSlide.value - 1
 }
 
 // Auto-advance carousel

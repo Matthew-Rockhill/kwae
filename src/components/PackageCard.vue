@@ -1,66 +1,72 @@
 <template>
-  <div class="bg-white shadow-lg h-full flex flex-col" :class="cardClass">
+  <BaseCard variant="elevated" :full-height="true" padding="none" class="flex flex-col">
     <!-- Header -->
-    <div class="p-8 bg-gradient-to-br from-[#DCCDC3] to-[#E6DFD7]">
-      <h3 class="text-2xl font-light text-[#33423C] mb-2" :class="titleClass">{{ title }}</h3>
-      <p class="text-[#6A7D72] text-sm italic mb-4">{{ subtitle }}</p>
-      <p class="text-2xl font-semibold text-[#33423C]">{{ price }}</p>
-      <p v-if="additionalPricing" class="text-sm text-[#6A7D72] mt-2">{{ additionalPricing }}</p>
+    <div class="p-8 bg-[var(--color-card-header)]">
+      <BaseHeading :level="3" class="mb-2">{{ title }}</BaseHeading>
+      <BaseText tag="p" size="sm" color="secondary" :italic="true" class="mb-4">{{ subtitle }}</BaseText>
+      <BaseText tag="p" size="xl" weight="semibold">{{ price }}</BaseText>
+      <BaseText v-if="additionalPricing" tag="p" size="sm" color="secondary" class="mt-2">{{ additionalPricing }}</BaseText>
     </div>
     
     <!-- Content - grows to fill available space -->
     <div class="p-8 flex-grow flex flex-col">
       <!-- Description -->
-      <p v-if="description" class="text-[#6A7D72] mb-4" :class="descriptionClass">{{ description }}</p>
+      <BaseText v-if="description" color="muted" class="mb-4" :class="descriptionClass">{{ description }}</BaseText>
       
       <!-- Features List -->
       <div class="space-y-4 mb-8 flex-grow">
         <div v-for="feature in features" :key="feature" class="flex items-start gap-3">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#6A7D72] mt-0.5 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
+          <BaseIcon color="secondary" class="mt-0.5">
             <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-          </svg>
-          <span class="text-[#33423C] font-light">{{ feature }}</span>
+          </BaseIcon>
+          <BaseText weight="light">{{ feature }}</BaseText>
         </div>
       </div>
       
       <!-- Additional Content (for complex cards like weddings) -->
       <div v-if="additionalContent" class="mb-6">
-        <p v-if="additionalContent.text" class="text-[#6A7D72] mb-4" v-html="additionalContent.text"></p>
-        <div v-if="additionalContent.bulletPoints" class="space-y-2 mb-4 text-sm text-[#6A7D72]">
-          <p v-for="point in additionalContent.bulletPoints" :key="point">{{ point }}</p>
+        <BaseText v-if="additionalContent.text" color="secondary" class="mb-4" v-html="additionalContent.text"></BaseText>
+        <div v-if="additionalContent.bulletPoints" class="space-y-2 mb-4">
+          <BaseText v-for="point in additionalContent.bulletPoints" :key="point" size="sm" color="secondary">{{ point }}</BaseText>
         </div>
       </div>
       
       <!-- Buttons - always at bottom -->
       <div class="mt-auto">
         <div v-if="buttons.length === 1" class="space-y-3">
-          <button 
+          <BaseButton 
             v-for="button in buttons" 
             :key="button.text"
-            class="w-full transition-all duration-300 px-8 py-3 rounded-none uppercase tracking-wider"
-            :class="button.variant === 'primary' ? 'bg-[#33423C] hover:bg-[#2A3630] text-[#F6F2ED]' : 'bg-transparent hover:bg-[#33423C]/10 text-[#33423C] border border-[#33423C]'"
+            :variant="button.variant"
+            full-width
             @click="$emit('button-click', button.action)"
           >
             {{ button.text }}
-          </button>
+          </BaseButton>
         </div>
         <div v-else class="space-y-3">
-          <button 
+          <BaseButton 
             v-for="button in buttons" 
             :key="button.text"
-            class="w-full transition-all duration-300 px-8 py-3 rounded-none uppercase tracking-wider"
-            :class="button.variant === 'primary' ? 'bg-[#33423C] hover:bg-[#2A3630] text-[#F6F2ED]' : 'bg-transparent hover:bg-[#33423C]/10 text-[#33423C] border border-[#33423C]'"
+            :variant="button.variant"
+            full-width
             @click="$emit('button-click', button.action)"
           >
             {{ button.text }}
-          </button>
+          </BaseButton>
         </div>
       </div>
     </div>
-  </div>
+  </BaseCard>
 </template>
 
 <script setup lang="ts">
+import BaseButton from '@/components/ui/BaseButton.vue'
+import BaseHeading from '@/components/ui/BaseHeading.vue'  
+import BaseText from '@/components/ui/BaseText.vue'
+import BaseCard from '@/components/ui/BaseCard.vue'
+import BaseIcon from '@/components/ui/BaseIcon.vue'
+
 interface Button {
   text: string
   action: string
