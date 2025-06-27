@@ -2,7 +2,7 @@
   <BaseCard variant="elevated" :full-height="true" padding="none" class="flex flex-col">
     <!-- Header -->
     <div class="p-8 bg-[var(--color-card-header)]">
-      <BaseHeading :level="3" class="mb-2">{{ title }}</BaseHeading>
+      <h3 class="text-2xl md:text-3xl font-extralight text-[var(--color-text)] mb-2" :class="uniformHeight ? 'min-h-[5rem] flex items-center' : ''">{{ title }}</h3>
       <BaseText tag="p" size="sm" color="secondary" :italic="true" class="mb-4">{{ subtitle }}</BaseText>
       <BaseText tag="p" size="xl" weight="semibold">{{ price }}</BaseText>
       <BaseText v-if="additionalPricing" tag="p" size="sm" color="secondary" class="mt-2">{{ additionalPricing }}</BaseText>
@@ -90,6 +90,7 @@ interface Props {
   cardClass?: string
   titleClass?: string
   descriptionClass?: string
+  uniformHeight?: boolean
 }
 
 defineProps<Props>()

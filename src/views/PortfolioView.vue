@@ -79,7 +79,7 @@
       />
       
       <!-- CTA Section -->
-      <BaseSection background="accent" padding="lg">
+      <BaseSection background="alabaster" padding="lg">
         <div class="text-center">
           <BaseHeading :level="2" align="center" class="mb-6">
             Ready to <span class="font-cormorant italic font-normal text-[var(--color-text)]">Tell Your Story?</span>
@@ -113,7 +113,7 @@
   import StickyFilterBar from '@/components/ui/StickyFilterBar.vue'
   
   const route = useRoute()
-  const activeCategory = ref(route.params.category || 'branding')
+  const activeCategory = ref(route.params.category || 'family')
   const activeSubcategory = ref<LifestyleSubcategory>('rockpooling') // Default subcategory for lifestyle
   const visibleCount = ref(12) // Number of images to show initially
   const totalItems = ref(0) // Total number of items available

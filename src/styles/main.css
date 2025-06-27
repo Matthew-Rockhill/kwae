@@ -3,28 +3,29 @@
 
 @import "tailwindcss";
 
-@theme {
-  --color-primary: #33423cff;
-  --color-primary-hover: #2A372F;
-  --color-accent: #e6e3dbff;
-  --color-secondary: #6a994eff;
-  --color-secondary-hover: #5B8A40;
-  --color-light: #fffffcff;
-  --color-light-accent: #e6e3dbff;
-  --color-text: #33423cff;
-  --color-text-light: #fffffcff;
-  --color-orange: #ff7f11ff;
-  --color-orange-hover: #E6700F;
-  --color-card-header: #d4c7b8ff;
-  
-  --font-montserrat: 'Montserrat', sans-serif;
-  --font-cormorant: 'Cormorant Garamond', serif;
-  
-  --breakpoint-sm: 640px;
-  --breakpoint-md: 768px;
-  --breakpoint-lg: 1024px;
-  --breakpoint-xl: 1280px;
-  --breakpoint-2xl: 1536px;
+  @theme {
+    --color-primary: #33423cff;
+    --color-primary-hover: #2A372F;
+    --color-accent: #e6e3dbff;
+    --color-secondary: #6a994eff;
+    --color-secondary-hover: #5B8A40;
+    --color-light: #fffffcff;
+    --color-light-accent: #e6e3dbff;
+    --color-alabaster: #f7f5f2ff;
+    --color-text: #33423cff;
+    --color-text-light: #fffffcff;
+    --color-orange: #ff7f11ff;
+    --color-orange-hover: #E6700F;
+    --color-card-header: #d4c7b8ff;
+    
+    --font-montserrat: 'Montserrat', sans-serif;
+    --font-cormorant: 'Cormorant Garamond', serif;
+    
+    --breakpoint-sm: 640px;
+    --breakpoint-md: 768px;
+    --breakpoint-lg: 1024px;
+    --breakpoint-xl: 1280px;
+    --breakpoint-2xl: 1536px;
   
   --spacing-1: 0.25rem;
   --spacing-2: 0.5rem;

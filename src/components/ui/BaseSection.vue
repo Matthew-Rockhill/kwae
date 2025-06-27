@@ -10,7 +10,7 @@
 import { computed } from 'vue'
 
 interface Props {
-  background?: 'light' | 'accent' | 'primary' | 'transparent'
+  background?: 'light' | 'accent' | 'primary' | 'transparent' | 'alabaster'
   padding?: 'sm' | 'md' | 'lg' | 'xl' | 'none'
   fullWidth?: boolean
 }
@@ -26,7 +26,8 @@ const sectionClasses = computed(() => {
     light: 'bg-[var(--color-light)]',
     accent: 'bg-[var(--color-accent)]',
     primary: 'bg-[var(--color-text)]',
-    transparent: 'bg-transparent'
+    transparent: 'bg-transparent',
+    alabaster: 'bg-[var(--color-alabaster)]'
   }
   
   const paddingClasses = {

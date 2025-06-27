@@ -27,8 +27,8 @@
             <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" class="text-[#DCCDC3] hover:text-white transition-colors">
               <font-awesome-icon :icon="['fab', 'facebook']" class="h-12 w-12" />
             </a>
-            <a href="https://pinterest.com" target="_blank" rel="noopener noreferrer" class="text-[#DCCDC3] hover:text-white transition-colors">
-              <font-awesome-icon :icon="['fab', 'pinterest']" class="h-12 w-12" />
+            <a href="https://linkedin.com/in/kristinwithaneye" target="_blank" rel="noopener noreferrer" class="text-[#DCCDC3] hover:text-white transition-colors">
+              <font-awesome-icon :icon="['fab', 'linkedin']" class="h-12 w-12" />
             </a>
           </div>
         </div>

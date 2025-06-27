@@ -33,7 +33,7 @@ const buttonClasses = computed(() => {
   const baseClasses = 'transition-all duration-300 rounded-none uppercase tracking-wider font-light'
   
   const variantClasses = {
-    primary: 'bg-[var(--color-orange)] hover:bg-[var(--color-orange-hover)] text-[var(--color-text-light)]',
+    primary: 'bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] text-[var(--color-text-light)]',
     secondary: 'bg-transparent hover:bg-[var(--color-secondary)]/10 text-[var(--color-secondary)] border border-[var(--color-secondary)]',
     ghost: 'bg-transparent hover:bg-[var(--color-text)]/5 text-[var(--color-text)]',
     white: 'bg-white hover:bg-gray-100 text-[var(--color-text)] border border-white'

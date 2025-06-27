@@ -15,14 +15,14 @@
     </BaseSection>
       
     <!-- Personal Photography Section -->
-    <section class="py-16 md:py-24 bg-[var(--color-accent)]">
+    <section id="family-sessions" class="py-16 md:py-24 bg-[var(--color-accent)]">
         <div class="container-custom">
         <div class="text-center max-w-3xl mx-auto mb-16">
           <h2 class="text-3xl md:text-4xl font-extralight text-[var(--color-text)] mb-4">Portrait & Family Sessions</h2>
           <p class="text-[var(--color-text)]/70 text-lg font-light">
             Earthy, heart-led storytelling for individuals, couples, and families.
           </p>
-          <p class="text-[var(--color-text)]/60 text-sm font-light mt-4 italic">
+          <p class="text-[var(--color-secondary)] text-sm font-light mt-4 italic">
             *Travel beyond 50km from Cape Town may include an additional fee.
           </p>
         </div>
@@ -44,7 +44,7 @@
       </section>
       
     <!-- Lifestyle Photography Section -->
-    <section class="py-16 md:py-24 bg-[var(--color-light)]">
+    <section id="lifestyle-events" class="py-16 md:py-24 bg-[var(--color-light)]">
       <div class="container-custom">
         <div class="text-center max-w-3xl mx-auto mb-16">
           <h2 class="text-3xl md:text-4xl font-extralight text-[var(--color-text)] mb-4">
@@ -53,7 +53,7 @@
           <p class="text-[var(--color-text)]/70 text-lg font-light">
             For celebrations, content creation, and soulful wedding documentation.
           </p>
-          <p class="text-[var(--color-text)]/60 text-sm font-light mt-4 italic">
+          <p class="text-[var(--color-secondary)] text-sm font-light mt-4 italic">
             *Travel beyond 50km from Cape Town may include an additional fee.
           </p>
         </div>
@@ -75,14 +75,14 @@
     </section>
       
     <!-- Organisation Section -->
-    <section class="py-16 md:py-24 bg-[var(--color-accent)]">
+    <section id="organisation-storytelling" class="py-16 md:py-24 bg-[var(--color-accent)]">
       <div class="container-custom">
         <div class="text-center max-w-3xl mx-auto mb-16">
           <h2 class="text-3xl md:text-4xl font-extralight text-[var(--color-text)] mb-4">Storytelling for Organisations — The Impact Box</h2>
           <p class="text-[var(--color-text)]/70 text-lg font-light">
             For NGOs, foundations, and changemakers seeking authentic, visual storytelling.
           </p>
-          <p class="text-[var(--color-text)]/60 text-sm font-light mt-4 italic">
+          <p class="text-[var(--color-secondary)] text-sm font-light mt-4 italic">
             Each package includes access to an Impact Toolkit — a resource to help amplify your story through images, words, and strategy.
           </p>
         </div>
@@ -94,10 +94,10 @@
             :title="pkg.title"
             :subtitle="pkg.subtitle"
             :price="pkg.price"
-
             :description="pkg.description"
             :features="pkg.features"
             :buttons="pkg.buttons"
+            :uniform-height="true"
             @button-click="handleButtonClick"
           />
         </div>
@@ -218,7 +218,7 @@ const lifestylePackages = [
 
 const organizationPackages = [
   {
-    title: 'Raw Thread',
+    title: 'The Raw Thread',
     subtitle: 'Short Story Package',
     price: 'R4,000',
     description: 'Ideal for events, new launches, or a content refresh.',

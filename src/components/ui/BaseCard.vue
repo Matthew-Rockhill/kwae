@@ -21,7 +21,7 @@ const props = withDefaults(defineProps<Props>(), {
   padding: 'lg',
   background: 'light',
   shadow: true,
-  rounded: false,
+  rounded: true,
   fullHeight: false
 })
 

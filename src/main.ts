@@ -15,10 +15,10 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 /* import specific icons */
-import { faInstagram, faFacebook, faPinterest } from '@fortawesome/free-brands-svg-icons'
+import { faInstagram, faFacebook, faLinkedin } from '@fortawesome/free-brands-svg-icons'
 
 /* add icons to the library */
-library.add(faInstagram, faFacebook, faPinterest)
+library.add(faInstagram, faFacebook, faLinkedin)
 
 // Create application
 const app = createApp(App)

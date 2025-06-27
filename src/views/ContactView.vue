@@ -116,10 +116,10 @@
           <!-- Contact Info Column -->
           <div class="lg:col-span-2">
             <!-- Contact Information -->
-            <BaseCard variant="default" class="p-8 md:p-10 mb-8">
-              <BaseHeading :level="2" class="mb-6">Contact Information</BaseHeading>
+            <BaseCard variant="default" class="p-6 md:p-8 mb-6">
+              <BaseHeading :level="2" class="mb-4">Contact Information</BaseHeading>
               
-              <div class="space-y-6">
+              <div class="space-y-4">
                 <div class="flex items-start">
                   <BaseIcon class="mr-3 mt-0.5">
                     <EnvelopeIcon class="h-6 w-6" />
@@ -156,24 +156,24 @@
             </BaseCard>
             
             <!-- Social Media Links -->
-            <BaseCard variant="default" class="p-8 md:p-10">
-              <BaseHeading :level="2" class="mb-6">Follow Along</BaseHeading>
+            <BaseCard variant="default" class="p-6 md:p-8">
+              <BaseHeading :level="2" class="mb-4">Follow Along</BaseHeading>
               
-              <div class="flex space-x-4">
-                <a href="https://instagram.com/kristin_with.an.eye" target="_blank" class="bg-[var(--color-primary)] text-[var(--color-light)] p-4 rounded-full hover:bg-[var(--color-secondary)] hover:shadow-lg transition-all flex items-center justify-center">
-                  <font-awesome-icon :icon="['fab', 'instagram']" class="text-3xl" />
+              <div class="flex justify-start space-x-4 mb-4">
+                <a href="https://instagram.com/kristin_with.an.eye" target="_blank" class="bg-[var(--color-primary)] text-[var(--color-light)] p-2.5 rounded-full hover:bg-[var(--color-secondary)] hover:shadow-lg transition-all flex items-center justify-center">
+                  <font-awesome-icon :icon="['fab', 'instagram']" class="text-xl" />
                 </a>
                 
-                <a href="https://facebook.com/kristinwithaneye" target="_blank" class="bg-[var(--color-primary)] text-[var(--color-light)] p-4 rounded-full hover:bg-[var(--color-secondary)] hover:shadow-lg transition-all flex items-center justify-center">
-                  <font-awesome-icon :icon="['fab', 'facebook']" class="text-3xl" />
+                <a href="https://facebook.com/kristinwithaneye" target="_blank" class="bg-[var(--color-primary)] text-[var(--color-light)] p-2.5 rounded-full hover:bg-[var(--color-secondary)] hover:shadow-lg transition-all flex items-center justify-center">
+                  <font-awesome-icon :icon="['fab', 'facebook']" class="text-xl" />
                 </a>
                 
-                <a href="https://pinterest.com/kristinwithaneye" target="_blank" class="bg-[var(--color-primary)] text-[var(--color-light)] p-4 rounded-full hover:bg-[var(--color-secondary)] hover:shadow-lg transition-all flex items-center justify-center">
-                  <font-awesome-icon :icon="['fab', 'pinterest']" class="text-3xl" />
+                <a href="https://linkedin.com/in/kristinwithaneye" target="_blank" class="bg-[var(--color-primary)] text-[var(--color-light)] p-2.5 rounded-full hover:bg-[var(--color-secondary)] hover:shadow-lg transition-all flex items-center justify-center">
+                  <font-awesome-icon :icon="['fab', 'linkedin']" class="text-xl" />
                 </a>
               </div>
               
-              <BaseText color="primary" :opacity="70" class="mt-6">
+              <BaseText color="primary" :opacity="70" class="text-left text-sm leading-relaxed">
                 Follow along for behind-the-scenes content, photography tips, and to see my latest work!
               </BaseText>
             </BaseCard>
