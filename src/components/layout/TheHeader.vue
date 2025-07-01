@@ -59,8 +59,6 @@
       <!-- Booking Modal -->
       <BookingModal
         :is-open="showBookingModal"
-        :package-title="'General Inquiry'"
-        :package-type="'General'"
         @close="closeBookingModal"
       />
     </header>

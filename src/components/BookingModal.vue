@@ -26,7 +26,7 @@
           >
             <DialogPanel class="w-full max-w-2xl transform overflow-hidden rounded-2xl bg-[var(--color-light)] p-6 text-left align-middle shadow-xl transition-all">
               <DialogTitle as="h3" class="font-montserrat text-2xl font-medium text-[var(--color-text)] mb-4">
-                Book Your {{ packageTitle }} Session
+                Book Your Session
               </DialogTitle>
               
               <p class="text-[var(--color-text)]/70 text-sm mb-6">
@@ -34,7 +34,61 @@
                 <a href="mailto:hello@kristinmathilde.com" class="text-[var(--color-secondary)] hover:underline">hello@kristinmathilde.com</a>
               </p>
 
-              <form @submit.prevent="submitForm" class="mt-4">
+              <!-- Success Message -->
+              <div v-if="submitSuccess" class="mb-6 p-4 bg-[var(--color-secondary)]/10 border border-[var(--color-secondary)]/20 rounded-lg">
+                <div class="flex items-center">
+                  <svg class="w-5 h-5 text-[var(--color-secondary)] mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                  </svg>
+                  <span class="text-[var(--color-secondary)] font-medium">Success!</span>
+                </div>
+                <p class="text-[var(--color-text)] text-sm mt-1">
+                  Your booking request has been submitted successfully. I'll get back to you within 24-48 hours!
+                </p>
+              </div>
+
+              <!-- Error Message -->
+              <div v-if="submitError" class="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+                <div class="flex items-center">
+                  <svg class="w-5 h-5 text-red-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                  </svg>
+                  <span class="text-red-700 font-medium">Error</span>
+                </div>
+                <p class="text-red-600 text-sm mt-1">{{ submitError }}</p>
+              </div>
+
+              <form @submit.prevent="submitForm" class="mt-4" v-if="!submitSuccess">
+                <!-- Package Selection -->
+                <div class="mb-6">
+                  <label for="package" class="block text-[var(--color-text)] font-medium mb-2">Package/Service *</label>
+                  <select 
+                    id="package"
+                    v-model="formData.selectedPackage"
+                    required
+                    class="w-full px-4 py-2 border border-[var(--color-card-header)] focus:outline-none focus:ring-2 focus:ring-[var(--color-secondary)] focus:border-transparent rounded-lg"
+                    :class="{ 'border-red-500': errors.selectedPackage }"
+                  >
+                    <option value="">Select a package...</option>
+                    <optgroup label="Portrait & Family Sessions">
+                      <option value="dust-light">Dust & Light - Mini Session (R1,500)</option>
+                      <option value="field-frame">Field & Frame - Full Session (R2,500)</option>
+                      <option value="soil-sun">Soil & Sun - Golden Hour Session (R4,000)</option>
+                    </optgroup>
+                    <optgroup label="Lifestyle & Events">
+                      <option value="lifestyle-event">Lifestyle & Events (From R1,500/hour)</option>
+                      <option value="wedding">Wedding Photography (Custom Packages)</option>
+                    </optgroup>
+                    <optgroup label="Organisational Storytelling">
+                      <option value="raw-thread">The Raw Thread - Short Story Package (R4,000)</option>
+                      <option value="narrative-journey">The Narrative Journey - Campaigns & Reports (R6,500)</option>
+                      <option value="footpath-journey">The Footpath Journey - Long-Term Partnership (From R6,000/month)</option>
+                    </optgroup>
+                    <option value="custom">Custom Package/Other</option>
+                  </select>
+                  <p v-if="errors.selectedPackage" class="text-red-500 text-sm mt-1">{{ errors.selectedPackage }}</p>
+                </div>
+
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                   <!-- First Name Input -->
                   <div>
@@ -104,18 +158,6 @@
                   />
                 </div>
 
-                <!-- Event Location -->
-                <div class="mb-6">
-                  <label for="eventLocation" class="block text-[var(--color-text)] font-medium mb-2">Event Location</label>
-                  <input 
-                    type="text" 
-                    id="eventLocation"
-                    v-model="formData.eventLocation"
-                    placeholder="Where will the session take place?"
-                    class="w-full px-4 py-2 border border-[var(--color-card-header)] focus:outline-none focus:ring-2 focus:ring-[var(--color-secondary)] focus:border-transparent rounded-lg"
-                  />
-                </div>
-
                 <!-- Additional Notes -->
                 <div class="mb-6">
                   <label for="additionalNotes" class="block text-[var(--color-text)] font-medium mb-2">Additional Notes</label>
@@ -149,6 +191,17 @@
                   </button>
                 </div>
               </form>
+              
+              <!-- Close button for success state -->
+              <div v-if="submitSuccess" class="mt-6 flex justify-end">
+                <button
+                  type="button"
+                  class="btn-primary px-4 py-2"
+                  @click="closeModal"
+                >
+                  Close
+                </button>
+              </div>
             </DialogPanel>
           </TransitionChild>
         </div>
@@ -158,14 +211,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
+import { ref, reactive, watch } from 'vue'
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import { ArrowPathIcon } from '@heroicons/vue/24/outline'
+import { bookingService } from '@/services/bookingService'
 
 const props = defineProps<{
   isOpen: boolean
-  packageTitle: string
-  packageType: string
+  preSelectedPackage?: string
   onClose?: () => void
 }>()
 
@@ -178,37 +231,62 @@ const submitSuccess = ref(false)
 const submitError = ref('')
 
 const formData = reactive({
+  selectedPackage: '',
   firstName: '',
   lastName: '',
   email: '',
   phone: '',
   eventDate: '',
-  eventLocation: '',
-  additionalNotes: '',
-  packageType: props.packageType
+  additionalNotes: ''
 })
 
 const errors = reactive({
+  selectedPackage: '',
   firstName: '',
   lastName: '',
   email: '',
   phone: '',
   eventDate: '',
-  eventLocation: '',
   additionalNotes: ''
 })
+
+// Watch for pre-selected package
+watch(() => props.preSelectedPackage, (newPackage) => {
+  if (newPackage) {
+    formData.selectedPackage = newPackage
+  }
+}, { immediate: true })
+
+// Package mapping for pre-selection
+const packageMapping: { [key: string]: string } = {
+  'book-dust-light': 'dust-light',
+  'book-field-frame': 'field-frame',
+  'book-soil-sun': 'soil-sun',
+  'book-lifestyle-event': 'lifestyle-event',
+  'wedding-quote': 'wedding',
+  'book-raw-thread': 'raw-thread',
+  'book-narrative': 'narrative-journey',
+  'book-footpath': 'footpath-journey'
+}
+
+// Map action to package value
+if (props.preSelectedPackage && packageMapping[props.preSelectedPackage]) {
+  formData.selectedPackage = packageMapping[props.preSelectedPackage]
+}
 
 const validateForm = () => {
   let isValid = true
   
   // Reset errors
-  errors.firstName = ''
-  errors.lastName = ''
-  errors.email = ''
-  errors.phone = ''
-  errors.eventDate = ''
-  errors.eventLocation = ''
-  errors.additionalNotes = ''
+  Object.keys(errors).forEach(key => {
+    errors[key as keyof typeof errors] = ''
+  })
+  
+  // Validate package selection
+  if (!formData.selectedPackage.trim()) {
+    errors.selectedPackage = 'Please select a package'
+    isValid = false
+  }
   
   // Validate first name
   if (!formData.firstName.trim()) {
@@ -237,18 +315,6 @@ const validateForm = () => {
     isValid = false
   }
   
-  // Validate event date
-  if (!formData.eventDate.trim()) {
-    errors.eventDate = 'Date is required'
-    isValid = false
-  }
-  
-  // Validate event location
-  if (!formData.eventLocation.trim()) {
-    errors.eventLocation = 'Event location is required'
-    isValid = false
-  }
-  
   return isValid
 }
 
@@ -259,18 +325,36 @@ const submitForm = async () => {
   submitError.value = ''
   
   try {
-    // Here you would typically send the form data to your backend
-    // For now, we'll just simulate a successful submission
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    submitSuccess.value = true
-    formData.firstName = ''
-    formData.lastName = ''
-    formData.email = ''
-    formData.phone = ''
-    formData.eventDate = ''
-    formData.eventLocation = ''
-    formData.additionalNotes = ''
+    const bookingData = {
+      selectedPackage: formData.selectedPackage,
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      email: formData.email,
+      phone: formData.phone,
+      eventDate: formData.eventDate,
+      additionalNotes: formData.additionalNotes,
+      submittedAt: new Date().toISOString()
+    }
+    
+    const result = await bookingService.submitBooking(bookingData)
+    
+    if (result.success) {
+      submitSuccess.value = true
+      
+      // Reset form
+      Object.keys(formData).forEach(key => {
+        formData[key as keyof typeof formData] = ''
+      })
+      
+      // Show success message for a few seconds then close
+      setTimeout(() => {
+        closeModal()
+      }, 3000)
+    } else {
+      submitError.value = result.message
+    }
   } catch (error) {
+    console.error('Booking submission error:', error)
     submitError.value = 'Failed to submit booking. Please try again.'
   } finally {
     isSubmitting.value = false
@@ -281,5 +365,10 @@ const closeModal = () => {
   emit('close')
   submitSuccess.value = false
   submitError.value = ''
+  
+  // Reset form
+  Object.keys(formData).forEach(key => {
+    formData[key as keyof typeof formData] = ''
+  })
 }
 </script> 
