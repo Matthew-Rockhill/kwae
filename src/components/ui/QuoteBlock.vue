@@ -19,7 +19,5 @@ interface Props {
   spacing?: string
 }
 
-const props = withDefaults(defineProps<Props>(), {
-  spacing: 'mb-6'
-})
+const { spacing = 'mb-6' } = defineProps<Props>()
 </script> 

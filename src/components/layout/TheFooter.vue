@@ -21,13 +21,13 @@
         <div>
           <h3 class="text-xl font-light mb-4">Connect</h3>
           <div class="flex space-x-4">
-            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="text-[#DCCDC3] hover:text-white transition-colors">
+            <a href="https://www.instagram.com/kristin_with.an.eye/" target="_blank" rel="noopener noreferrer" class="text-[#DCCDC3] hover:text-white transition-colors">
               <font-awesome-icon :icon="['fab', 'instagram']" class="h-12 w-12" />
             </a>
-            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" class="text-[#DCCDC3] hover:text-white transition-colors">
+            <a href="https://www.facebook.com/people/Kristin-With-An-Eye/100071698255681/" target="_blank" rel="noopener noreferrer" class="text-[#DCCDC3] hover:text-white transition-colors">
               <font-awesome-icon :icon="['fab', 'facebook']" class="h-12 w-12" />
             </a>
-            <a href="https://linkedin.com/in/kristinwithaneye" target="_blank" rel="noopener noreferrer" class="text-[#DCCDC3] hover:text-white transition-colors">
+            <a href="https://www.linkedin.com/company/kristin-with-an-eye/" target="_blank" rel="noopener noreferrer" class="text-[#DCCDC3] hover:text-white transition-colors">
               <font-awesome-icon :icon="['fab', 'linkedin']" class="h-12 w-12" />
             </a>
           </div>
