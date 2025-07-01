@@ -101,7 +101,7 @@
   </template>
   
   <script setup lang="ts">
-  import { ref, computed, onMounted } from 'vue'
+  import { ref, computed, onMounted, watch } from 'vue'
   import { useRoute } from 'vue-router'
   import ImageLightbox from '@/components/ImageLightbox.vue'
   import BaseSection from '@/components/ui/BaseSection.vue'
@@ -113,7 +113,7 @@
   import StickyFilterBar from '@/components/ui/StickyFilterBar.vue'
   
   const route = useRoute()
-  const activeCategory = ref(route.params.category || 'family')
+  const activeCategory = ref((route.query.category as string) || 'family')
   const activeSubcategory = ref<LifestyleSubcategory>('rockpooling') // Default subcategory for lifestyle
   const visibleCount = ref(12) // Number of images to show initially
   const totalItems = ref(0) // Total number of items available
@@ -130,6 +130,16 @@
     { id: 'lifestyle', name: 'Lifestyle' },
     { id: 'branding', name: 'Branding' }
   ]
+
+  // Watch for route changes to update category
+  watch(
+    () => route.query.category,
+    (newCategory) => {
+      if (newCategory && typeof newCategory === 'string') {
+        activeCategory.value = newCategory
+      }
+    }
+  )
   
   // Lightbox state
   const lightboxOpen = ref(false)

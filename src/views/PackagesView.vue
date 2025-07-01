@@ -37,7 +37,7 @@
             :description="pkg.description"
             :features="pkg.features"
             :buttons="pkg.buttons"
-            @button-click="handleButtonClick"
+            @button-click="openBookingModal"
           />
         </div>
         </div>
@@ -68,7 +68,7 @@
             :description="pkg.description"
             :features="pkg.features"
             :buttons="pkg.buttons"
-            @button-click="handleButtonClick"
+            @button-click="openBookingModal"
           />
         </div>
       </div>
@@ -98,7 +98,7 @@
             :features="pkg.features"
             :buttons="pkg.buttons"
             :uniform-height="true"
-            @button-click="handleButtonClick"
+            @button-click="openBookingModal"
           />
         </div>
       </div>
@@ -125,15 +125,55 @@
         </div>
       </div>
     </BaseSection>
+
+    <!-- Booking Modal -->
+    <BookingModal
+      :is-open="showBookingModal"
+      :pre-selected-package="selectedPackageAction"
+      @close="closeBookingModal"
+    />
     </div>
   </template>
   
   <script setup lang="ts">
+import { ref, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
 import PackageCard from '@/components/PackageCard.vue'
+import BookingModal from '@/components/BookingModal.vue'
 import BaseSection from '@/components/ui/BaseSection.vue'
 import BaseHeading from '@/components/ui/BaseHeading.vue'
 import BaseText from '@/components/ui/BaseText.vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
+
+const route = useRoute()
+const showBookingModal = ref(false)
+const selectedPackageAction = ref('')
+
+// Handle anchor scrolling on page load
+onMounted(() => {
+  // Small delay to ensure the page is fully rendered
+  setTimeout(() => {
+    if (route.hash) {
+      const element = document.querySelector(route.hash)
+      if (element) {
+        element.scrollIntoView({ 
+          behavior: 'smooth',
+          block: 'start'
+        })
+      }
+    }
+  }, 100)
+})
+
+const openBookingModal = (packageAction: string) => {
+  selectedPackageAction.value = packageAction
+  showBookingModal.value = true
+}
+
+const closeBookingModal = () => {
+  showBookingModal.value = false
+  selectedPackageAction.value = ''
+}
 
 // Package data
 const portraitPackages = [
@@ -262,9 +302,4 @@ const organizationPackages = [
     ]
   }
 ]
-
-const handleButtonClick = (action: string) => {
-  console.log('Button clicked:', action)
-  // Handle different actions here
-}
   </script>
