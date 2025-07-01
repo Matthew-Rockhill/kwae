@@ -62,7 +62,7 @@
 
 <script setup lang="ts">
 import BaseButton from '@/components/ui/BaseButton.vue'
-import BaseHeading from '@/components/ui/BaseHeading.vue'  
+// import BaseHeading from '@/components/ui/BaseHeading.vue' // Removed - not used  
 import BaseText from '@/components/ui/BaseText.vue'
 import BaseCard from '@/components/ui/BaseCard.vue'
 import BaseIcon from '@/components/ui/BaseIcon.vue'

@@ -108,7 +108,7 @@
     <BaseSection background="light" padding="lg">
       <div class="text-center">
         <BaseHeading :level="2" align="center" class="mb-6">Interested in working together?</BaseHeading>
-        <BaseText size="lg" color="primary" opacity="90" class="max-w-2xl mx-auto mb-10" align="center">
+        <BaseText size="lg" color="primary" :opacity="90" class="max-w-2xl mx-auto mb-10" align="center">
           "Every story is unique, and I'd love to help you tell yours. If you're unsure which package fits
           your needs or if you'd like a custom quote, let's chat!"
         </BaseText>

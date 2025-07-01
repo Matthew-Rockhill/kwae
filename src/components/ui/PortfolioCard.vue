@@ -19,10 +19,10 @@
           <BaseText v-if="image.category" tag="span" size="sm" color="primary" :opacity="80" class="uppercase tracking-wider mb-2">
             {{ image.category }}
           </BaseText>
-          <BaseHeading v-if="image.title" :level="3" color="white" class="mb-2">
+          <BaseHeading v-if="image.title" :level="3" color="primary" class="mb-2 text-white">
             {{ image.title }}
           </BaseHeading>
-          <BaseText v-if="image.description" size="sm" color="white" class="line-clamp-2" opacity="80">
+          <BaseText v-if="image.description" size="sm" color="white" class="line-clamp-2" :opacity="80">
             {{ image.description }}
           </BaseText>
         </div>

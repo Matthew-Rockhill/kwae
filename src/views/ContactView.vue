@@ -160,15 +160,15 @@
               <BaseHeading :level="2" class="mb-4">Follow Along</BaseHeading>
               
               <div class="flex justify-start space-x-4 mb-4">
-                <a href="https://instagram.com/kristin_with.an.eye" target="_blank" class="bg-[var(--color-primary)] text-[var(--color-light)] p-2.5 rounded-full hover:bg-[var(--color-secondary)] hover:shadow-lg transition-all flex items-center justify-center">
+                <a href="https://www.instagram.com/kristin_with.an.eye/" target="_blank" class="bg-[var(--color-primary)] text-[var(--color-light)] p-2.5 rounded-full hover:bg-[var(--color-secondary)] hover:shadow-lg transition-all flex items-center justify-center">
                   <font-awesome-icon :icon="['fab', 'instagram']" class="text-xl" />
                 </a>
                 
-                <a href="https://facebook.com/kristinwithaneye" target="_blank" class="bg-[var(--color-primary)] text-[var(--color-light)] p-2.5 rounded-full hover:bg-[var(--color-secondary)] hover:shadow-lg transition-all flex items-center justify-center">
+                <a href="https://www.facebook.com/people/Kristin-With-An-Eye/100071698255681/" target="_blank" class="bg-[var(--color-primary)] text-[var(--color-light)] p-2.5 rounded-full hover:bg-[var(--color-secondary)] hover:shadow-lg transition-all flex items-center justify-center">
                   <font-awesome-icon :icon="['fab', 'facebook']" class="text-xl" />
                 </a>
                 
-                <a href="https://linkedin.com/in/kristinwithaneye" target="_blank" class="bg-[var(--color-primary)] text-[var(--color-light)] p-2.5 rounded-full hover:bg-[var(--color-secondary)] hover:shadow-lg transition-all flex items-center justify-center">
+                <a href="https://www.linkedin.com/company/kristin-with-an-eye/" target="_blank" class="bg-[var(--color-primary)] text-[var(--color-light)] p-2.5 rounded-full hover:bg-[var(--color-secondary)] hover:shadow-lg transition-all flex items-center justify-center">
                   <font-awesome-icon :icon="['fab', 'linkedin']" class="text-xl" />
                 </a>
               </div>
