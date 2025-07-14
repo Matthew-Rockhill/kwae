@@ -75,13 +75,15 @@
         <BaseText size="lg" color="primary" :opacity="70" weight="light" class="max-w-2xl mx-auto mb-10" align="center">
           Let's work together to capture your authentic moments and create beautiful memories that last a lifetime.
         </BaseText>
-        <router-link to="/contact">
-          <BaseButton variant="primary">
-            Book Your Session Today
-          </BaseButton>
-        </router-link>
+        <BaseButton variant="primary" @click="openBookingModal">
+          Book Your Session Today
+        </BaseButton>
       </div>
     </BaseSection>
+    <BookingModal
+      :is-open="showBookingModal"
+      @close="closeBookingModal"
+    />
   </div>
 </template>
 
@@ -95,6 +97,7 @@ import BaseSection from '@/components/ui/BaseSection.vue'
 import BaseHeading from '@/components/ui/BaseHeading.vue'
 import BaseText from '@/components/ui/BaseText.vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
+import BookingModal from '@/components/BookingModal.vue'
 
 // Testimonials data
 const testimonials = ref([
@@ -203,5 +206,13 @@ onMounted(() => {
 onUnmounted(() => {
   stopAutoAdvance()
 })
+
+const showBookingModal = ref(false)
+const openBookingModal = () => {
+  showBookingModal.value = true
+}
+const closeBookingModal = () => {
+  showBookingModal.value = false
+}
 
 </script>

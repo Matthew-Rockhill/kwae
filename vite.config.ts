@@ -21,5 +21,28 @@ export default defineConfig({
   },
   server: {
     host: true
+  },
+  build: {
+    // Optimize for production
+    target: 'es2015',
+    outDir: 'dist',
+    assetsDir: 'assets',
+    // Chunk size optimization
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['vue', 'vue-router'],
+          ui: ['@headlessui/vue', '@heroicons/vue']
+        }
+      }
+    },
+    // Reduce bundle size
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true
+      }
+    }
   }
 })

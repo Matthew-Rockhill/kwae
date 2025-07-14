@@ -87,16 +87,21 @@
           <BaseText size="lg" color="primary" :opacity="70" class="max-w-2xl mx-auto mb-10" align="center">
             Let's work together to capture your authentic moments and create beautiful memories that last a lifetime.
           </BaseText>
-          <router-link to="/contact">
-            <BaseButton 
-              variant="primary"
-              class="transform transition-transform duration-300 hover:scale-105"
-            >
-              Book Your Story
-            </BaseButton>
-          </router-link>
+          <BaseButton 
+            variant="primary"
+            class="transform transition-transform duration-300 hover:scale-105"
+            @click="openBookingModal"
+          >
+            Book Your Story
+          </BaseButton>
         </div>
       </BaseSection>
+      
+      <!-- Booking Modal -->
+      <BookingModal
+        :is-open="showBookingModal"
+        @close="closeBookingModal"
+      />
     </div>
   </template>
   
@@ -111,6 +116,7 @@
   import FilterButton from '@/components/ui/FilterButton.vue'
   import PortfolioCard from '@/components/ui/PortfolioCard.vue'
   import StickyFilterBar from '@/components/ui/StickyFilterBar.vue'
+  import BookingModal from '@/components/BookingModal.vue'
   
   const route = useRoute()
   const activeCategory = ref((route.query.category as string) || 'family')
@@ -122,6 +128,15 @@
   const portfolio = ref<any[]>([])
   const loading = ref(false)
   const error = ref('')
+  
+  // Booking modal state
+  const showBookingModal = ref(false)
+  const openBookingModal = () => {
+    showBookingModal.value = true
+  }
+  const closeBookingModal = () => {
+    showBookingModal.value = false
+  }
   
   // Categories
   const categories = [

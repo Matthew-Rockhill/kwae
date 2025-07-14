@@ -20,7 +20,8 @@ class BookingService {
 
   constructor() {
     // You can set this to your actual API endpoint
-    this.apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001/api'
+    this.apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 
+      (import.meta.env.PROD ? 'https://kristin-with-an-eye.vercel.app/api' : 'http://localhost:3001/api')
   }
 
   /**
