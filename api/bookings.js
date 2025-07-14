@@ -116,20 +116,21 @@ async function sendBookingEmails(bookingData) {
   }
 }
 
+const allowedOrigins = [
+  'https://kristin-with-an-eye.vercel.app',
+  'https://www.kristinmathilde.com'
+];
+
 module.exports = async (req, res) => {
-  // Set CORS headers
-  const allowedOrigins = [
-    'https://kristin-with-an-eye.vercel.app',
-    'https://www.kristinmathilde.com'
-  ];
   const origin = req.headers.origin;
   if (allowedOrigins.includes(origin)) {
     res.setHeader('Access-Control-Allow-Origin', origin);
   }
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Vary', 'Origin');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  
-  // Handle preflight requests
+  // res.setHeader('Access-Control-Allow-Credentials', 'true'); // Uncomment if needed
+
   if (req.method === 'OPTIONS') {
     res.status(200).end();
     return;
