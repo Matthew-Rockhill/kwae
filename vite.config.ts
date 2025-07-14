@@ -35,14 +35,7 @@ export default defineConfig({
           ui: ['@headlessui/vue', '@heroicons/vue']
         }
       }
-    },
-    // Reduce bundle size
-    minify: 'terser',
-    terserOptions: {
-      compress: {
-        drop_console: true,
-        drop_debugger: true
-      }
     }
+    // Removed minify: 'terser' and terserOptions to use default esbuild
   }
 })
