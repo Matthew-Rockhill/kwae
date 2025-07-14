@@ -339,7 +339,7 @@ const submitForm = async () => {
     const result = await bookingService.submitBooking(bookingData)
     
     if (result.success) {
-      submitSuccess.value = true
+    submitSuccess.value = true
       
       // Reset form
       Object.keys(formData).forEach(key => {

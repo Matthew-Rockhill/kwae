@@ -1,6 +1,6 @@
 <template>
-    <div>
-      <!-- Page Header -->
+  <div>
+    <!-- Page Header -->
     <BaseSection background="light" padding="xl">
       <div class="max-w-3xl mx-auto text-center">
         <BaseHeading :level="1" align="center" class="mb-6">
@@ -16,7 +16,7 @@
       
     <!-- Personal Photography Section -->
     <section id="family-sessions" class="py-16 md:py-24 bg-[var(--color-accent)]">
-        <div class="container-custom">
+      <div class="container-custom">
         <div class="text-center max-w-3xl mx-auto mb-16">
           <h2 class="text-3xl md:text-4xl font-extralight text-[var(--color-text)] mb-4">Portrait & Family Sessions</h2>
           <p class="text-[var(--color-text)]/70 text-lg font-light">
@@ -28,7 +28,7 @@
         </div>
         
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <PackageCard
+          <PackagePreviewCard
             v-for="pkg in portraitPackages"
             :key="pkg.title"
             :title="pkg.title"
@@ -37,11 +37,12 @@
             :description="pkg.description"
             :features="pkg.features"
             :buttons="pkg.buttons"
+            :image="pkg.image"
             @button-click="openBookingModal"
           />
         </div>
-        </div>
-      </section>
+      </div>
+    </section>
       
     <!-- Lifestyle Photography Section -->
     <section id="lifestyle-events" class="py-16 md:py-24 bg-[var(--color-light)]">
@@ -59,7 +60,7 @@
         </div>
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <PackageCard
+          <PackagePreviewCard
             v-for="pkg in lifestylePackages"
             :key="pkg.title"
             :title="pkg.title"
@@ -68,6 +69,7 @@
             :description="pkg.description"
             :features="pkg.features"
             :buttons="pkg.buttons"
+            :image="pkg.image"
             @button-click="openBookingModal"
           />
         </div>
@@ -88,7 +90,7 @@
         </div>
         
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <PackageCard
+          <PackagePreviewCard
             v-for="pkg in organizationPackages"
             :key="pkg.title"
             :title="pkg.title"
@@ -97,6 +99,7 @@
             :description="pkg.description"
             :features="pkg.features"
             :buttons="pkg.buttons"
+            :image="pkg.image"
             :uniform-height="true"
             @button-click="openBookingModal"
           />
@@ -132,13 +135,13 @@
       :pre-selected-package="selectedPackageAction"
       @close="closeBookingModal"
     />
-    </div>
-  </template>
-  
-  <script setup lang="ts">
+  </div>
+</template>
+
+<script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
-import PackageCard from '@/components/PackageCard.vue'
+import PackagePreviewCard from '@/components/PackagePreviewCard.vue'
 import BookingModal from '@/components/BookingModal.vue'
 import BaseSection from '@/components/ui/BaseSection.vue'
 import BaseHeading from '@/components/ui/BaseHeading.vue'
@@ -189,7 +192,11 @@ const portraitPackages = [
     ],
     buttons: [
       { text: 'Book Now', action: 'book-dust-light', variant: 'primary' as const }
-    ]
+    ],
+    image: {
+      src: new URL('@/assets/images/family/dsc-0006.jpg', import.meta.url).href,
+      alt: 'Family mini session'
+    }
   },
   {
     title: 'Field & Frame',
@@ -203,7 +210,11 @@ const portraitPackages = [
     ],
     buttons: [
       { text: 'Book Now', action: 'book-field-frame', variant: 'primary' as const }
-    ]
+    ],
+    image: {
+      src: new URL('@/assets/images/family/dsc-0011.jpg', import.meta.url).href,
+      alt: 'Family full session'
+    }
   },
   {
     title: 'Soil & Sun',
@@ -219,7 +230,11 @@ const portraitPackages = [
     ],
     buttons: [
       { text: 'Book Now', action: 'book-soil-sun', variant: 'primary' as const }
-    ]
+    ],
+    image: {
+      src: new URL('@/assets/images/family/dsc-0038.jpg', import.meta.url).href,
+      alt: 'Golden hour family session'
+    }
   }
 ]
 
@@ -237,7 +252,11 @@ const lifestylePackages = [
     ],
     buttons: [
       { text: 'Book Now', action: 'book-lifestyle-event', variant: 'primary' as const }
-    ]
+    ],
+    image: {
+      src: new URL('@/assets/images/lifestyle/events/Bay Nourish Ladies Tea2.jpg', import.meta.url).href,
+      alt: 'Lifestyle and events photography'
+    }
   },
   {
     title: 'Wedding Photography',
@@ -252,7 +271,11 @@ const lifestylePackages = [
     ],
     buttons: [
       { text: 'Request a Wedding Quote', action: 'wedding-quote', variant: 'primary' as const }
-    ]
+    ],
+    image: {
+      src: new URL('@/assets/images/lifestyle/traditional-wedding/Copy of DSC_0017.jpg', import.meta.url).href,
+      alt: 'Wedding photography'
+    }
   }
 ]
 
@@ -269,7 +292,11 @@ const organizationPackages = [
     ],
     buttons: [
       { text: 'Book Now', action: 'book-raw-thread', variant: 'primary' as const }
-    ]
+    ],
+    image: {
+      src: new URL('@/assets/images/NGO-storytelling/Sozo Foundation Case Study Images103.jpg', import.meta.url).href,
+      alt: 'NGO short story package'
+    }
   },
   {
     title: 'The Narrative Journey',
@@ -284,7 +311,11 @@ const organizationPackages = [
     ],
     buttons: [
       { text: 'Book Now', action: 'book-narrative', variant: 'primary' as const }
-    ]
+    ],
+    image: {
+      src: new URL('@/assets/images/NGO-storytelling/Sozo Foundation Case Study Images106.jpg', import.meta.url).href,
+      alt: 'NGO campaigns and reports'
+    }
   },
   {
     title: 'The Footpath Journey',
@@ -299,7 +330,11 @@ const organizationPackages = [
     ],
     buttons: [
       { text: 'Book Now', action: 'book-footpath', variant: 'primary' as const }
-    ]
+    ],
+    image: {
+      src: new URL('@/assets/images/NGO-storytelling/Sozo Foundation Case Study Images20.jpg', import.meta.url).href,
+      alt: 'NGO long-term partnership'
+    }
   }
 ]
-  </script>
+</script>

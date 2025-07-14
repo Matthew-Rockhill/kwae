@@ -1,5 +1,5 @@
 <template>
-    <section id="about" class="py-24 md:py-32 bg-[var(--color-background)]">
+    <section id="about" class="bg-[var(--color-background)]">
       <div class="container-custom">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <!-- Left Column: Content -->
@@ -10,24 +10,19 @@
             
             <div class="mt-10 space-y-6">
               <p class="text-[var(--color-text)] text-lg font-light leading-relaxed">
-                As a photographer and storyteller, my mission is simple: to capture authentic moments, 
-                to find beauty in humble places, and to share stories that connect us all.
+                As a photographer and storyteller, my mission is simple: to capture authentic moments, find beauty in humble places, and share stories that connect us all.
               </p>
-              
               <div class="pl-6 border-l-2 border-[var(--color-accent)] py-2">
                 <p class="font-cormorant text-xl italic text-[var(--color-secondary)]">
-                  "I aim to help individuals, families, and organisations expand their reach and make 
-                  an impact through visual storytelling."
+                  "I help individuals, families, and organisations expand their reach and make an impact through intentional, visual storytelling."
                 </p>
               </div>
-              
               <p class="text-[var(--color-text)] text-lg font-light leading-relaxed">
-                My approach is earthy, natural, and raw. I want you to feel comfortable, seen, and heard. 
-                Whether you're booking a personal photography session or seeking to share the heart of your 
-                business or NGO, I am committed to showcasing your unique story in a way that resonates with 
-                your audience.
+                With a background in Print Journalism, Media and Social Anthropology, and over a decade of experience working across the NGO and EdTech sectors, I bring both heart and strategy to every story I tell.
               </p>
-              
+              <p class="text-[var(--color-text)] text-lg font-light leading-relaxed">
+                My approach is earthy, natural, and raw. I want you to feel comfortable, seen, and heard. Whether you’re booking a personal session or seeking to share the heart of your business or NGO, I am committed to showcasing your story in a way that truly resonates.
+              </p>
               <div class="mt-10">
                 <router-link to="/about">
                   <BaseButton variant="primary">

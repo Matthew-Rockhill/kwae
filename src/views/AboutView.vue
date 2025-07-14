@@ -17,8 +17,7 @@
         <!-- First Content Block -->
         <ContentBlock 
           :image="{ src: aboutImage1, alt: 'Kristin' }" 
-          image-position="left" 
-          spacing="large"
+          image-position="left"
         >
           <BaseText size="lg" weight="light" leading="relaxed" class="mb-6">
             Hi, I'm Kristin, the heart and eyes behind Kristin With An Eye. I'm based in Cape Town but wander often, always seeking beauty in both people and places. I'm a wife to my incredible husband Matthew and mom to two very special boys. I'm passionate about exploring the world and capturing the quiet, meaningful moments that often go unnoticed.
@@ -41,6 +40,10 @@
           <BaseText size="lg" weight="light" leading="relaxed" class="mb-6">
             With a background in Print Journalism and Social Anthropology, and over a decade of experience in the NGO and EdTech sectors, storytelling has always been part of my path. Photography was a quiet passion that kept resurfacing - a gift God gently, persistently invited me to embrace. What began as a whisper became a calling I could no longer ignore.
           </BaseText>
+
+          <BaseText size="lg" weight="light" leading="relaxed" class="mb-6">
+            In 2025, I was honoured to be named a Top 5 Finalist in the World Wildlife Foundation's "Believe in Better" Photography Competition - a moment that affirmed the power of storytelling rooted in purpose.
+          </BaseText>
         
           <QuoteBlock>
             I'm drawn to humble beauty - the real, raw, and often overlooked parts of life. I believe every moment holds a story worth telling.
@@ -58,8 +61,12 @@
             Whether it's a laugh shared around a kitchen table, the quiet strength of a community leader, or a landscape soaked in light, we are committed to capturing it with honesty, heart, and intention.
           </BaseText>
 
-          <BaseText size="lg" weight="light" leading="relaxed">
+          <BaseText size="lg" weight="light" leading="relaxed" class="mb-6">
             Our approach is rooted in trust and connection. We walk closely with each client to ensure your story is told in a way that feels true to you.
+          </BaseText>
+
+          <BaseText size="lg" weight="light" leading="relaxed">
+            Let's tell yours together.
           </BaseText>
         </ContentBlock>
       </BaseSection>

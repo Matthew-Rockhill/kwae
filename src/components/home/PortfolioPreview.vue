@@ -1,5 +1,5 @@
 <template>
-    <section class="py-24 md:py-32 bg-white">
+    <section class="bg-white">
       <div class="container-custom">
         <div class="text-center max-w-3xl mx-auto mb-16">
           <h2 class="text-3xl md:text-4xl font-extralight text-[var(--color-text)] mb-6">

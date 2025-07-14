@@ -1,7 +1,7 @@
 <template>
-  <section class="min-h-screen flex items-center justify-center bg-[var(--color-light)] p-[5px]">
+  <section class="min-h-screen flex items-center justify-center bg-[var(--color-light)] w-full">
     <!-- Hero Image with Overlay -->
-    <div class="relative w-full h-[calc(100vh-10px)] overflow-hidden rounded-2xl shadow-xl">
+    <div class="relative w-full h-[100vh] overflow-hidden">
       <img 
         src="/src/assets/images/Klein-Barmen-farm-found-just-outside-of-Okahandja.jpg" 
         alt="Authentic photography" 
@@ -11,7 +11,7 @@
       <!-- Text Overlay - Bottom Right -->
       <div class="absolute bottom-12 right-12 text-right">
         <h1 class="text-white font-montserrat font-medium text-3xl md:text-4xl lg:text-5xl xl:text-6xl leading-tight drop-shadow-2xl">
-          Capturing beauty in<br>humble places
+          Capturing Beauty in<br>Humble Places
         </h1>
       </div>
     </div>
