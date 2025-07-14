@@ -4,6 +4,7 @@ const allowedOrigins = [
 ];
 
 module.exports = async (req, res) => {
+  // Set CORS headers FIRST - before any other logic
   const origin = req.headers.origin;
   if (allowedOrigins.includes(origin)) {
     res.setHeader('Access-Control-Allow-Origin', origin);
@@ -13,11 +14,12 @@ module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   // res.setHeader('Access-Control-Allow-Credentials', 'true'); // Uncomment if needed
 
+  // Handle preflight requests FIRST
   if (req.method === 'OPTIONS') {
     res.status(200).end();
     return;
   }
-
+  
   // Only allow GET requests
   if (req.method !== 'GET') {
     return res.status(405).json({ 

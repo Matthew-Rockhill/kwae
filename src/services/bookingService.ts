@@ -22,6 +22,11 @@ class BookingService {
     // You can set this to your actual API endpoint
     this.apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 
       (import.meta.env.PROD ? 'https://kristin-with-an-eye.vercel.app/api' : 'http://localhost:3001/api')
+    
+    // Debug logging
+    console.log('🔧 Environment:', import.meta.env.MODE);
+    console.log('🔧 Production:', import.meta.env.PROD);
+    console.log('🔧 API Base URL:', this.apiBaseUrl);
   }
 
   /**
