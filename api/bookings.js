@@ -117,8 +117,9 @@ async function sendBookingEmails(bookingData) {
 }
 
 const allowedOrigins = [
-  'https://kristin-with-an-eye.vercel.app',
-  'https://www.kristinmathilde.com'
+  'https://www.kristinmathilde.com',
+  'https://kristinmathilde.com',
+  'https://kristin-with-an-eye.vercel.app'
 ];
 
 module.exports = async (req, res) => {
