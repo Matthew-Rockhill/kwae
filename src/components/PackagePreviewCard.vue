@@ -125,7 +125,7 @@ interface Props {
   uniformHeight?: boolean
 }
 
-const props = withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<Props>(), {
   buttonText: 'Learn More',
   buttonAction: 'default',
   uniformHeight: false

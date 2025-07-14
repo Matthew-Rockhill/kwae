@@ -4,7 +4,7 @@
     <BaseSection background="transparent" padding="xl">
       <AboutSection />
     </BaseSection>
-    <BaseSection background="white" padding="xl">
+    <BaseSection background="light" padding="xl">
       <PortfolioPreview />
     </BaseSection>
     <BaseSection background="accent" padding="xl">
