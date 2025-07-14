@@ -118,7 +118,14 @@ async function sendBookingEmails(bookingData) {
 
 module.exports = async (req, res) => {
   // Set CORS headers
-  res.setHeader('Access-Control-Allow-Origin', process.env.FRONTEND_URL || 'https://kristin-with-an-eye.vercel.app');
+  const allowedOrigins = [
+    'https://kristin-with-an-eye.vercel.app',
+    'https://www.kristinmathilde.com'
+  ];
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  }
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   
