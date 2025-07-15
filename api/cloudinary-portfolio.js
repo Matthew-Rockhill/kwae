@@ -1,4 +1,4 @@
-// Fixed Cloudinary API with correct endpoint
+// Cloudinary API using CLOUDINARY_URL environment variable
 export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
@@ -19,12 +19,29 @@ export default async function handler(req, res) {
       
       console.log(`📁 Fetching images from folder: "${folder}"`);
       
-      // Your Cloudinary credentials
-      const CLOUD_NAME = 'dqhvcjoor';
-      const API_KEY = '857256826466323';
-      const API_SECRET = '5v9Jr2YYlzI_2fCQLO7NpajXxR4';
+      // Parse CLOUDINARY_URL environment variable
+      const cloudinaryUrl = process.env.CLOUDINARY_URL;
+      if (!cloudinaryUrl) {
+        throw new Error('CLOUDINARY_URL environment variable not set');
+      }
       
-      // Try a different approach - use the search API instead of resources
+      console.log('🔑 CLOUDINARY_URL found');
+      
+      // Parse the URL: cloudinary://api_key:api_secret@cloud_name
+      const url = new URL(cloudinaryUrl);
+      const CLOUD_NAME = url.hostname;
+      const API_KEY = url.username;
+      const API_SECRET = url.password;
+      
+      console.log(`☁️ Cloud name: ${CLOUD_NAME}`);
+      console.log(`🔑 API Key: ${API_KEY.substring(0, 6)}...`);
+      console.log(`🔒 API Secret: ${API_SECRET ? '[SET]' : '[MISSING]'}`);
+      
+      if (!CLOUD_NAME || !API_KEY || !API_SECRET) {
+        throw new Error('Invalid CLOUDINARY_URL format');
+      }
+      
+      // Use the search API
       const timestamp = Math.round(Date.now() / 1000);
       
       // Build search expression
@@ -55,6 +72,9 @@ export default async function handler(req, res) {
         .update(sortedParams + API_SECRET)
         .digest('hex');
       
+      console.log(`🔍 Search expression: ${searchExpression}`);
+      console.log(`📝 Signature created for params: ${sortedParams}`);
+      
       const formData = new URLSearchParams({
         expression: params.expression,
         max_results: params.max_results,
@@ -64,11 +84,10 @@ export default async function handler(req, res) {
         signature: signature
       });
       
-      // Use the search endpoint instead
+      // Use the search endpoint
       const searchUrl = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/resources/search`;
       
-      console.log(`🔍 Using search API: ${searchUrl}`);
-      console.log(`🔍 Search expression: ${searchExpression}`);
+      console.log(`🌐 Making request to: ${searchUrl}`);
       
       const response = await fetch(searchUrl, {
         method: 'POST',
@@ -81,16 +100,22 @@ export default async function handler(req, res) {
       console.log(`📡 Response status: ${response.status}`);
       
       const responseText = await response.text();
-      console.log(`📄 Response preview: ${responseText.substring(0, 200)}`);
+      console.log(`📄 Response preview: ${responseText.substring(0, 300)}`);
   
       if (!response.ok) {
-        throw new Error(`Cloudinary search API error: ${response.status} - ${responseText.substring(0, 200)}`);
+        // Try to parse error for better debugging
+        try {
+          const errorData = JSON.parse(responseText);
+          throw new Error(`Cloudinary API error: ${response.status} - ${errorData.error?.message || responseText}`);
+        } catch (parseError) {
+          throw new Error(`Cloudinary API error: ${response.status} - ${responseText.substring(0, 200)}`);
+        }
       }
   
       const result = JSON.parse(responseText);
       
-      console.log(`✅ Found ${result.total_count || 0} images`);
-  
+      console.log(`✅ Found ${result.total_count || 0} images in folder "${folder}"`);
+      
       // Transform search results
       const images = (result.resources || []).map(img => ({
         url: img.secure_url,
@@ -106,7 +131,11 @@ export default async function handler(req, res) {
         success: true,
         images,
         total: result.total_count || images.length,
-        folder: folder || 'all'
+        folder: folder || 'all',
+        debug: process.env.NODE_ENV !== 'production' ? {
+          searchExpression,
+          totalFound: result.total_count
+        } : undefined
       });
   
     } catch (error) {
