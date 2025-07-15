@@ -1,6 +1,5 @@
-// Working Cloudinary API for Vercel
+// Fixed Cloudinary API with correct endpoint
 export default async function handler(req, res) {
-    // Set CORS headers
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -18,33 +17,37 @@ export default async function handler(req, res) {
     try {
       const { folder = '' } = req.query;
       
-      console.log(`📁 Fetching images from Cloudinary folder: "${folder}"`);
+      console.log(`📁 Fetching images from folder: "${folder}"`);
       
-      // Cloudinary credentials
+      // Your Cloudinary credentials
       const CLOUD_NAME = 'dqhvcjoor';
       const API_KEY = '857256826466323';
       const API_SECRET = '5v9Jr2YYlzI_2fCQLO7NpajXxR4';
       
-      // Create timestamp for signature
+      // Try a different approach - use the search API instead of resources
       const timestamp = Math.round(Date.now() / 1000);
       
-      // Prepare parameters
+      // Build search expression
+      let searchExpression = 'resource_type:image';
+      if (folder && folder.trim() !== '') {
+        searchExpression += ` AND folder:${folder.trim()}`;
+      }
+      
       const params = {
-        type: 'upload',
+        expression: searchExpression,
         max_results: 100,
+        sort_by: [['created_at', 'desc']],
         timestamp: timestamp
       };
       
-      // Add folder prefix if specified
-      if (folder && folder.trim() !== '') {
-        params.prefix = folder.trim();
-      }
-      
-      // Create signature
+      // Create signature for search API
       const crypto = await import('crypto');
       const sortedParams = Object.keys(params)
         .sort()
-        .map(key => `${key}=${params[key]}`)
+        .map(key => {
+          const value = Array.isArray(params[key]) ? JSON.stringify(params[key]) : params[key];
+          return `${key}=${value}`;
+        })
         .join('&');
       
       const signature = crypto
@@ -52,19 +55,22 @@ export default async function handler(req, res) {
         .update(sortedParams + API_SECRET)
         .digest('hex');
       
-      // Build form data
       const formData = new URLSearchParams({
-        ...params,
+        expression: params.expression,
+        max_results: params.max_results,
+        sort_by: JSON.stringify(params.sort_by),
+        timestamp: params.timestamp,
         api_key: API_KEY,
         signature: signature
       });
       
-      // Make request to Cloudinary
-      const cloudinaryUrl = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/resources/image`;
+      // Use the search endpoint instead
+      const searchUrl = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/resources/search`;
       
-      console.log(`🌐 Making request to: ${cloudinaryUrl}`);
+      console.log(`🔍 Using search API: ${searchUrl}`);
+      console.log(`🔍 Search expression: ${searchExpression}`);
       
-      const response = await fetch(cloudinaryUrl, {
+      const response = await fetch(searchUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
@@ -72,17 +78,20 @@ export default async function handler(req, res) {
         body: formData
       });
   
+      console.log(`📡 Response status: ${response.status}`);
+      
+      const responseText = await response.text();
+      console.log(`📄 Response preview: ${responseText.substring(0, 200)}`);
+  
       if (!response.ok) {
-        const errorText = await response.text();
-        console.error(`❌ Cloudinary API error: ${response.status} ${response.statusText}`, errorText);
-        throw new Error(`Cloudinary API error: ${response.status} ${response.statusText}`);
+        throw new Error(`Cloudinary search API error: ${response.status} - ${responseText.substring(0, 200)}`);
       }
   
-      const result = await response.json();
+      const result = JSON.parse(responseText);
       
-      console.log(`✅ Found ${result.resources?.length || 0} images in folder "${folder}"`);
+      console.log(`✅ Found ${result.total_count || 0} images`);
   
-      // Transform and return the images
+      // Transform search results
       const images = (result.resources || []).map(img => ({
         url: img.secure_url,
         public_id: img.public_id,
@@ -96,8 +105,8 @@ export default async function handler(req, res) {
       res.status(200).json({
         success: true,
         images,
-        total: images.length,
-        folder: folder || 'root'
+        total: result.total_count || images.length,
+        folder: folder || 'all'
       });
   
     } catch (error) {
@@ -105,7 +114,7 @@ export default async function handler(req, res) {
       
       res.status(500).json({ 
         success: false,
-        error: error.message || 'Failed to fetch images from Cloudinary',
+        error: error.message,
         folder: req.query.folder || 'unknown'
       });
     }
