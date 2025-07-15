@@ -163,13 +163,7 @@ const handler = async (req, res) => {
 
     // --- DEBUG: Database connection ---
     let client;
-    let pool;
     try {
-      const { Pool } = require('pg');
-      pool = new Pool({
-        connectionString: process.env.DATABASE_URL,
-        ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
-      });
       client = await pool.connect();
       console.log('✅ Database connection successful');
     } catch (dbErr) {
@@ -222,7 +216,7 @@ const handler = async (req, res) => {
 
     // --- DEBUG: Check for duplicate bookings ---
     try {
-      const duplicateCheck = await client.query(
+      const duplicateCheck = await pool.query(
         `SELECT id FROM bookings WHERE email = $1 AND selected_package = $2 AND created_at > NOW() - INTERVAL '24 hours'`,
         [email, selectedPackage]
       );
@@ -264,7 +258,7 @@ const handler = async (req, res) => {
         submittedAt,
         clientIP
       ];
-      const result = await client.query(insertQuery, values);
+      const result = await pool.query(insertQuery, values);
       bookingId = result.rows[0].id;
       createdAt = result.rows[0].created_at;
       console.log(`📅 New booking inserted: #${bookingId}`);
@@ -305,7 +299,6 @@ const handler = async (req, res) => {
     });
 
     if (client) client.release();
-    if (pool) await pool.end();
   } catch (error) {
     console.error('❌ Outer error handler:', error);
     res.status(500).json({
