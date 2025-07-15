@@ -1,6 +1,6 @@
 <template>
   <div>
-    <HeroSection />
+    <HeroSection @book-now="openBookingModal" />
     <BaseSection background="transparent" padding="xl">
       <AboutSection />
     </BaseSection>
