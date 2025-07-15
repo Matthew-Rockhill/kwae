@@ -123,49 +123,76 @@ const allowedOrigins = [
 ];
 
 module.exports = async (req, res) => {
-  // Set CORS headers FIRST - before any other logic
-  const origin = req.headers.origin;
-  console.log('🔍 Request origin:', origin);
-  console.log('🔍 Request method:', req.method);
-  
-  if (allowedOrigins.includes(origin)) {
-    res.setHeader('Access-Control-Allow-Origin', origin);
-    console.log('✅ CORS origin allowed:', origin);
-  } else {
-    console.log('❌ CORS origin not allowed:', origin);
-  }
-  res.setHeader('Vary', 'Origin');
-  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-
-  // Handle preflight requests FIRST
-  if (req.method === 'OPTIONS') {
-    console.log('🔄 Handling OPTIONS preflight request');
-    res.status(200).end();
-    return;
-  }
-  
-  // Only allow POST requests
-  if (req.method !== 'POST') {
-    console.log('❌ Method not allowed:', req.method);
-    return res.status(405).json({ 
-      success: false, 
-      message: 'Method not allowed' 
-    });
-  }
-  
-  // Rate limiting
-  const clientIP = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-  if (!checkRateLimit(clientIP)) {
-    return res.status(429).json({
-      success: false,
-      message: 'Too many booking requests. Please try again in an hour.'
-    });
-  }
-  
-  const client = await pool.connect();
-  
   try {
+    // --- DEBUG: Log incoming request ---
+    console.log('🔍 Request origin:', req.headers.origin);
+    console.log('🔍 Request method:', req.method);
+    console.log('🔍 Request headers:', req.headers);
+    if (req.body) {
+      console.log('🔍 Request body:', req.body);
+    }
+
+    // --- DEBUG: Log env variable presence ---
+    const envCheck = {
+      DATABASE_URL: !!process.env.DATABASE_URL,
+      SENDGRID_API_KEY: !!process.env.SENDGRID_API_KEY,
+      FROM_EMAIL: !!process.env.FROM_EMAIL,
+      ADMIN_EMAIL: !!process.env.ADMIN_EMAIL,
+      NODE_ENV: process.env.NODE_ENV
+    };
+    console.log('🔍 Env check:', envCheck);
+
+    // Set CORS headers
+    const origin = req.headers.origin;
+    if (allowedOrigins.includes(origin)) {
+      res.setHeader('Access-Control-Allow-Origin', origin);
+    }
+    res.setHeader('Vary', 'Origin');
+    res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+    // Handle preflight
+    if (req.method === 'OPTIONS') {
+      res.status(200).end();
+      return;
+    }
+
+    // Only allow POST
+    if (req.method !== 'POST') {
+      return res.status(405).json({ success: false, message: 'Method not allowed' });
+    }
+
+    // --- DEBUG: Database connection ---
+    let client;
+    let pool;
+    try {
+      const { Pool } = require('pg');
+      pool = new Pool({
+        connectionString: process.env.DATABASE_URL,
+        ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
+      });
+      client = await pool.connect();
+      console.log('✅ Database connection successful');
+    } catch (dbErr) {
+      console.error('❌ Database connection failed:', dbErr);
+      return res.status(500).json({
+        success: false,
+        message: 'Database connection failed',
+        error: process.env.NODE_ENV !== 'production' ? dbErr.message : undefined
+      });
+    }
+
+    // --- DEBUG: Parse and log request body ---
+    let data = req.body;
+    if (!data || typeof data !== 'object') {
+      try {
+        data = JSON.parse(req.body);
+      } catch (e) {
+        // Already an object or invalid JSON
+      }
+    }
+    console.log('🔍 Parsed booking data:', data);
+
     const {
       selectedPackage,
       firstName,
@@ -175,7 +202,7 @@ module.exports = async (req, res) => {
       eventDate,
       additionalNotes,
       submittedAt
-    } = req.body;
+    } = data || {};
 
     // Validate required fields
     if (!selectedPackage || !firstName || !lastName || !email || !phone) {
@@ -194,77 +221,98 @@ module.exports = async (req, res) => {
       });
     }
 
-    // Check for duplicate bookings (same email + package within 24 hours)
-    const duplicateCheck = await client.query(`
-      SELECT id FROM bookings 
-      WHERE email = $1 AND selected_package = $2 
-      AND created_at > NOW() - INTERVAL '24 hours'
-    `, [email, selectedPackage]);
-
-    if (duplicateCheck.rows.length > 0) {
-      return res.status(409).json({
+    // --- DEBUG: Check for duplicate bookings ---
+    try {
+      const duplicateCheck = await client.query(
+        `SELECT id FROM bookings WHERE email = $1 AND selected_package = $2 AND created_at > NOW() - INTERVAL '24 hours'`,
+        [email, selectedPackage]
+      );
+      console.log('🔍 Duplicate check result:', duplicateCheck.rows);
+      if (duplicateCheck.rows.length > 0) {
+        return res.status(409).json({
+          success: false,
+          message: 'A booking with this email and package already exists within the last 24 hours.'
+        });
+      }
+    } catch (dupErr) {
+      console.error('❌ Duplicate check failed:', dupErr);
+      return res.status(500).json({
         success: false,
-        message: 'A booking with this email and package already exists within the last 24 hours.'
+        message: 'Duplicate check failed',
+        error: process.env.NODE_ENV !== 'production' ? dupErr.message : undefined
       });
     }
 
-    // Insert booking into database
-    const insertQuery = `
-      INSERT INTO bookings (
-        selected_package, first_name, last_name, email, phone, 
-        event_date, additional_notes, submitted_at, ip_address
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
-      RETURNING id, created_at
-    `;
+    // --- DEBUG: Insert booking ---
+    let bookingId, createdAt;
+    try {
+      const insertQuery = `
+        INSERT INTO bookings (
+          selected_package, first_name, last_name, email, phone, 
+          event_date, additional_notes, submitted_at, ip_address
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+        RETURNING id, created_at
+      `;
+      const clientIP = req.headers['x-forwarded-for'] || req.connection?.remoteAddress || null;
+      const values = [
+        selectedPackage,
+        firstName,
+        lastName,
+        email,
+        phone,
+        eventDate || null,
+        additionalNotes || null,
+        submittedAt,
+        clientIP
+      ];
+      const result = await client.query(insertQuery, values);
+      bookingId = result.rows[0].id;
+      createdAt = result.rows[0].created_at;
+      console.log(`📅 New booking inserted: #${bookingId}`);
+    } catch (insertErr) {
+      console.error('❌ Booking insert failed:', insertErr);
+      return res.status(500).json({
+        success: false,
+        message: 'Booking insert failed',
+        error: process.env.NODE_ENV !== 'production' ? insertErr.message : undefined
+      });
+    }
 
-    const values = [
-      selectedPackage,
-      firstName,
-      lastName,
-      email,
-      phone,
-      eventDate || null,
-      additionalNotes || null,
-      submittedAt,
-      clientIP
-    ];
-
-    const result = await client.query(insertQuery, values);
-    const bookingId = result.rows[0].id;
-    const createdAt = result.rows[0].created_at;
-
-    console.log(`📅 New booking received: #${bookingId} from ${firstName} ${lastName}`);
-
-    // Send emails asynchronously (don't wait for completion)
-    console.log('🔄 Starting email sending process...');
-    sendBookingEmails({
-      bookingId,
-      selectedPackage,
-      firstName,
-      lastName,
-      email,
-      phone,
-      eventDate,
-      additionalNotes,
-      createdAt
-    }).catch(error => {
-      console.error('❌ Email sending failed:', error);
-      console.error('Error details:', error.response?.body || error.message);
-    });
+    // --- DEBUG: Send emails (async, log errors) ---
+    try {
+      // (Assume sendBookingEmails is defined elsewhere in the file)
+      sendBookingEmails({
+        bookingId,
+        selectedPackage,
+        firstName,
+        lastName,
+        email,
+        phone,
+        eventDate,
+        additionalNotes,
+        createdAt
+      }).catch(emailErr => {
+        console.error('❌ Email sending failed:', emailErr);
+      });
+    } catch (emailErr) {
+      console.error('❌ Email sending setup failed:', emailErr);
+    }
 
     res.status(201).json({
       success: true,
       message: 'Booking submitted successfully!',
-      bookingId: bookingId.toString()
+      bookingId: bookingId?.toString(),
+      debug: process.env.NODE_ENV !== 'production' ? { envCheck, bookingId, createdAt } : undefined
     });
 
+    if (client) client.release();
+    if (pool) await pool.end();
   } catch (error) {
-    console.error('Booking submission error:', error);
+    console.error('❌ Outer error handler:', error);
     res.status(500).json({
       success: false,
-      message: 'Internal server error. Please try again later.'
+      message: 'Internal server error',
+      error: process.env.NODE_ENV !== 'production' ? error.message : undefined
     });
-  } finally {
-    client.release();
   }
 }; 
