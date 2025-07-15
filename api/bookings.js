@@ -1,5 +1,5 @@
-const { Pool } = require('pg');
-const sgMail = require('@sendgrid/mail');
+import { Pool } from 'pg';
+import * as sgMail from '@sendgrid/mail';
 
 // Configure SendGrid
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
@@ -119,10 +119,9 @@ async function sendBookingEmails(bookingData) {
 const allowedOrigins = [
   'https://www.kristinmathilde.com',
   'https://kristinmathilde.com',
-  'https://kristin-with-an-eye.vercel.app'
 ];
 
-module.exports = async (req, res) => {
+const handler = async (req, res) => {
   try {
     // --- DEBUG: Log incoming request ---
     console.log('🔍 Request origin:', req.headers.origin);
@@ -315,4 +314,6 @@ module.exports = async (req, res) => {
       error: process.env.NODE_ENV !== 'production' ? error.message : undefined
     });
   }
-}; 
+};
+
+export default handler; 

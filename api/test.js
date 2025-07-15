@@ -4,7 +4,7 @@ const allowedOrigins = [
   'https://kristin-with-an-eye.vercel.app'
 ];
 
-module.exports = async (req, res) => {
+const handler = async (req, res) => {
   // Set CORS headers
   const origin = req.headers.origin;
   if (allowedOrigins.includes(origin)) {
@@ -72,4 +72,6 @@ module.exports = async (req, res) => {
       error: error.message
     });
   }
-}; 
+};
+
+export default handler; 
