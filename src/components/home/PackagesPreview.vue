@@ -40,7 +40,7 @@ const previewPackages = [
     title: 'Portrait & Family Sessions',
     description: 'Earthy, natural photos that celebrate connection and the beauty of the everyday.',
     image: {
-      src: new URL('@/assets/images/family/dsc-0006.jpg', import.meta.url).href,
+      src: new URL('@/assets/images/family/dsc-0222.jpg', import.meta.url).href,
       alt: 'Family photography'
     },
     buttonText: 'Family Packages',
@@ -50,7 +50,7 @@ const previewPackages = [
     title: 'Events & Weddings',
     description: 'Candid, heartfelt coverage of milestones, celebrations, and soulful unions.',
     image: {
-      src: new URL('@/assets/images/lifestyle/traditional-wedding/Copy of DSC_0017.jpg', import.meta.url).href,
+      src: new URL('@/assets/images/lifestyle/traditional-wedding/Copy of DSC_0319.jpg', import.meta.url).href,
       alt: 'Wedding photography'
     },
     buttonText: 'Events & Weddings',
@@ -60,7 +60,7 @@ const previewPackages = [
     title: 'Organisational Storytelling',
     description: 'Long-form storytelling for NGOs and changemakers — crafted with care.',
     image: {
-      src: new URL('@/assets/images/NGO-storytelling/Sozo Foundation Case Study Images103.jpg', import.meta.url).href,
+      src: new URL('@/assets/images/NGO-storytelling/Sozo Foundation Case Study Images20.jpg', import.meta.url).href,
       alt: 'NGO storytelling'
     },
     buttonText: 'Impact Box',

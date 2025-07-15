@@ -55,10 +55,10 @@
           <!-- Right Column: Single Image -->
           <div class="relative h-full overflow-hidden rounded-2xl">
             <img 
-              :src="currentMasonryImages[0]?.url" 
-              :alt="currentMasonryImages[0]?.alt"
+              :src="currentTestimonial.image.url" 
+              :alt="currentTestimonial.image.alt"
               class="w-full h-full object-cover transition-all duration-1000 ease-in-out"
-              :class="{ 'opacity-100': currentMasonryImages[0], 'opacity-0': !currentMasonryImages[0] }"
+              :class="{ 'opacity-100': currentTestimonial.image, 'opacity-0': !currentTestimonial.image }"
             />
           </div>
           
@@ -105,97 +105,64 @@ const testimonials = ref([
     quote: "Kristin with an eye doesn't simply take photographs. She tells stories that live and breathed through every frame. Her work is a compelling fusion of visual imagery and heartfelt narrative.",
     name: "Anton Cuyler",
     role: "CEO/Founder, The Sozo Foundation",
-    initial: "A"
+    initial: "A",
+    image: {
+      url: new URL('@/assets/images/NGO-storytelling/Sozo Foundation Case Study Images106.jpg', import.meta.url).href,
+      alt: 'Anton Cuyler, The Sozo Foundation'
+    }
   },
   {
     quote: "We had a family photoshoot that was incredibly enjoyable in one of the most stunning parts of Cape Town during sunset. Her creativity shines through in every shot — she has a true gift for capturing beautiful, genuine moments.",
     name: "Denise Malan",
     role: "Family Session",
-    initial: "D"
+    initial: "D",
+    image: {
+      url: new URL('@/assets/images/family/malan-family-shoot-55.jpg', import.meta.url).href,
+      alt: 'Denise Malan, Family Session'
+    }
   },
   {
     quote: "From candid emotions to beautifully posed portraits, Kristin made sure no moment was missed. Looking at these photos, we are instantly transported back to the magic of our wedding day.",
     name: "Aurelie Bukongo",
     role: "Wedding Photography",
-    initial: "A"
+    initial: "A",
+    image: {
+      url: new URL('@/assets/images/lifestyle/traditional-wedding/Copy of DSC_0394.jpg', import.meta.url).href,
+      alt: 'Aurelie Bukongo, Wedding Photography'
+    }
   }
 ])
 
-// Masonry images data
-const masonryImages = ref([
-  // Family images
-  { url: new URL('@/assets/images/family/dsc-0006.jpg', import.meta.url).href, alt: 'Family moment' },
-  { url: new URL('@/assets/images/family/dsc-0011.jpg', import.meta.url).href, alt: 'Family portrait' },
-  { url: new URL('@/assets/images/family/dsc-0038.jpg', import.meta.url).href, alt: 'Family connection' },
-  { url: new URL('@/assets/images/family/dsc-0056.jpg', import.meta.url).href, alt: 'Family joy' },
-  { url: new URL('@/assets/images/family/dsc-0059.jpg', import.meta.url).href, alt: 'Family love' },
-  { url: new URL('@/assets/images/family/dsc-0066.jpg', import.meta.url).href, alt: 'Family bond' },
-  { url: new URL('@/assets/images/family/dsc-0077.jpg', import.meta.url).href, alt: 'Family laughter' },
-  { url: new URL('@/assets/images/family/dsc-0087.jpg', import.meta.url).href, alt: 'Family warmth' },
-  { url: new URL('@/assets/images/family/dsc-0099.jpg', import.meta.url).href, alt: 'Family togetherness' },
-  { url: new URL('@/assets/images/family/dsc-0100.jpg', import.meta.url).href, alt: 'Family embrace' },
-  // Branding images
-  { url: new URL('@/assets/images/branding/ray-branding-shoot-1.jpg', import.meta.url).href, alt: 'Professional branding' },
-  { url: new URL('@/assets/images/branding/ray-branding-shoot-25.jpg', import.meta.url).href, alt: 'Brand storytelling' },
-  { url: new URL('@/assets/images/branding/ray-branding-shoot-39.jpg', import.meta.url).href, alt: 'Business portrait' },
-  { url: new URL('@/assets/images/branding/ray-branding-shoot-40.jpg', import.meta.url).href, alt: 'Professional image' },
-  // NGO images
-  { url: new URL('@/assets/images/NGO-storytelling/Sozo Foundation Case Study Images103.jpg', import.meta.url).href, alt: 'NGO impact story' },
-  { url: new URL('@/assets/images/NGO-storytelling/Sozo Foundation Case Study Images106.jpg', import.meta.url).href, alt: 'Community story' },
-  { url: new URL('@/assets/images/NGO-storytelling/Sozo Foundation Case Study Images20.jpg', import.meta.url).href, alt: 'Social impact' },
-  { url: new URL('@/assets/images/NGO-storytelling/Sozo Foundation Case Study Images23.jpg', import.meta.url).href, alt: 'Change story' },
-])
+// Remove all other images from the testimonial section and tie each testimonial to its image
+// Remove masonryImages and related logic
 
 // Current states
 const currentSlide = ref(0)
-const currentMasonrySet = ref(0)
 const totalSlides = computed(() => testimonials.value.length)
 
 // Computed properties
 const currentTestimonial = computed(() => testimonials.value[currentSlide.value])
 
-const currentMasonryImages = computed(() => {
-  const startIndex = (currentMasonrySet.value * 3) % masonryImages.value.length
-  const images = []
-  for (let i = 0; i < 3; i++) {
-    const index = (startIndex + i) % masonryImages.value.length
-    images.push(masonryImages.value[index])
-  }
-  return images
-})
+// Remove currentMasonryImages and masonry logic
 
 const nextSlide = () => {
   currentSlide.value = (currentSlide.value + 1) % totalSlides.value
 }
 
-const nextMasonrySet = () => {
-  currentMasonrySet.value = (currentMasonrySet.value + 1) % Math.ceil(masonryImages.value.length / 3)
-}
-
 // Auto-advance functionality
 let testimonialIntervalId: number | null = null
-let masonryIntervalId: number | null = null
 
 const startAutoAdvance = () => {
   // Auto-advance testimonials every 6 seconds
   testimonialIntervalId = window.setInterval(() => {
     nextSlide()
   }, 6000)
-  
-  // Auto-advance masonry images every 3 seconds
-  masonryIntervalId = window.setInterval(() => {
-    nextMasonrySet()
-  }, 3000)
 }
 
 const stopAutoAdvance = () => {
   if (testimonialIntervalId) {
     clearInterval(testimonialIntervalId)
     testimonialIntervalId = null
-  }
-  if (masonryIntervalId) {
-    clearInterval(masonryIntervalId)
-    masonryIntervalId = null
   }
 }
 

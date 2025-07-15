@@ -4,11 +4,34 @@ import sgMail from '@sendgrid/mail';
 // Configure SendGrid
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
-// PostgreSQL connection
+// PostgreSQL connection with SSL configuration for Supabase
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
+  connectionString: process.env.DATABASE_URL || 
+    process.env.VITE_DATABASE_URL ||
+    'postgresql://postgres:%2Bc%254vua.bThXF4B@db.xeeqjvjhnrdeknkwstqb.supabase.co:5432/postgres',
+  ssl: {
+    rejectUnauthorized: false
+  }
 });
+
+// Debug: Log connection string status
+console.log('🔍 DATABASE_URL exists:', !!process.env.DATABASE_URL);
+console.log('🔍 DATABASE_URL preview:', process.env.DATABASE_URL ? `${process.env.DATABASE_URL.substring(0, 20)}...` : 'NOT_SET');
+console.log('🔍 All env vars:', Object.keys(process.env).filter(key => key.includes('DATABASE')));
+
+// Test the database connection
+async function testDatabaseConnection() {
+  try {
+    const client = await pool.connect();
+    console.log('✅ Database connection test successful');
+    await client.query('SELECT NOW()');
+    client.release();
+    return true;
+  } catch (error) {
+    console.error('❌ Database connection test failed:', error);
+    return false;
+  }
+}
 
 // Rate limiting helper (simple in-memory store for serverless)
 const rateLimitStore = new Map();
@@ -134,12 +157,22 @@ const handler = async (req, res) => {
     // --- DEBUG: Log env variable presence ---
     const envCheck = {
       DATABASE_URL: !!process.env.DATABASE_URL,
+      DATABASE_URL_PREVIEW: process.env.DATABASE_URL ? `${process.env.DATABASE_URL.substring(0, 30)}...` : 'NOT_SET',
       SENDGRID_API_KEY: !!process.env.SENDGRID_API_KEY,
       FROM_EMAIL: !!process.env.FROM_EMAIL,
       ADMIN_EMAIL: !!process.env.ADMIN_EMAIL,
       NODE_ENV: process.env.NODE_ENV
     };
     console.log('🔍 Env check:', envCheck);
+
+    // Test database connection first
+    const dbConnectionTest = await testDatabaseConnection();
+    if (!dbConnectionTest) {
+      return res.status(500).json({
+        success: false,
+        message: 'Database connection failed during startup test'
+      });
+    }
 
     // Set CORS headers
     const origin = req.headers.origin;
@@ -166,8 +199,32 @@ const handler = async (req, res) => {
     try {
       client = await pool.connect();
       console.log('✅ Database connection successful');
+      
+      // Test query to ensure we can actually query the database
+      const testQuery = await client.query('SELECT 1 as test');
+      console.log('✅ Test query successful:', testQuery.rows);
+      
     } catch (dbErr) {
       console.error('❌ Database connection failed:', dbErr);
+      console.error('❌ Full error details:', {
+        message: dbErr.message,
+        code: dbErr.code,
+        detail: dbErr.detail,
+        hint: dbErr.hint,
+        position: dbErr.position,
+        internalPosition: dbErr.internalPosition,
+        internalQuery: dbErr.internalQuery,
+        where: dbErr.where,
+        schema: dbErr.schema,
+        table: dbErr.table,
+        column: dbErr.column,
+        dataType: dbErr.dataType,
+        constraint: dbErr.constraint,
+        file: dbErr.file,
+        line: dbErr.line,
+        routine: dbErr.routine
+      });
+      
       return res.status(500).json({
         success: false,
         message: 'Database connection failed',
@@ -181,7 +238,11 @@ const handler = async (req, res) => {
       try {
         data = JSON.parse(req.body);
       } catch (e) {
-        // Already an object or invalid JSON
+        console.error('❌ JSON parsing failed:', e);
+        return res.status(400).json({
+          success: false,
+          message: 'Invalid JSON in request body'
+        });
       }
     }
     console.log('🔍 Parsed booking data:', data);
@@ -216,7 +277,7 @@ const handler = async (req, res) => {
 
     // --- DEBUG: Check for duplicate bookings ---
     try {
-      const duplicateCheck = await pool.query(
+      const duplicateCheck = await client.query(
         `SELECT id FROM bookings WHERE email = $1 AND selected_package = $2 AND created_at > NOW() - INTERVAL '24 hours'`,
         [email, selectedPackage]
       );
@@ -255,15 +316,36 @@ const handler = async (req, res) => {
         phone,
         eventDate || null,
         additionalNotes || null,
-        submittedAt,
+        submittedAt || new Date().toISOString(),
         clientIP
       ];
-      const result = await pool.query(insertQuery, values);
+      
+      console.log('🔍 About to insert with values:', values);
+      const result = await client.query(insertQuery, values);
       bookingId = result.rows[0].id;
       createdAt = result.rows[0].created_at;
       console.log(`📅 New booking inserted: #${bookingId}`);
     } catch (insertErr) {
       console.error('❌ Booking insert failed:', insertErr);
+      console.error('❌ Insert error details:', {
+        message: insertErr.message,
+        code: insertErr.code,
+        detail: insertErr.detail,
+        hint: insertErr.hint,
+        position: insertErr.position,
+        internalPosition: insertErr.internalPosition,
+        internalQuery: insertErr.internalQuery,
+        where: insertErr.where,
+        schema: insertErr.schema,
+        table: insertErr.table,
+        column: insertErr.column,
+        dataType: insertErr.dataType,
+        constraint: insertErr.constraint,
+        file: insertErr.file,
+        line: insertErr.line,
+        routine: insertErr.routine
+      });
+      
       return res.status(500).json({
         success: false,
         message: 'Booking insert failed',
@@ -273,7 +355,6 @@ const handler = async (req, res) => {
 
     // --- DEBUG: Send emails (async, log errors) ---
     try {
-      // (Assume sendBookingEmails is defined elsewhere in the file)
       sendBookingEmails({
         bookingId,
         selectedPackage,
@@ -309,4 +390,4 @@ const handler = async (req, res) => {
   }
 };
 
-export default handler; 
+export default handler;

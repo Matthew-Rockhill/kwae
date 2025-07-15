@@ -194,7 +194,7 @@ const portraitPackages = [
       { text: 'Book Now', action: 'book-dust-light', variant: 'primary' as const }
     ],
     image: {
-      src: new URL('@/assets/images/family/dsc-0006.jpg', import.meta.url).href,
+      src: new URL('@/assets/images/family/dsc-0167.jpg', import.meta.url).href,
       alt: 'Family mini session'
     }
   },
@@ -212,7 +212,7 @@ const portraitPackages = [
       { text: 'Book Now', action: 'book-field-frame', variant: 'primary' as const }
     ],
     image: {
-      src: new URL('@/assets/images/family/dsc-0011.jpg', import.meta.url).href,
+      src: new URL('@/assets/images/family/dsc-0128.jpg', import.meta.url).href,
       alt: 'Family full session'
     }
   },
@@ -232,7 +232,7 @@ const portraitPackages = [
       { text: 'Book Now', action: 'book-soil-sun', variant: 'primary' as const }
     ],
     image: {
-      src: new URL('@/assets/images/family/dsc-0038.jpg', import.meta.url).href,
+      src: new URL('@/assets/images/family/dsc-0207.jpg', import.meta.url).href,
       alt: 'Golden hour family session'
     }
   }
@@ -254,7 +254,7 @@ const lifestylePackages = [
       { text: 'Book Now', action: 'book-lifestyle-event', variant: 'primary' as const }
     ],
     image: {
-      src: new URL('@/assets/images/lifestyle/events/Bay Nourish Ladies Tea2.jpg', import.meta.url).href,
+      src: new URL('@/assets/images/lifestyle/rockpooling/Copy of DSC_0027.jpg', import.meta.url).href,
       alt: 'Lifestyle and events photography'
     }
   },
@@ -273,7 +273,7 @@ const lifestylePackages = [
       { text: 'Request a Wedding Quote', action: 'wedding-quote', variant: 'primary' as const }
     ],
     image: {
-      src: new URL('@/assets/images/lifestyle/traditional-wedding/Copy of DSC_0017.jpg', import.meta.url).href,
+      src: new URL('@/assets/images/lifestyle/traditional-wedding/Copy of DSC_0027.jpg', import.meta.url).href,
       alt: 'Wedding photography'
     }
   }
@@ -294,7 +294,7 @@ const organizationPackages = [
       { text: 'Book Now', action: 'book-raw-thread', variant: 'primary' as const }
     ],
     image: {
-      src: new URL('@/assets/images/NGO-storytelling/Sozo Foundation Case Study Images103.jpg', import.meta.url).href,
+      src: new URL('@/assets/images/NGO-storytelling/Sozo Foundation Case Study Images54.jpg', import.meta.url).href,
       alt: 'NGO short story package'
     }
   },
@@ -313,7 +313,7 @@ const organizationPackages = [
       { text: 'Book Now', action: 'book-narrative', variant: 'primary' as const }
     ],
     image: {
-      src: new URL('@/assets/images/NGO-storytelling/Sozo Foundation Case Study Images106.jpg', import.meta.url).href,
+      src: new URL('@/assets/images/NGO-storytelling/Sozo Foundation Case Study Images40.jpg', import.meta.url).href,
       alt: 'NGO campaigns and reports'
     }
   },
@@ -332,7 +332,7 @@ const organizationPackages = [
       { text: 'Book Now', action: 'book-footpath', variant: 'primary' as const }
     ],
     image: {
-      src: new URL('@/assets/images/NGO-storytelling/Sozo Foundation Case Study Images20.jpg', import.meta.url).href,
+      src: new URL('@/assets/images/NGO-storytelling/Sozo Foundation Case Study Images65.jpg', import.meta.url).href,
       alt: 'NGO long-term partnership'
     }
   }
