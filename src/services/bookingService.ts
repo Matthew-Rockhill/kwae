@@ -19,13 +19,13 @@ class BookingService {
   private apiBaseUrl: string
 
   constructor() {
-    // You can set this to your actual API endpoint
-    this.apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 
-      (import.meta.env.PROD ? 'https://www.kristinmathilde.com/api' : 'http://localhost:3001/api')
-    
+    // Strict: require VITE_API_BASE_URL to be set
+    if (!import.meta.env.VITE_API_BASE_URL) {
+      throw new Error('VITE_API_BASE_URL environment variable must be set!');
+    }
+    this.apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
+
     // Debug logging
-    console.log('🔧 Environment:', import.meta.env.MODE);
-    console.log('🔧 Production:', import.meta.env.PROD);
     console.log('🔧 API Base URL:', this.apiBaseUrl);
   }
 
@@ -50,54 +50,9 @@ class BookingService {
       return result
     } catch (error) {
       console.error('Booking submission error:', error)
-      
-      // For development, let's store in localStorage and send a mock email
-      if (import.meta.env.DEV) {
-        return this.handleDevSubmission(bookingData)
-      }
-      
       return {
         success: false,
         message: 'Failed to submit booking. Please try again or contact us directly.',
-      }
-    }
-  }
-
-  /**
-   * Development fallback - store in localStorage and log
-   */
-  private async handleDevSubmission(bookingData: BookingData): Promise<BookingResponse> {
-    try {
-      // Store in localStorage for development
-      const existingBookings = JSON.parse(localStorage.getItem('bookings') || '[]')
-      const bookingId = `booking_${Date.now()}`
-      
-      const booking = {
-        ...bookingData,
-        id: bookingId,
-      }
-      
-      existingBookings.push(booking)
-      localStorage.setItem('bookings', JSON.stringify(existingBookings))
-      
-      // Log the booking data for development
-      console.log('📅 New Booking Received:', booking)
-      console.log('💌 Email would be sent to: hello@kristinmathilde.com')
-      console.log('📧 Customer email:', bookingData.email)
-      
-      // Simulate network delay
-      await new Promise(resolve => setTimeout(resolve, 500))
-      
-      return {
-        success: true,
-        message: 'Booking submitted successfully! (Development mode)',
-        bookingId,
-      }
-    } catch (error) {
-      console.error('Dev submission error:', error)
-      return {
-        success: false,
-        message: 'Failed to submit booking.',
       }
     }
   }
@@ -120,12 +75,6 @@ class BookingService {
       return await response.json()
     } catch (error) {
       console.error('Error fetching bookings:', error)
-      
-      // Return localStorage bookings in development
-      if (import.meta.env.DEV) {
-        return JSON.parse(localStorage.getItem('bookings') || '[]')
-      }
-      
       return []
     }
   }
