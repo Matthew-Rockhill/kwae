@@ -49,7 +49,7 @@
     <!-- Error State -->
     <BaseSection v-else-if="error" background="light" padding="lg">
       <div class="text-center">
-        <BaseText color="error">{{ error }}</BaseText>
+        <BaseText color="muted">{{ error }}</BaseText>
       </div>
     </BaseSection>
     
@@ -240,51 +240,22 @@ async function fetchImages() {
     
     console.log(`Fetching images from folder: ${folder}`)
     
-    const response = await fetch(`/api/cloudinary-portfolio?folder=${folder}`)
-    
-    console.log('Response status:', response.status)
-    console.log('Response headers:', Object.fromEntries(response.headers.entries()))
-    
-    if (!response.ok) {
-      const errorText = await response.text()
-      console.error('Error response:', errorText)
-      throw new Error(`HTTP error! status: ${response.status}`)
-    }
-    
-    // Get the raw response text first
-    const responseText = await response.text()
-    console.log('Raw response:', responseText.substring(0, 200) + '...')
-    
-    // Try to parse as JSON
-    let data
-    try {
-      data = JSON.parse(responseText)
-    } catch (parseError) {
-      console.error('JSON parse error:', parseError)
-      console.error('Response that failed to parse:', responseText)
-      throw new Error('Invalid JSON response from API')
-    }
-    
-    if (data.error) {
-      throw new Error(data.error)
-    }
-    
-    // Transform Cloudinary response to our image format
-    images.value = (data.images || []).map((img: any, index: number): PortfolioImage => ({
-      id: img.public_id || `${folder}-${index}`,
-      thumbnailUrl: img.url,
-      fullUrl: img.url,
-      alt: img.public_id || `${activeCategory.value} image ${index + 1}`,
-      title: img.public_id || undefined
+    // For now, use placeholder images to test the interface
+    const placeholderImages = Array.from({ length: 12 }, (_, index) => ({
+      id: `${folder}-${index}`,
+      thumbnailUrl: `https://picsum.photos/800/600?random=${Date.now()}-${index}`,
+      fullUrl: `https://picsum.photos/1200/900?random=${Date.now()}-${index}`,
+      alt: `${activeCategory.value} image ${index + 1}`,
+      title: `${folder} - Image ${index + 1}`
     }))
     
-    // Reset visible count when changing categories
+    images.value = placeholderImages
     visibleCount.value = 12
     
-    console.log(`Loaded ${images.value.length} images`)
+    console.log(`Loaded ${images.value.length} placeholder images`)
     
   } catch (err) {
-    console.error('Error fetching images:', err)
+    console.error('Error generating images:', err)
     error.value = err instanceof Error ? err.message : 'Failed to load images'
     images.value = []
   } finally {
