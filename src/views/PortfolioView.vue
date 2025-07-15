@@ -48,8 +48,27 @@
     
     <!-- Error State -->
     <BaseSection v-else-if="error" background="light" padding="lg">
-      <div class="text-center">
-        <BaseText color="muted">{{ error }}</BaseText>
+      <div class="text-center py-12">
+        <div class="max-w-md mx-auto">
+          <div class="mb-6">
+            <svg class="w-16 h-16 mx-auto text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <BaseHeading :level="3" align="center" class="mb-4">
+            Unable to Load Gallery
+          </BaseHeading>
+          <BaseText size="lg" :opacity="70" align="center" class="mb-6">
+            {{ error }}
+          </BaseText>
+          <BaseButton 
+            variant="primary"
+            @click="fetchImages"
+            class="transform transition-transform duration-300 hover:scale-105"
+          >
+            Try Again
+          </BaseButton>
+        </div>
       </div>
     </BaseSection>
     
@@ -240,23 +259,51 @@ async function fetchImages() {
     
     console.log(`Fetching images from folder: ${folder}`)
     
-    // For now, use placeholder images to test the interface
-    const placeholderImages = Array.from({ length: 12 }, (_, index) => ({
-      id: `${folder}-${index}`,
-      thumbnailUrl: `https://picsum.photos/800/600?random=${Date.now()}-${index}`,
-      fullUrl: `https://picsum.photos/1200/900?random=${Date.now()}-${index}`,
-      alt: `${activeCategory.value} image ${index + 1}`,
-      title: `${folder} - Image ${index + 1}`
+    const response = await fetch(`/api/cloudinary-portfolio?folder=${folder}`)
+    
+    if (!response.ok) {
+      throw new Error(`Failed to fetch images: ${response.status} ${response.statusText}`)
+    }
+    
+    const responseText = await response.text()
+    
+    // Check if response looks like JavaScript code (development issue)
+    if (responseText.includes('export default') || responseText.includes('function handler')) {
+      throw new Error('API configuration error - please contact support')
+    }
+    
+    let data
+    try {
+      data = JSON.parse(responseText)
+    } catch (parseError) {
+      throw new Error('Invalid response from image server')
+    }
+    
+    if (!data.success) {
+      throw new Error(data.error || 'Failed to load images')
+    }
+    
+    if (!data.images || data.images.length === 0) {
+      throw new Error(`No images found in ${activeCategory.value} gallery`)
+    }
+    
+    // Transform API response to our image format
+    images.value = data.images.map((img: any, index: number): PortfolioImage => ({
+      id: img.public_id || `${folder}-${index}`,
+      thumbnailUrl: img.url,
+      fullUrl: img.url,
+      alt: img.public_id || `${activeCategory.value} image ${index + 1}`,
+      title: img.public_id || undefined
     }))
     
-    images.value = placeholderImages
+    // Reset visible count when changing categories
     visibleCount.value = 12
     
-    console.log(`Loaded ${images.value.length} placeholder images`)
+    console.log(`✅ Loaded ${images.value.length} images from ${activeCategory.value} gallery`)
     
   } catch (err) {
-    console.error('Error generating images:', err)
-    error.value = err instanceof Error ? err.message : 'Failed to load images'
+    console.error('Error fetching images:', err)
+    error.value = err instanceof Error ? err.message : 'Failed to load gallery images'
     images.value = []
   } finally {
     loading.value = false
