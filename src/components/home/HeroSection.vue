@@ -14,7 +14,7 @@
           Capturing Beauty in<br>Humble Places
         </h1>
         <button
-          class="mt-6 btn-primary px-8 py-3 text-lg font-semibold rounded shadow-lg hover:bg-[var(--color-secondary)] transition"
+          class="mt-6 px-8 py-3 text-lg font-semibold rounded shadow-lg bg-white text-[var(--color-text)] hover:bg-[var(--color-secondary)] hover:text-white transition border border-[var(--color-text)]"
           @click="$emit('book-now')"
         >
           Book Now

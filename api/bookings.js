@@ -1,64 +1,18 @@
-import { Pool } from 'pg';
+import { createClient } from '@supabase/supabase-js';
 import sgMail from '@sendgrid/mail';
 
 // Configure SendGrid
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
-// PostgreSQL connection with SSL configuration for Supabase
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL || 
-    process.env.VITE_DATABASE_URL ||
-    'postgresql://postgres:%2Bc%254vua.bThXF4B@db.xeeqjvjhnrdeknkwstqb.supabase.co:5432/postgres',
-  ssl: {
-    rejectUnauthorized: false
-  }
-});
-
-// Debug: Log connection string status
-console.log('🔍 DATABASE_URL exists:', !!process.env.DATABASE_URL);
-console.log('🔍 DATABASE_URL preview:', process.env.DATABASE_URL ? `${process.env.DATABASE_URL.substring(0, 20)}...` : 'NOT_SET');
-console.log('🔍 All env vars:', Object.keys(process.env).filter(key => key.includes('DATABASE')));
-
-// Test the database connection
-async function testDatabaseConnection() {
-  try {
-    const client = await pool.connect();
-    console.log('✅ Database connection test successful');
-    await client.query('SELECT NOW()');
-    client.release();
-    return true;
-  } catch (error) {
-    console.error('❌ Database connection test failed:', error);
-    return false;
-  }
-}
-
-// Rate limiting helper (simple in-memory store for serverless)
-const rateLimitStore = new Map();
-
-function checkRateLimit(ip, limit = 5, windowMs = 60 * 60 * 1000) {
-  const now = Date.now();
-  const windowStart = now - windowMs;
-  
-  if (!rateLimitStore.has(ip)) {
-    rateLimitStore.set(ip, []);
-  }
-  
-  const requests = rateLimitStore.get(ip).filter(time => time > windowStart);
-  rateLimitStore.set(ip, requests);
-  
-  if (requests.length >= limit) {
-    return false;
-  }
-  
-  requests.push(now);
-  return true;
-}
+// Initialize Supabase client
+const supabase = createClient(
+  process.env.VITE_SUPABASE_URL,
+  process.env.VITE_SUPABASE_SERVICE_KEY
+);
 
 async function sendBookingEmails(bookingData) {
   const { bookingId, selectedPackage, firstName, lastName, email, phone, eventDate, additionalNotes } = bookingData;
   
-  // Admin notification email
   const adminEmail = {
     to: process.env.ADMIN_EMAIL || 'hello@kristinmathilde.com',
     from: process.env.FROM_EMAIL || 'hello@kristinmathilde.com',
@@ -85,7 +39,6 @@ async function sendBookingEmails(bookingData) {
     `
   };
   
-  // Customer confirmation email
   const customerEmail = {
     to: email,
     from: process.env.FROM_EMAIL || 'hello@kristinmathilde.com',
@@ -135,7 +88,6 @@ async function sendBookingEmails(bookingData) {
     console.log(`✅ Emails sent successfully for booking #${bookingId}`);
   } catch (error) {
     console.error('❌ Email sending failed:', error);
-    throw error;
   }
 }
 
@@ -146,33 +98,17 @@ const allowedOrigins = [
 
 const handler = async (req, res) => {
   try {
-    // --- DEBUG: Log incoming request ---
-    console.log('🔍 Request origin:', req.headers.origin);
     console.log('🔍 Request method:', req.method);
-    console.log('🔍 Request headers:', req.headers);
-    if (req.body) {
-      console.log('🔍 Request body:', req.body);
-    }
-
-    // --- DEBUG: Log env variable presence ---
-    const envCheck = {
-      DATABASE_URL: !!process.env.DATABASE_URL,
-      DATABASE_URL_PREVIEW: process.env.DATABASE_URL ? `${process.env.DATABASE_URL.substring(0, 30)}...` : 'NOT_SET',
+    console.log('🔍 Request origin:', req.headers.origin);
+    
+    // Debug environment variables
+    console.log('🔍 Environment check:', {
+      VITE_SUPABASE_URL: !!process.env.VITE_SUPABASE_URL,
+      VITE_SUPABASE_SERVICE_KEY: !!process.env.VITE_SUPABASE_SERVICE_KEY,
       SENDGRID_API_KEY: !!process.env.SENDGRID_API_KEY,
       FROM_EMAIL: !!process.env.FROM_EMAIL,
-      ADMIN_EMAIL: !!process.env.ADMIN_EMAIL,
-      NODE_ENV: process.env.NODE_ENV
-    };
-    console.log('🔍 Env check:', envCheck);
-
-    // Test database connection first
-    const dbConnectionTest = await testDatabaseConnection();
-    if (!dbConnectionTest) {
-      return res.status(500).json({
-        success: false,
-        message: 'Database connection failed during startup test'
-      });
-    }
+      ADMIN_EMAIL: !!process.env.ADMIN_EMAIL
+    });
 
     // Set CORS headers
     const origin = req.headers.origin;
@@ -183,209 +119,110 @@ const handler = async (req, res) => {
     res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-    // Handle preflight
     if (req.method === 'OPTIONS') {
       res.status(200).end();
       return;
     }
 
-    // Only allow POST
     if (req.method !== 'POST') {
       return res.status(405).json({ success: false, message: 'Method not allowed' });
     }
 
-    // --- DEBUG: Database connection ---
-    let client;
-    try {
-      client = await pool.connect();
-      console.log('✅ Database connection successful');
-      
-      // Test query to ensure we can actually query the database
-      const testQuery = await client.query('SELECT 1 as test');
-      console.log('✅ Test query successful:', testQuery.rows);
-      
-    } catch (dbErr) {
-      console.error('❌ Database connection failed:', dbErr);
-      console.error('❌ Full error details:', {
-        message: dbErr.message,
-        code: dbErr.code,
-        detail: dbErr.detail,
-        hint: dbErr.hint,
-        position: dbErr.position,
-        internalPosition: dbErr.internalPosition,
-        internalQuery: dbErr.internalQuery,
-        where: dbErr.where,
-        schema: dbErr.schema,
-        table: dbErr.table,
-        column: dbErr.column,
-        dataType: dbErr.dataType,
-        constraint: dbErr.constraint,
-        file: dbErr.file,
-        line: dbErr.line,
-        routine: dbErr.routine
-      });
-      
-      return res.status(500).json({
-        success: false,
-        message: 'Database connection failed',
-        error: process.env.NODE_ENV !== 'production' ? dbErr.message : undefined
-      });
-    }
-
-    // --- DEBUG: Parse and log request body ---
+    // Parse request body
     let data = req.body;
     if (!data || typeof data !== 'object') {
       try {
         data = JSON.parse(req.body);
       } catch (e) {
-        console.error('❌ JSON parsing failed:', e);
-        return res.status(400).json({
-          success: false,
-          message: 'Invalid JSON in request body'
-        });
+        return res.status(400).json({ success: false, message: 'Invalid JSON' });
       }
     }
-    console.log('🔍 Parsed booking data:', data);
 
-    const {
-      selectedPackage,
-      firstName,
-      lastName,
-      email,
-      phone,
-      eventDate,
-      additionalNotes,
-      submittedAt
-    } = data || {};
+    const { selectedPackage, firstName, lastName, email, phone, eventDate, additionalNotes } = data || {};
 
     // Validate required fields
     if (!selectedPackage || !firstName || !lastName || !email || !phone) {
       return res.status(400).json({
         success: false,
-        message: 'Missing required fields: selectedPackage, firstName, lastName, email, phone'
+        message: 'Missing required fields'
       });
     }
 
     // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      return res.status(400).json({
+      return res.status(400).json({ success: false, message: 'Invalid email format' });
+    }
+
+    // Check for duplicates (last 24 hours)
+    const yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+    const { data: duplicates } = await supabase
+      .from('bookings')
+      .select('id')
+      .eq('email', email)
+      .eq('selected_package', selectedPackage)
+      .gte('created_at', yesterday);
+
+    if (duplicates && duplicates.length > 0) {
+      return res.status(409).json({
         success: false,
-        message: 'Invalid email format'
+        message: 'A booking with this email and package already exists within the last 24 hours.'
       });
     }
 
-    // --- DEBUG: Check for duplicate bookings ---
-    try {
-      const duplicateCheck = await client.query(
-        `SELECT id FROM bookings WHERE email = $1 AND selected_package = $2 AND created_at > NOW() - INTERVAL '24 hours'`,
-        [email, selectedPackage]
-      );
-      console.log('🔍 Duplicate check result:', duplicateCheck.rows);
-      if (duplicateCheck.rows.length > 0) {
-        return res.status(409).json({
-          success: false,
-          message: 'A booking with this email and package already exists within the last 24 hours.'
-        });
-      }
-    } catch (dupErr) {
-      console.error('❌ Duplicate check failed:', dupErr);
+    // Insert new booking
+    const bookingData = {
+      selected_package: selectedPackage,
+      first_name: firstName,
+      last_name: lastName,
+      email: email,
+      phone: phone,
+      event_date: eventDate || null,
+      additional_notes: additionalNotes || null,
+      submitted_at: new Date().toISOString(),
+      ip_address: req.headers['x-forwarded-for'] || req.headers['x-real-ip'] || null
+    };
+
+    const { data: result, error } = await supabase
+      .from('bookings')
+      .insert([bookingData])
+      .select('id, created_at')
+      .single();
+
+    if (error) {
+      console.error('❌ Insert error:', error);
       return res.status(500).json({
         success: false,
-        message: 'Duplicate check failed',
-        error: process.env.NODE_ENV !== 'production' ? dupErr.message : undefined
+        message: 'Failed to save booking',
+        error: process.env.NODE_ENV !== 'production' ? error.message : undefined
       });
     }
 
-    // --- DEBUG: Insert booking ---
-    let bookingId, createdAt;
-    try {
-      const insertQuery = `
-        INSERT INTO bookings (
-          selected_package, first_name, last_name, email, phone, 
-          event_date, additional_notes, submitted_at, ip_address
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
-        RETURNING id, created_at
-      `;
-      const clientIP = req.headers['x-forwarded-for'] || req.connection?.remoteAddress || null;
-      const values = [
-        selectedPackage,
-        firstName,
-        lastName,
-        email,
-        phone,
-        eventDate || null,
-        additionalNotes || null,
-        submittedAt || new Date().toISOString(),
-        clientIP
-      ];
-      
-      console.log('🔍 About to insert with values:', values);
-      const result = await client.query(insertQuery, values);
-      bookingId = result.rows[0].id;
-      createdAt = result.rows[0].created_at;
-      console.log(`📅 New booking inserted: #${bookingId}`);
-    } catch (insertErr) {
-      console.error('❌ Booking insert failed:', insertErr);
-      console.error('❌ Insert error details:', {
-        message: insertErr.message,
-        code: insertErr.code,
-        detail: insertErr.detail,
-        hint: insertErr.hint,
-        position: insertErr.position,
-        internalPosition: insertErr.internalPosition,
-        internalQuery: insertErr.internalQuery,
-        where: insertErr.where,
-        schema: insertErr.schema,
-        table: insertErr.table,
-        column: insertErr.column,
-        dataType: insertErr.dataType,
-        constraint: insertErr.constraint,
-        file: insertErr.file,
-        line: insertErr.line,
-        routine: insertErr.routine
-      });
-      
-      return res.status(500).json({
-        success: false,
-        message: 'Booking insert failed',
-        error: process.env.NODE_ENV !== 'production' ? insertErr.message : undefined
-      });
-    }
+    console.log(`✅ Booking created: #${result.id}`);
 
-    // --- DEBUG: Send emails (async, log errors) ---
-    try {
-      sendBookingEmails({
-        bookingId,
-        selectedPackage,
-        firstName,
-        lastName,
-        email,
-        phone,
-        eventDate,
-        additionalNotes,
-        createdAt
-      }).catch(emailErr => {
-        console.error('❌ Email sending failed:', emailErr);
-      });
-    } catch (emailErr) {
-      console.error('❌ Email sending setup failed:', emailErr);
-    }
+    // Send emails (don't wait for completion)
+    sendBookingEmails({
+      bookingId: result.id,
+      selectedPackage,
+      firstName,
+      lastName,
+      email,
+      phone,
+      eventDate,
+      additionalNotes
+    }).catch(err => console.error('Email error:', err));
 
     res.status(201).json({
       success: true,
       message: 'Booking submitted successfully!',
-      bookingId: bookingId?.toString(),
-      debug: process.env.NODE_ENV !== 'production' ? { envCheck, bookingId, createdAt } : undefined
+      bookingId: result.id.toString()
     });
 
-    if (client) client.release();
   } catch (error) {
-    console.error('❌ Outer error handler:', error);
+    console.error('❌ Handler error:', error);
     res.status(500).json({
       success: false,
-      message: 'Internal server error',
-      error: process.env.NODE_ENV !== 'production' ? error.message : undefined
+      message: 'Internal server error'
     });
   }
 };
