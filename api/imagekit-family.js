@@ -29,7 +29,16 @@ export default async function handler(req, res) {
         const bNum = parseInt(b.name.match(/(\d+)/)?.[1] || '0');
         return aNum - bNum;
       })
-      .map(file => IMAGEKIT_PUBLIC_URL + file.filePath.replace(/^\//, ''));
+      .map(file => {
+        const baseUrl = IMAGEKIT_PUBLIC_URL + file.filePath.replace(/^\//, '');
+        // Generate optimized thumbnail (400x400, high quality, auto format)
+        const thumbnailUrl = baseUrl + '?tr=w-400,h-400,c-at_max,q-80,f-auto';
+        return {
+          thumbnailUrl,
+          fullUrl: baseUrl + '?tr=q-90,f-auto', // High quality for lightbox
+          alt: `Family photo ${file.name}`
+        };
+      });
     return res.status(200).json({ images });
   } catch (err) {
     return res.status(500).json({ error: err.message });

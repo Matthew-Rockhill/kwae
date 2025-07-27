@@ -138,7 +138,7 @@ const brandingImages = [
   { id: 2, thumbnailUrl: new URL('@/assets/images/branding/ray-branding-shoot-25.jpg', import.meta.url).href, fullUrl: new URL('@/assets/images/branding/ray-branding-shoot-25.jpg', import.meta.url).href, alt: 'Branding photo 2' },
   // ... add the rest as before ...
 ];
-const familyImages = ref<{ src: string }[]>([]);
+const familyImages = ref<{ thumbnailUrl: string; fullUrl: string; alt: string }[]>([]);
 
 async function fetchFamilyImages() {
   loading.value = true;
@@ -147,7 +147,7 @@ async function fetchFamilyImages() {
     const res = await fetch('/api/imagekit-family');
     if (!res.ok) throw new Error('Failed to fetch family images');
     const data = await res.json();
-    familyImages.value = data.images.map((url: string) => ({ src: url }));
+    familyImages.value = data.images;
   } catch (err: any) {
     error.value = err.message || 'Unknown error';
   } finally {
@@ -190,10 +190,7 @@ const filteredPortfolio = computed(() => {
     return brandingImages.slice(0, visibleCount.value)
   }
   if (activeCategory.value === 'family') {
-    return familyImages.value.slice(0, visibleCount.value).map(img => ({
-      thumbnailUrl: img.src,
-      fullUrl: img.src
-    }))
+    return familyImages.value.slice(0, visibleCount.value)
   }
   if (activeCategory.value === 'lifestyle') {
     return lifestyleImages.value[activeSubcategory.value].slice(0, visibleCount.value).map(img => ({
