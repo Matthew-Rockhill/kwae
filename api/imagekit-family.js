@@ -23,6 +23,12 @@ export default async function handler(req, res) {
     // files is an array of file objects
     const images = files
       .filter(file => file.type === 'file')
+      .sort((a, b) => {
+        // Extract numbers from filename for sorting
+        const aNum = parseInt(a.name.match(/(\d+)/)?.[1] || '0');
+        const bNum = parseInt(b.name.match(/(\d+)/)?.[1] || '0');
+        return aNum - bNum;
+      })
       .map(file => IMAGEKIT_PUBLIC_URL + file.filePath.replace(/^\//, ''));
     return res.status(200).json({ images });
   } catch (err) {
