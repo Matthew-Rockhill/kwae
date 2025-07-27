@@ -133,11 +133,7 @@ const visibleCount = ref(12);
 const loading = ref(false);
 const error = ref('');
 
-const brandingImages = [
-  { id: 1, thumbnailUrl: new URL('@/assets/images/branding/ray-branding-shoot-1.jpg', import.meta.url).href, fullUrl: new URL('@/assets/images/branding/ray-branding-shoot-1.jpg', import.meta.url).href, alt: 'Branding photo 1' },
-  { id: 2, thumbnailUrl: new URL('@/assets/images/branding/ray-branding-shoot-25.jpg', import.meta.url).href, fullUrl: new URL('@/assets/images/branding/ray-branding-shoot-25.jpg', import.meta.url).href, alt: 'Branding photo 2' },
-  // ... add the rest as before ...
-];
+const brandingImages = ref<{ thumbnailUrl: string; fullUrl: string; alt: string }[]>([]);
 const familyImages = ref<{ thumbnailUrl: string; fullUrl: string; alt: string }[]>([]);
 
 async function fetchFamilyImages() {
@@ -155,60 +151,105 @@ async function fetchFamilyImages() {
   }
 }
 
+async function fetchBrandingImages() {
+  loading.value = true;
+  error.value = '';
+  try {
+    const res = await fetch('/api/imagekit-branding');
+    if (!res.ok) throw new Error('Failed to fetch branding images');
+    const data = await res.json();
+    brandingImages.value = data.images;
+  } catch (err: any) {
+    error.value = err.message || 'Unknown error';
+  } finally {
+    loading.value = false;
+  }
+}
+
+async function fetchNgoImages() {
+  loading.value = true;
+  error.value = '';
+  try {
+    const res = await fetch('/api/imagekit-ngo');
+    if (!res.ok) throw new Error('Failed to fetch NGO images');
+    const data = await res.json();
+    ngoImages.value = data.images;
+  } catch (err: any) {
+    error.value = err.message || 'Unknown error';
+  } finally {
+    loading.value = false;
+  }
+}
+
+async function fetchLifestyleImages(subcategory: LifestyleSubcategory) {
+  loading.value = true;
+  error.value = '';
+  try {
+    const res = await fetch(`/api/imagekit-lifestyle?subcategory=${subcategory}`);
+    if (!res.ok) throw new Error(`Failed to fetch ${subcategory} images`);
+    const data = await res.json();
+    lifestyleImages.value[subcategory] = data.images;
+  } catch (err: any) {
+    error.value = err.message || 'Unknown error';
+  } finally {
+    loading.value = false;
+  }
+}
+
 onMounted(() => {
   if (activeCategory.value === 'family') {
     fetchFamilyImages();
+  } else if (activeCategory.value === 'branding') {
+    fetchBrandingImages();
+  } else if (activeCategory.value === 'ngo') {
+    fetchNgoImages();
+  } else if (activeCategory.value === 'lifestyle') {
+    fetchLifestyleImages(activeSubcategory.value);
   }
 });
 
 watch(activeCategory, (newVal) => {
   if (newVal === 'family' && familyImages.value.length === 0) {
     fetchFamilyImages();
+  } else if (newVal === 'branding' && brandingImages.value.length === 0) {
+    fetchBrandingImages();
+  } else if (newVal === 'ngo' && ngoImages.value.length === 0) {
+    fetchNgoImages();
+  } else if (newVal === 'lifestyle' && lifestyleImages.value[activeSubcategory.value].length === 0) {
+    fetchLifestyleImages(activeSubcategory.value);
   }
 });
-const ngoImages = ref([
-  { src: new URL('@/assets/images/NGO-storytelling/Sozo Foundation Case Study Images106.jpg', import.meta.url).href },
-  // ... add the rest as before ...
-]);
-const lifestyleImages = ref<Record<LifestyleSubcategory, { src: string }[]>>({
-  rockpooling: [
-    { src: new URL('@/assets/images/lifestyle/rockpooling/Copy of DSC_0051.jpg', import.meta.url).href },
-    // ... add the rest as before ...
-  ],
-  events: [
-    { src: new URL('@/assets/images/lifestyle/events/Bay Nourish Ladies Tea63.jpg', import.meta.url).href },
-    // ... add the rest as before ...
-  ],
-  'traditional-wedding': [
-    { src: new URL('@/assets/images/lifestyle/traditional-wedding/Copy of DSC_0465.jpg', import.meta.url).href },
-    // ... add the rest as before ...
-  ]
+
+watch(activeSubcategory, (newVal) => {
+  if (activeCategory.value === 'lifestyle' && lifestyleImages.value[newVal].length === 0) {
+    fetchLifestyleImages(newVal);
+  }
+});
+const ngoImages = ref<{ thumbnailUrl: string; fullUrl: string; alt: string }[]>([]);
+const lifestyleImages = ref<Record<LifestyleSubcategory, { thumbnailUrl: string; fullUrl: string; alt: string }[]>>({
+  rockpooling: [],
+  events: [],
+  'traditional-wedding': []
 });
 
 const filteredPortfolio = computed(() => {
   if (activeCategory.value === 'branding') {
-    return brandingImages.slice(0, visibleCount.value)
+    return brandingImages.value.slice(0, visibleCount.value)
   }
   if (activeCategory.value === 'family') {
     return familyImages.value.slice(0, visibleCount.value)
   }
   if (activeCategory.value === 'lifestyle') {
-    return lifestyleImages.value[activeSubcategory.value].slice(0, visibleCount.value).map(img => ({
-      thumbnailUrl: img.src,
-      fullUrl: img.src
-    }))
+    return lifestyleImages.value[activeSubcategory.value].slice(0, visibleCount.value)
   }
   if (activeCategory.value === 'ngo') {
-    return ngoImages.value.slice(0, visibleCount.value).map(img => ({
-      thumbnailUrl: img.src,
-      fullUrl: img.src
-    }))
+    return ngoImages.value.slice(0, visibleCount.value)
   }
   return []
 });
 const hasMoreItems = computed(() => {
   if (activeCategory.value === 'branding') {
-    return visibleCount.value < brandingImages.length
+    return visibleCount.value < brandingImages.value.length
   }
   if (activeCategory.value === 'family') {
     return visibleCount.value < familyImages.value.length
