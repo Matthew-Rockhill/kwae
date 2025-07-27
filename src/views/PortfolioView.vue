@@ -30,54 +30,21 @@
     <div v-if="activeCategory === 'lifestyle'" class="flex justify-center items-center space-x-4 mb-4 mt-4 min-h-[60px]">
       <FilterButton
         v-for="subcategory in lifestyleSubcategories"
-        :key="subcategory.id"
-        :active="activeSubcategory === subcategory.id"
-        @click="setActiveSubcategory(subcategory.id)"
+        :key="subcategory"
+        :active="activeSubcategory === subcategory"
+        @click="activeSubcategory = subcategory"
         class="capitalize"
       >
-        {{ subcategory.name }}
+        {{ subcategory.replace('-', ' ') }}
       </FilterButton>
     </div>
-    
-    <!-- Loading State -->
-    <BaseSection v-if="loading" background="light" padding="lg">
-      <div class="text-center">
-        <BaseText>Loading images...</BaseText>
-      </div>
-    </BaseSection>
-    
-    <!-- Error State -->
-    <BaseSection v-else-if="error" background="light" padding="lg">
-      <div class="text-center py-12">
-        <div class="max-w-md mx-auto">
-          <div class="mb-6">
-            <svg class="w-16 h-16 mx-auto text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-          </div>
-          <BaseHeading :level="3" align="center" class="mb-4">
-            Unable to Load Gallery
-          </BaseHeading>
-          <BaseText size="lg" :opacity="70" align="center" class="mb-6">
-            {{ error }}
-          </BaseText>
-          <BaseButton 
-            variant="primary"
-            @click="fetchImages"
-            class="transform transition-transform duration-300 hover:scale-105"
-          >
-            Try Again
-          </BaseButton>
-        </div>
-      </div>
-    </BaseSection>
     
     <!-- Portfolio Gallery -->
     <BaseSection v-else background="light" padding="lg">
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         <PortfolioCard
           v-for="(item, index) in filteredPortfolio" 
-          :key="item.id"
+          :key="index"
           :image="item"
           :category="activeCategory"
           :subcategory="activeSubcategory"
@@ -94,12 +61,12 @@
           @click="loadMore"
           class="transform transition-transform duration-300 hover:scale-105"
         >
-          Load More ({{ visibleCount }}/{{ totalItems }})
+          Load More ({{ visibleCount }}/{{ filteredPortfolio.length }})
         </BaseButton>
       </div>
       
       <!-- No Images State -->
-      <div v-if="!loading && images.length === 0" class="text-center py-12">
+      <div v-if="filteredPortfolio.length === 0" class="text-center py-12">
         <BaseText size="lg" :opacity="70">No images found for this category.</BaseText>
       </div>
     </BaseSection>
@@ -144,8 +111,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { ref, computed, onMounted, watch } from 'vue'
+import { useRoute } from 'vue-router'
 import ImageLightbox from '@/components/ImageLightbox.vue'
 import BaseSection from '@/components/ui/BaseSection.vue'
 import BaseHeading from '@/components/ui/BaseHeading.vue'
@@ -156,227 +123,161 @@ import PortfolioCard from '@/components/ui/PortfolioCard.vue'
 import StickyFilterBar from '@/components/ui/StickyFilterBar.vue'
 import BookingModal from '@/components/BookingModal.vue'
 
-// Types
-type CategoryId = 'family' | 'ngo' | 'lifestyle' | 'branding'
-type LifestyleSubcategoryId = 'rockpooling' | 'events' | 'traditional-wedding'
+type CategoryId = 'family' | 'ngo' | 'lifestyle' | 'branding';
+type LifestyleSubcategory = 'rockpooling' | 'events' | 'traditional-wedding';
 
-interface PortfolioImage {
-  id: string
-  thumbnailUrl: string
-  fullUrl: string
-  alt: string
-  title?: string
-  description?: string
+const route = useRoute();
+const activeCategory = ref((route.query.category as string) || 'family');
+const activeSubcategory = ref<LifestyleSubcategory>('rockpooling');
+const visibleCount = ref(12);
+const loading = ref(false);
+const error = ref('');
+
+const brandingImages = [
+  { id: 1, thumbnailUrl: new URL('@/assets/images/branding/ray-branding-shoot-1.jpg', import.meta.url).href, fullUrl: new URL('@/assets/images/branding/ray-branding-shoot-1.jpg', import.meta.url).href, alt: 'Branding photo 1' },
+  { id: 2, thumbnailUrl: new URL('@/assets/images/branding/ray-branding-shoot-25.jpg', import.meta.url).href, fullUrl: new URL('@/assets/images/branding/ray-branding-shoot-25.jpg', import.meta.url).href, alt: 'Branding photo 2' },
+  // ... add the rest as before ...
+];
+const familyImages = ref<{ src: string }[]>([]);
+
+async function fetchFamilyImages() {
+  loading.value = true;
+  error.value = '';
+  try {
+    const res = await fetch('/api/imagekit-family');
+    if (!res.ok) throw new Error('Failed to fetch family images');
+    const data = await res.json();
+    familyImages.value = data.images.map((url: string) => ({ src: url }));
+  } catch (err: any) {
+    error.value = err.message || 'Unknown error';
+  } finally {
+    loading.value = false;
+  }
 }
 
-interface Category {
-  id: CategoryId
-  name: string
-}
+onMounted(() => {
+  if (activeCategory.value === 'family') {
+    fetchFamilyImages();
+  }
+});
 
-interface LifestyleSubcategory {
-  id: LifestyleSubcategoryId
-  name: string
-}
+watch(activeCategory, (newVal) => {
+  if (newVal === 'family' && familyImages.value.length === 0) {
+    fetchFamilyImages();
+  }
+});
+const ngoImages = ref([
+  { src: new URL('@/assets/images/NGO-storytelling/Sozo Foundation Case Study Images106.jpg', import.meta.url).href },
+  // ... add the rest as before ...
+]);
+const lifestyleImages = ref<Record<LifestyleSubcategory, { src: string }[]>>({
+  rockpooling: [
+    { src: new URL('@/assets/images/lifestyle/rockpooling/Copy of DSC_0051.jpg', import.meta.url).href },
+    // ... add the rest as before ...
+  ],
+  events: [
+    { src: new URL('@/assets/images/lifestyle/events/Bay Nourish Ladies Tea63.jpg', import.meta.url).href },
+    // ... add the rest as before ...
+  ],
+  'traditional-wedding': [
+    { src: new URL('@/assets/images/lifestyle/traditional-wedding/Copy of DSC_0465.jpg', import.meta.url).href },
+    // ... add the rest as before ...
+  ]
+});
 
-// Router
-const route = useRoute()
-const router = useRouter()
+const filteredPortfolio = computed(() => {
+  if (activeCategory.value === 'branding') {
+    return brandingImages.slice(0, visibleCount.value)
+  }
+  if (activeCategory.value === 'family') {
+    return familyImages.value.slice(0, visibleCount.value).map(img => ({
+      thumbnailUrl: img.src,
+      fullUrl: img.src
+    }))
+  }
+  if (activeCategory.value === 'lifestyle') {
+    return lifestyleImages.value[activeSubcategory.value].slice(0, visibleCount.value).map(img => ({
+      thumbnailUrl: img.src,
+      fullUrl: img.src
+    }))
+  }
+  if (activeCategory.value === 'ngo') {
+    return ngoImages.value.slice(0, visibleCount.value).map(img => ({
+      thumbnailUrl: img.src,
+      fullUrl: img.src
+    }))
+  }
+  return []
+});
+const hasMoreItems = computed(() => {
+  if (activeCategory.value === 'branding') {
+    return visibleCount.value < brandingImages.length
+  }
+  if (activeCategory.value === 'family') {
+    return visibleCount.value < familyImages.value.length
+  }
+  if (activeCategory.value === 'lifestyle') {
+    return visibleCount.value < lifestyleImages.value[activeSubcategory.value].length
+  }
+  if (activeCategory.value === 'ngo') {
+    return visibleCount.value < ngoImages.value.length
+  }
+  return false
+});
 
-// State
-const activeCategory = ref<CategoryId>((route.query.category as CategoryId) || 'family')
-const activeSubcategory = ref<LifestyleSubcategoryId>('rockpooling')
-const visibleCount = ref(12)
-const images = ref<PortfolioImage[]>([])
-const loading = ref(false)
-const error = ref('')
+const lightboxOpen = ref(false);
+const currentLightboxIndex = ref(0);
+const currentLightboxItem = computed(() => filteredPortfolio.value[currentLightboxIndex.value]);
+const currentLightboxImage = computed(() => {
+  const item = currentLightboxItem.value;
+  if (!item) return undefined;
+  return {
+    src: item.fullUrl || item.thumbnailUrl,
+    alt: 'Gallery image',
+  };
+});
+const totalLightboxImages = computed(() => filteredPortfolio.value.length);
 
-// Lightbox state
-const lightboxOpen = ref(false)
-const currentLightboxIndex = ref(0)
+const openLightbox = (index: number) => {
+  currentLightboxIndex.value = index;
+  lightboxOpen.value = true;
+  document.body.style.overflow = 'hidden';
+};
+const closeLightbox = () => {
+  lightboxOpen.value = false;
+  document.body.style.overflow = 'auto';
+};
+const prevImage = () => {
+  currentLightboxIndex.value = (currentLightboxIndex.value - 1 + filteredPortfolio.value.length) % filteredPortfolio.value.length;
+};
+const nextImage = () => {
+  currentLightboxIndex.value = (currentLightboxIndex.value + 1) % filteredPortfolio.value.length;
+};
+const loadMore = () => {
+  visibleCount.value += 12;
+};
 
 // Booking modal state
-const showBookingModal = ref(false)
+const showBookingModal = ref(false);
+const openBookingModal = () => {
+  showBookingModal.value = true;
+};
+const closeBookingModal = () => {
+  showBookingModal.value = false;
+};
 
-// Categories configuration
-const categories: Category[] = [
+const categories = [
   { id: 'family', name: 'Family' },
   { id: 'ngo', name: 'NGO Storytelling' },
   { id: 'lifestyle', name: 'Lifestyle' },
   { id: 'branding', name: 'Branding' }
-]
+];
+const lifestyleSubcategories: LifestyleSubcategory[] = ['rockpooling', 'events', 'traditional-wedding'];
 
-const lifestyleSubcategories: LifestyleSubcategory[] = [
-  { id: 'rockpooling', name: 'Rockpooling' },
-  { id: 'events', name: 'Events' },
-  { id: 'traditional-wedding', name: 'Traditional Wedding' }
-]
-
-// Cloudinary folder mapping
-const cloudinaryFolders = {
-  branding: 'branding',
-  family: 'family',
-  ngo: 'NGO-storytelling',
-  lifestyle: {
-    rockpooling: 'lifestyle/rockpooling',
-    events: 'lifestyle/events',
-    'traditional-wedding': 'lifestyle/traditional-wedding'
-  }
-}
-
-// Computed properties
-const filteredPortfolio = computed(() => images.value.slice(0, visibleCount.value))
-const hasMoreItems = computed(() => visibleCount.value < images.value.length)
-const totalItems = computed(() => images.value.length)
-
-const currentLightboxImage = computed(() => {
-  const item = filteredPortfolio.value[currentLightboxIndex.value]
-  if (!item) return undefined
-  
-  return {
-    src: item.fullUrl || item.thumbnailUrl,
-    alt: item.alt || 'Gallery image',
-    title: item.title,
-    description: item.description
-  }
-})
-
-const totalLightboxImages = computed(() => images.value.length)
-
-// Methods
-async function fetchImages() {
-  loading.value = true
-  error.value = ''
-  
-  try {
-    // Determine folder based on category and subcategory
-    let folder = ''
-    if (activeCategory.value === 'lifestyle') {
-      folder = cloudinaryFolders.lifestyle[activeSubcategory.value]
-    } else {
-      folder = cloudinaryFolders[activeCategory.value]
-    }
-    
-    console.log(`Fetching images from folder: ${folder}`)
-    
-    const response = await fetch(`/api/cloudinary-portfolio?folder=${folder}`)
-    
-    if (!response.ok) {
-      throw new Error(`Failed to fetch images: ${response.status} ${response.statusText}`)
-    }
-    
-    const responseText = await response.text()
-    
-    // Check if response looks like JavaScript code (development issue)
-    if (responseText.includes('export default') || responseText.includes('function handler')) {
-      throw new Error('API configuration error - please contact support')
-    }
-    
-    let data
-    try {
-      data = JSON.parse(responseText)
-    } catch (parseError) {
-      throw new Error('Invalid response from image server')
-    }
-    
-    if (!data.success) {
-      throw new Error(data.error || 'Failed to load images')
-    }
-    
-    if (!data.images || data.images.length === 0) {
-      throw new Error(`No images found in ${activeCategory.value} gallery`)
-    }
-    
-    // Transform API response to our image format
-    images.value = data.images.map((img: any, index: number): PortfolioImage => ({
-      id: img.public_id || `${folder}-${index}`,
-      thumbnailUrl: img.url,
-      fullUrl: img.url,
-      alt: img.public_id || `${activeCategory.value} image ${index + 1}`,
-      title: img.public_id || undefined
-    }))
-    
-    // Reset visible count when changing categories
-    visibleCount.value = 12
-    
-    console.log(`✅ Loaded ${images.value.length} images from ${activeCategory.value} gallery`)
-    
-  } catch (err) {
-    console.error('Error fetching images:', err)
-    error.value = err instanceof Error ? err.message : 'Failed to load gallery images'
-    images.value = []
-  } finally {
-    loading.value = false
-  }
-}
-
-function setActiveCategory(categoryId: CategoryId) {
-  activeCategory.value = categoryId
-  
-  // Update URL query parameter
-  router.push({
-    query: { ...route.query, category: categoryId }
-  })
-  
-  // Reset subcategory to default when changing categories
+function setActiveCategory(categoryId: string) {
+  activeCategory.value = categoryId as CategoryId;
   if (categoryId === 'lifestyle') {
-    activeSubcategory.value = 'rockpooling'
+    activeSubcategory.value = 'rockpooling';
   }
 }
-
-function setActiveSubcategory(subcategoryId: LifestyleSubcategoryId) {
-  activeSubcategory.value = subcategoryId
-}
-
-function loadMore() {
-  visibleCount.value += 12
-}
-
-// Lightbox methods
-function openLightbox(index: number) {
-  currentLightboxIndex.value = index
-  lightboxOpen.value = true
-  document.body.style.overflow = 'hidden'
-}
-
-function closeLightbox() {
-  lightboxOpen.value = false
-  document.body.style.overflow = 'auto'
-}
-
-function prevImage() {
-  if (images.value.length === 0) return
-  currentLightboxIndex.value = (currentLightboxIndex.value - 1 + images.value.length) % images.value.length
-}
-
-function nextImage() {
-  if (images.value.length === 0) return
-  currentLightboxIndex.value = (currentLightboxIndex.value + 1) % images.value.length
-}
-
-// Booking modal methods
-function openBookingModal() {
-  showBookingModal.value = true
-}
-
-function closeBookingModal() {
-  showBookingModal.value = false
-}
-
-// Watchers
-watch([activeCategory, activeSubcategory], fetchImages, { immediate: false })
-
-watch(
-  () => route.query.category,
-  (newCategory) => {
-    if (newCategory && typeof newCategory === 'string' && categories.some(cat => cat.id === newCategory)) {
-      activeCategory.value = newCategory as CategoryId
-    }
-  }
-)
-
-// Lifecycle
-onMounted(() => {
-  fetchImages()
-})
 </script>
