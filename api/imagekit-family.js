@@ -1,7 +1,7 @@
 export default async function handler(req, res) {
   const IMAGEKIT_PRIVATE_KEY = process.env.IMAGEKIT_PRIVATE_KEY;
   const IMAGEKIT_PUBLIC_URL = 'https://ik.imagekit.io/skbxxrf9vm/';
-  const FOLDER = 'family';
+  const FOLDER = 'Famil';
 
   if (!IMAGEKIT_PRIVATE_KEY) {
     return res.status(500).json({ error: 'Missing IMAGEKIT_PRIVATE_KEY in environment variables.' });
