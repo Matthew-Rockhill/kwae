@@ -25,8 +25,10 @@
             leave-to="opacity-0 scale-95"
           >
             <DialogPanel class="w-full max-w-2xl transform overflow-hidden rounded-2xl bg-[var(--color-light)] p-6 text-left align-middle shadow-xl transition-all">
-              <DialogTitle as="h3" class="font-montserrat text-2xl font-medium text-[var(--color-text)] mb-4">
-                Book Your Session
+              <DialogTitle as="template">
+                <BaseHeading :level="3" variant="hero" class="mb-4">
+                  Book Your Session
+                </BaseHeading>
               </DialogTitle>
               
               <p class="text-[var(--color-text)]/70 text-sm mb-6">
@@ -215,6 +217,7 @@ import { ref, reactive, watch } from 'vue'
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import { ArrowPathIcon } from '@heroicons/vue/24/outline'
 import { bookingService } from '@/services/bookingService'
+import BaseHeading from '@/components/ui/BaseHeading.vue'
 
 const props = defineProps<{
   isOpen: boolean

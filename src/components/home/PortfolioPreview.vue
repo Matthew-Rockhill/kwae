@@ -2,9 +2,9 @@
     <section class="bg-white">
       <div class="container-custom">
         <div class="text-center max-w-3xl mx-auto mb-16">
-          <h2 class="text-3xl md:text-4xl font-extralight text-[var(--color-text)] mb-6">
+          <BaseHeading :level="2" class="mb-6">
             A Glimpse into <span class="font-cormorant italic font-normal text-[var(--color-text)]">My Work</span>
-          </h2>
+          </BaseHeading>
           <p class="text-[var(--color-text)]/70 text-lg font-light leading-relaxed">
             Explore some of my favorite stories captured through the lens. From intimate family moments 
             to long-term visual storytelling for organisations, I bring a sense of authenticity and beauty to 
@@ -25,7 +25,7 @@
               <div class="absolute inset-0 bg-gradient-to-t from-[var(--color-text)]/80 via-[var(--color-text)]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               <div class="absolute inset-0 flex flex-col justify-end p-8 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-4 group-hover:translate-y-0">
                 <span class="text-[var(--color-accent)] text-sm uppercase tracking-wider mb-2">Family</span>
-                <h3 class="text-white text-2xl font-light">Capturing Family Moments</h3>
+                <BaseHeading :level="3" color="white" variant="light">Capturing Family Moments</BaseHeading>
               </div>
             </div>
             <div class="pointer-events-none absolute inset-px rounded-lg ring-1 shadow-sm ring-[var(--color-text)]/5 lg:rounded-l-[2rem]" />
@@ -42,7 +42,7 @@
               <div class="absolute inset-0 bg-gradient-to-t from-[var(--color-text)]/80 via-[var(--color-text)]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               <div class="absolute inset-0 flex flex-col justify-end p-6 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-4 group-hover:translate-y-0">
                 <span class="text-[var(--color-accent)] text-sm uppercase tracking-wider mb-2">NGO Storytelling</span>
-                <h3 class="text-white text-xl font-light">Documenting Impact</h3>
+                <BaseHeading :level="3" color="white" variant="light">Documenting Impact</BaseHeading>
               </div>
             </div>
             <div class="pointer-events-none absolute inset-px rounded-lg ring-1 shadow-sm ring-[#33423C]/5 max-lg:rounded-t-[2rem]" />
@@ -59,7 +59,7 @@
               <div class="absolute inset-0 bg-gradient-to-t from-[var(--color-text)]/80 via-[var(--color-text)]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               <div class="absolute inset-0 flex flex-col justify-end p-6 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-4 group-hover:translate-y-0">
                 <span class="text-[var(--color-accent)] text-sm uppercase tracking-wider mb-2">Branding</span>
-                <h3 class="text-white text-xl font-light">Visual Identity</h3>
+                <BaseHeading :level="3" color="white" variant="light">Visual Identity</BaseHeading>
           </div>
                 </div>
             <div class="pointer-events-none absolute inset-px rounded-lg ring-1 shadow-sm ring-[#33423C]/5" />
@@ -76,7 +76,7 @@
               <div class="absolute inset-0 bg-gradient-to-t from-[var(--color-text)]/80 via-[var(--color-text)]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               <div class="absolute inset-0 flex flex-col justify-end p-8 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-4 group-hover:translate-y-0">
                 <span class="text-[var(--color-accent)] text-sm uppercase tracking-wider mb-2">Lifestyle</span>
-                <h3 class="text-white text-2xl font-light">Everyday Stories</h3>
+                <BaseHeading :level="3" color="white" variant="light">Everyday Stories</BaseHeading>
               </div>
             </div>
             <div class="pointer-events-none absolute inset-px rounded-lg ring-1 shadow-sm ring-[#33423C]/5 max-lg:rounded-b-[2rem] lg:rounded-r-[2rem]" />
@@ -97,4 +97,5 @@
   
   <script setup lang="ts">
   import BaseButton from '@/components/ui/BaseButton.vue'
+  import BaseHeading from '@/components/ui/BaseHeading.vue'
   </script>

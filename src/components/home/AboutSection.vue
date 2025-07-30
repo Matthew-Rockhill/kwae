@@ -4,9 +4,9 @@
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <!-- Left Column: Content -->
           <div class="order-2 lg:order-1">
-            <h2 class="text-2xl md:text-3xl font-extralight text-[var(--color-text)] mb-6 whitespace-nowrap">
+            <BaseHeading :level="2" class="mb-6 whitespace-nowrap">
               The Heart Behind <span class="font-cormorant italic font-normal text-[var(--color-text)]">Kristin With An Eye</span>
-            </h2>
+            </BaseHeading>
             
             <div class="mt-10 space-y-6">
               <p class="text-[var(--color-text)] text-lg font-light leading-relaxed">
@@ -64,4 +64,5 @@
   
   <script setup lang="ts">
   import BaseButton from '@/components/ui/BaseButton.vue'
+  import BaseHeading from '@/components/ui/BaseHeading.vue'
   </script>

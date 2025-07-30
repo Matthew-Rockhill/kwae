@@ -4,7 +4,7 @@
     <BaseSection background="light" padding="xl">
       <div class="max-w-3xl mx-auto text-center">
         <BaseHeading :level="1" align="center" class="mb-6">
-          Photography <span class="font-cormorant italic text-4xl md:text-5xl font-extralight text-[var(--color-text)]">Packages</span>
+          Photography <span class="font-cormorant italic font-normal text-[var(--color-text)]">Packages</span>
         </BaseHeading>
         <BaseText size="lg" weight="light" color="muted" leading="relaxed" align="center">
           Every moment has a story worth telling. Whether it's the quiet connection between family members, 
@@ -18,7 +18,7 @@
     <section id="family-sessions" class="py-16 md:py-24 bg-[var(--color-accent)]">
       <div class="container-custom">
         <div class="text-center max-w-3xl mx-auto mb-16">
-          <h2 class="text-3xl md:text-4xl font-extralight text-[var(--color-text)] mb-4">Portrait & Family Sessions</h2>
+          <BaseHeading :level="2" class="mb-4">Portrait & Family Sessions</BaseHeading>
           <p class="text-[var(--color-text)]/70 text-lg font-light">
             Earthy, heart-led storytelling for individuals, couples, and families.
           </p>
@@ -48,9 +48,9 @@
     <section id="lifestyle-events" class="py-16 md:py-24 bg-[var(--color-light)]">
       <div class="container-custom">
         <div class="text-center max-w-3xl mx-auto mb-16">
-          <h2 class="text-3xl md:text-4xl font-extralight text-[var(--color-text)] mb-4">
-            Lifestyle, Events & <span class="font-cormorant italic text-3xl md:text-4xl font-extralight text-[var(--color-text)]">Weddings</span>
-          </h2>
+          <BaseHeading :level="2" class="mb-4">
+            Lifestyle, Events & <span class="font-cormorant italic font-normal text-[var(--color-text)]">Weddings</span>
+          </BaseHeading>
           <p class="text-[var(--color-text)]/70 text-lg font-light">
             For celebrations, content creation, and soulful wedding documentation.
           </p>
@@ -80,7 +80,7 @@
     <section id="organisation-storytelling" class="py-16 md:py-24 bg-[var(--color-accent)]">
       <div class="container-custom">
         <div class="text-center max-w-3xl mx-auto mb-16">
-          <h2 class="text-3xl md:text-4xl font-extralight text-[var(--color-text)] mb-4">Storytelling for Organisations — The Impact Box</h2>
+          <BaseHeading :level="2" class="mb-4">Storytelling for Organisations — The Impact Box</BaseHeading>
           <p class="text-[var(--color-text)]/70 text-lg font-light">
             For NGOs, foundations, and changemakers seeking authentic, visual storytelling.
           </p>

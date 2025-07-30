@@ -217,24 +217,6 @@
     font-style: italic;
   }
   
-  .section-title {
-    font-size: 1.875rem;
-    font-weight: 300;
-    color: var(--color-text);
-    margin-bottom: 1.5rem;
-  }
-  
-  @media (min-width: 768px) {
-    .section-title {
-      font-size: 2.25rem;
-    }
-  }
-  
-  @media (min-width: 1024px) {
-    .section-title {
-      font-size: 3rem;
-    }
-  }
   
   .section-subtitle {
     font-size: 1.125rem;

@@ -2,9 +2,9 @@
   <section class="bg-[var(--color-accent)]">
     <div class="container-custom">
       <div class="text-center max-w-3xl mx-auto mb-16">
-        <h2 class="text-3xl md:text-4xl font-extralight text-[var(--color-text)] mb-6">
+        <BaseHeading :level="2" class="mb-6">
           Photography Packages & <span class="font-cormorant italic font-normal text-[var(--color-text)]">Visual Storytelling</span>
-        </h2>
+        </BaseHeading>
         <p class="text-[var(--color-text)]/70 text-lg font-light leading-relaxed">
           Whether you're seeking timeless family portraits, a special event captured, or a storytelling
           project to amplify your business's mission, my packages are designed to meet your needs with
@@ -32,6 +32,7 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
 import PackagePreviewCard from '@/components/PackagePreviewCard.vue'
+import BaseHeading from '@/components/ui/BaseHeading.vue'
 
 const router = useRouter()
 
