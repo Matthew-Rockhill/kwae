@@ -18,7 +18,7 @@
     <section id="family-sessions" class="py-16 md:py-24 bg-[var(--color-accent)]">
       <div class="container-custom">
         <div class="text-center max-w-3xl mx-auto mb-16">
-          <BaseHeading :level="2" class="mb-4">Portrait & Family Sessions</BaseHeading>
+          <BaseHeading :level="2" class="mb-4">Portrait & <span class="font-cormorant italic font-normal text-[var(--color-text)]">Family Sessions</span></BaseHeading>
           <p class="text-[var(--color-text)]/70 text-lg font-light">
             Earthy, heart-led storytelling for individuals, couples, and families.
           </p>
@@ -80,7 +80,7 @@
     <section id="organisation-storytelling" class="py-16 md:py-24 bg-[var(--color-accent)]">
       <div class="container-custom">
         <div class="text-center max-w-3xl mx-auto mb-16">
-          <BaseHeading :level="2" class="mb-4">Storytelling for Organisations — The Impact Box</BaseHeading>
+          <BaseHeading :level="2" class="mb-4">Storytelling for <span class="font-cormorant italic font-normal text-[var(--color-text)]">Organisations</span> — The Impact Box</BaseHeading>
           <p class="text-[var(--color-text)]/70 text-lg font-light">
             For NGOs, foundations, and changemakers seeking authentic, visual storytelling.
           </p>

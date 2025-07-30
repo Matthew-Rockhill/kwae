@@ -4,7 +4,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <!-- Left Column: Content -->
           <div class="order-2 lg:order-1">
-            <BaseHeading :level="2" class="mb-6 whitespace-nowrap">
+            <BaseHeading :level="2" class="mb-6">
               The Heart Behind <span class="font-cormorant italic font-normal text-[var(--color-text)]">Kristin With An Eye</span>
             </BaseHeading>
             

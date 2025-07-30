@@ -45,8 +45,8 @@
                   <span class="text-white font-bold">{{ currentTestimonial.initial }}</span>
                 </div>
                 <div>
-                  <h4 class="font-semibold text-[var(--color-text)]">{{ currentTestimonial.name }}</h4>
-                  <p class="text-[var(--color-text)]/70 text-sm">{{ currentTestimonial.role }}</p>
+                  <BaseHeading :level="4" variant="hero" class="text-base">{{ currentTestimonial.name }}</BaseHeading>
+                  <BaseText size="sm" color="muted">{{ currentTestimonial.role }}</BaseText>
                 </div>
               </div>
             </div>
