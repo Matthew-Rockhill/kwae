@@ -26,12 +26,12 @@ defineEmits<{
 }>()
 
 const buttonClasses = computed(() => {
-  const baseClasses = 'px-5 py-2 font-light'
+  const baseClasses = 'px-3 py-1.5 sm:px-4 sm:py-2 md:px-5 md:py-2 font-light text-sm sm:text-base touch-action-manipulation'
   
   if (props.active) {
     return `${baseClasses} bg-[var(--color-text)] text-[var(--color-light)]`
   } else {
-    return `${baseClasses} bg-[var(--color-light)] text-[var(--color-text)] hover:bg-[var(--color-accent)]`
+    return `${baseClasses} bg-[var(--color-light)] text-[var(--color-text)] hover:bg-[var(--color-accent)] active:bg-[var(--color-accent)]`
   }
 })
 </script> 

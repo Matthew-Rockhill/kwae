@@ -32,10 +32,10 @@ const sectionClasses = computed(() => {
   
   const paddingClasses = {
     none: '',
-    sm: 'py-8',
-    md: 'py-12 md:py-16',
-    lg: 'py-16 md:py-20',
-    xl: 'py-20 md:py-24'
+    sm: 'py-6 sm:py-8',
+    md: 'py-8 sm:py-12 md:py-16',
+    lg: 'py-12 sm:py-16 md:py-20',
+    xl: 'py-16 sm:py-20 md:py-24'
   }
   
   return [

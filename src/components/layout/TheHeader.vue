@@ -37,23 +37,32 @@
         </div>
   
         <!-- Mobile navigation -->
-        <div v-if="isMenuOpen" class="md:hidden mt-4 pb-4 border-t border-[var(--color-card-header)] pt-4">
-          <div class="flex flex-col space-y-4">
-            <router-link 
-              v-for="(item, index) in navItems" 
-              :key="index" 
-              :to="item.path" 
-              class="text-[var(--color-text)] hover:text-[var(--color-secondary)] uppercase text-sm tracking-wider font-light py-2 transition duration-300"
-              :class="{ 'font-normal border-b border-[var(--color-card-header)] w-max': isActiveRoute(item.path) }"
-              @click="closeMenu"
-            >
-              {{ item.name }}
-            </router-link>
-            <button @click="openBookingModal" class="btn-primary uppercase text-sm tracking-wider w-full">
-              Book Now
-            </button>
+        <transition
+          enter-active-class="transition duration-200 ease-out"
+          enter-from-class="transform scale-95 opacity-0"
+          enter-to-class="transform scale-100 opacity-100"
+          leave-active-class="transition duration-150 ease-in"
+          leave-from-class="transform scale-100 opacity-100"
+          leave-to-class="transform scale-95 opacity-0"
+        >
+          <div v-if="isMenuOpen" class="md:hidden mt-4 pb-4 border-t border-[var(--color-card-header)] pt-4">
+            <div class="flex flex-col space-y-3">
+              <router-link 
+                v-for="(item, index) in navItems" 
+                :key="index" 
+                :to="item.path" 
+                class="text-[var(--color-text)] hover:text-[var(--color-secondary)] uppercase text-base tracking-wider font-light py-3 px-2 transition duration-300 active:bg-[var(--color-accent)] rounded"
+                :class="{ 'font-normal bg-[var(--color-accent)]': isActiveRoute(item.path) }"
+                @click="closeMenu"
+              >
+                {{ item.name }}
+              </router-link>
+              <button @click="openBookingModal" class="btn-primary uppercase text-base tracking-wider w-full py-4 mt-2">
+                Book Now
+              </button>
+            </div>
           </div>
-        </div>
+        </transition>
       </div>
 
       <!-- Booking Modal -->

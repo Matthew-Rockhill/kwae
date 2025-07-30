@@ -1,7 +1,7 @@
 <template>
-  <section class="pt-12 pb-4 bg-[var(--color-light)] sticky top-0 z-10 shadow-sm">
+  <section class="pt-4 sm:pt-8 md:pt-12 pb-3 sm:pb-4 bg-[var(--color-light)] sticky top-0 z-10 shadow-sm">
     <div class="container-custom">
-      <div class="flex flex-wrap justify-center gap-4">
+      <div class="flex flex-wrap justify-center gap-2 sm:gap-3 md:gap-4">
         <slot />
       </div>
     </div>

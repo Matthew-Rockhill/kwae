@@ -1,6 +1,6 @@
 <template>
   <div 
-    class="group relative overflow-hidden rounded-lg bg-[var(--color-light)] transform transition-all duration-500 hover:scale-[1.02] hover:shadow-xl cursor-pointer"
+    class="group relative overflow-hidden rounded-lg bg-[var(--color-light)] transform transition-all duration-500 hover:scale-[1.02] hover:shadow-xl cursor-pointer active:scale-[0.98]"
     @click="$emit('click')"
   >
     <!-- Image Container -->
