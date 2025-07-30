@@ -18,7 +18,7 @@
     
     <!-- Content -->
     <div class="p-8 flex-grow text-left">
-      <BaseHeading :level="3" class="mb-4">{{ title }}</BaseHeading>
+      <BaseHeading :level="4" class="mb-4">{{ title }}</BaseHeading>
       <BaseText 
         color="primary" 
         :opacity="70" 
