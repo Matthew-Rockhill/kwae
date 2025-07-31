@@ -134,8 +134,12 @@ async function compareAndSync() {
       const slug = generateSlug(folderName);
       const displayName = generateDisplayName(folderName);
       
-      // Check if category exists in database
-      let dbCategory = dbCategories?.find(cat => cat.slug === slug);
+      console.log(`🔍 Processing folder: "${folderName}" -> slug: "${slug}"`);
+      
+      // Check if category exists in database (case-insensitive)
+      let dbCategory = dbCategories?.find(cat => 
+        cat.slug.toLowerCase() === slug.toLowerCase()
+      );
       
       if (!dbCategory) {
         // Create missing category
@@ -175,8 +179,10 @@ async function compareAndSync() {
       }
       
       // Process subfolders and their files
+      console.log(`📁 Found ${ikSubfolders.length} subfolders in ${dbCategory.name}:`, ikSubfolders.map(sf => sf.name));
+      
       for (const subfolder of ikSubfolders) {
-        console.log(`📁 Processing subfolder: ${subfolder.name}`);
+        console.log(`📁 Processing subfolder: ${subfolder.name} at ${subfolder.filePath}`);
         
         const subfolderContents = await fetchFromImageKit(
           `https://api.imagekit.io/v1/files?path=${subfolder.filePath}`
@@ -184,6 +190,8 @@ async function compareAndSync() {
         
         const subfolderFiles = subfolderContents.filter(item => item.type === 'file');
         const subcategoryName = subfolder.name;
+        
+        console.log(`📸 Found ${subfolderFiles.length} files in subfolder ${subcategoryName}:`, subfolderFiles.map(f => f.name));
         
         // Process files in this subfolder
         for (const file of subfolderFiles) {
