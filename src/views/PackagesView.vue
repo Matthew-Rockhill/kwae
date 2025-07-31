@@ -1,132 +1,74 @@
 <template>
   <div>
-    <!-- Page Header -->
-    <BaseSection background="light" padding="xl">
-      <div class="max-w-3xl mx-auto text-center">
-        <BaseHeading :level="1" align="center" class="mb-6">
-          Photography <span class="font-cormorant italic font-normal text-[var(--color-text)]">Packages</span>
-        </BaseHeading>
-        <BaseText size="lg" weight="light" color="muted" leading="relaxed" align="center">
-          Every moment has a story worth telling. Whether it's the quiet connection between family members, 
-          the joy of a celebration, or the powerful impact of your organisation's work, I'm here to capture 
-          it with authenticity and heart.
-        </BaseText>
+    <!-- Hero Section -->
+    <BaseSection background="white" padding="3xl" spacing="relaxed">
+      <div class="relative">
+        <!-- Background decorative elements -->
+        <div class="absolute -top-20 -right-20 w-40 h-40 bg-[var(--color-secondary)]/5 rounded-full blur-3xl"></div>
+        <div class="absolute -bottom-20 -left-20 w-60 h-60 bg-[var(--color-accent)]/20 rounded-full blur-3xl"></div>
+        
+        <div class="relative max-w-5xl mx-auto text-center">
+          <BaseHeading :level="1" align="center" :animate="true" class="mb-8">
+            Photography <span class="font-cormorant italic font-normal text-[var(--color-secondary)]">Packages</span>
+          </BaseHeading>
+          <BaseText size="xl" weight="light" color="primary" leading="relaxed" align="center" class="max-w-4xl mx-auto mb-12">
+            Every moment has a story worth telling. Whether it's the quiet connection between family members, 
+            the joy of a celebration, or the powerful impact of your organisation's work, I'm here to capture 
+            it with authenticity and heart.
+          </BaseText>
+          
+          <!-- Quick Navigation -->
+          <div class="flex flex-wrap justify-center gap-4">
+            <a 
+              href="#family-sessions"
+              class="inline-flex items-center px-6 py-3 bg-white/80 backdrop-blur-sm border border-[var(--color-text)]/10 rounded-full text-[var(--color-text)] hover:bg-[var(--color-accent)]/20 hover:border-[var(--color-secondary)]/30 transition-all duration-300 shadow-lg hover:shadow-xl"
+            >
+              Portrait & Family
+            </a>
+            <a 
+              href="#lifestyle-events"
+              class="inline-flex items-center px-6 py-3 bg-white/80 backdrop-blur-sm border border-[var(--color-text)]/10 rounded-full text-[var(--color-text)] hover:bg-[var(--color-accent)]/20 hover:border-[var(--color-secondary)]/30 transition-all duration-300 shadow-lg hover:shadow-xl"
+            >
+              Lifestyle & Events
+            </a>
+            <a 
+              href="#wedding-photography"
+              class="inline-flex items-center px-6 py-3 bg-white/80 backdrop-blur-sm border border-[var(--color-text)]/10 rounded-full text-[var(--color-text)] hover:bg-[var(--color-accent)]/20 hover:border-[var(--color-secondary)]/30 transition-all duration-300 shadow-lg hover:shadow-xl"
+            >
+              Wedding Photography
+            </a>
+            <a 
+              href="#organisation-storytelling"
+              class="inline-flex items-center px-6 py-3 bg-white/80 backdrop-blur-sm border border-[var(--color-text)]/10 rounded-full text-[var(--color-text)] hover:bg-[var(--color-accent)]/20 hover:border-[var(--color-secondary)]/30 transition-all duration-300 shadow-lg hover:shadow-xl"
+            >
+              NGO Storytelling
+            </a>
+          </div>
+        </div>
       </div>
     </BaseSection>
       
     <!-- Personal Photography Section -->
-    <section id="family-sessions" class="py-16 md:py-24 bg-[var(--color-accent)]">
-      <div class="container-custom">
-        <div class="text-center max-w-3xl mx-auto mb-16">
-          <BaseHeading :level="2" align="center" class="mb-4">Portrait & <span class="font-cormorant italic font-normal text-[var(--color-text)]">Family Sessions</span></BaseHeading>
-          <p class="text-[var(--color-text)]/70 text-lg font-light">
-            Earthy, heart-led storytelling for individuals, couples, and families.
-          </p>
-          <p class="text-[var(--color-secondary)] text-sm font-light mt-4 italic">
-            *Travel beyond 50km from Cape Town may include an additional fee.
-          </p>
-        </div>
-        
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <PackagePreviewCard
-            v-for="pkg in portraitPackages"
-            :key="pkg.title"
-            :title="pkg.title"
-            :subtitle="pkg.subtitle"
-            :price="pkg.price"
-            :description="pkg.description"
-            :features="pkg.features"
-            :buttons="pkg.buttons"
-            :image="pkg.image"
-            @button-click="openBookingModal"
-          />
-        </div>
-      </div>
-    </section>
+    <PortraitFamilySection @book-package="openBookingModal" />
       
-    <!-- Lifestyle Photography Section -->
-    <section id="lifestyle-events" class="py-16 md:py-24 bg-[var(--color-light)]">
-      <div class="container-custom">
-        <div class="text-center max-w-3xl mx-auto mb-16">
-          <BaseHeading :level="2" align="center" class="mb-4">
-            Lifestyle, Events & <span class="font-cormorant italic font-normal text-[var(--color-text)]">Weddings</span>
-          </BaseHeading>
-          <p class="text-[var(--color-text)]/70 text-lg font-light">
-            For celebrations, content creation, and soulful wedding documentation.
-          </p>
-          <p class="text-[var(--color-secondary)] text-sm font-light mt-4 italic">
-            *Travel beyond 50km from Cape Town may include an additional fee.
-          </p>
-        </div>
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <PackagePreviewCard
-            v-for="pkg in lifestylePackages"
-            :key="pkg.title"
-            :title="pkg.title"
-            :subtitle="pkg.subtitle"
-            :price="pkg.price"
-            :description="pkg.description"
-            :features="pkg.features"
-            :buttons="pkg.buttons"
-            :image="pkg.image"
-            @button-click="openBookingModal"
-          />
-        </div>
-      </div>
-    </section>
+    <!-- Lifestyle & Events Section -->
+    <LifestyleEventsSection @book-package="openBookingModal" />
+      
+    <!-- Wedding Photography Section -->
+    <WeddingSection @book-package="openBookingModal" />
       
     <!-- Organisation Section -->
-    <section id="organisation-storytelling" class="py-16 md:py-24 bg-[var(--color-accent)]">
-      <div class="container-custom">
-        <div class="text-center max-w-3xl mx-auto mb-16">
-          <BaseHeading :level="2" align="center" class="mb-4">Storytelling for <span class="font-cormorant italic font-normal text-[var(--color-text)]">Organisations</span> — The Impact Box</BaseHeading>
-          <p class="text-[var(--color-text)]/70 text-lg font-light">
-            For NGOs, foundations, and changemakers seeking authentic, visual storytelling.
-          </p>
-          <p class="text-[var(--color-secondary)] text-sm font-light mt-4 italic">
-            Each package includes access to an Impact Toolkit — a resource to help amplify your story through images, words, and strategy.
-          </p>
-        </div>
-        
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <PackagePreviewCard
-            v-for="pkg in organizationPackages"
-            :key="pkg.title"
-            :title="pkg.title"
-            :subtitle="pkg.subtitle"
-            :price="pkg.price"
-            :description="pkg.description"
-            :features="pkg.features"
-            :buttons="pkg.buttons"
-            :image="pkg.image"
-            :uniform-height="true"
-            @button-click="openBookingModal"
-          />
-        </div>
-      </div>
-    </section>
+    <OrganisationSection @book-package="openBookingModal" />
     
     <!-- CTA Section -->
-    <BaseSection background="light" padding="lg">
-      <div class="text-center">
-        <BaseHeading :level="2" align="center" class="mb-6">Interested in working together?</BaseHeading>
-        <BaseText size="lg" color="primary" :opacity="90" class="max-w-2xl mx-auto mb-10" align="center">
-          "Every story is unique, and I'd love to help you tell yours. If you're unsure which package fits
-          your needs or if you'd like a custom quote, let's chat!"
-        </BaseText>
-        <div class="flex flex-col sm:flex-row gap-4 justify-center">
-          <router-link to="/contact">
-            <BaseButton variant="primary">Contact Me</BaseButton>
-          </router-link>
-          <a 
-            href="https://www.instagram.com/kristin_with.an.eye/" 
-            target="_blank"
-          >
-            <BaseButton variant="secondary">Follow My Work @kristin_with.an.eye</BaseButton>
-          </a>
-        </div>
-      </div>
+    <BaseSection background="alabaster" padding="xl" spacing="normal">
+      <CallToActionSection
+        custom-heading='Interested in <span class="font-cormorant italic font-normal text-[var(--color-secondary)]">working together?</span>'
+        description="Every story is unique, and I'd love to help you tell yours. If you're unsure which package fits your needs or if you'd like a custom quote, let's chat!"
+        :primary-action="{ text: 'Book Your Session', type: 'button' }"
+        @primary-click="openBookingModal"
+        @voucher-click="handleVoucherClick"
+      />
     </BaseSection>
 
     <!-- Booking Modal -->
@@ -143,6 +85,11 @@ import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import PackagePreviewCard from '@/components/PackagePreviewCard.vue'
 import BookingModal from '@/components/BookingModal.vue'
+import CallToActionSection from '@/components/ui/CallToActionSection.vue'
+import PortraitFamilySection from '@/components/packages/PortraitFamilySection.vue'
+import LifestyleEventsSection from '@/components/packages/LifestyleEventsSection.vue'
+import WeddingSection from '@/components/packages/WeddingSection.vue'
+import OrganisationSection from '@/components/packages/OrganisationSection.vue'
 import BaseSection from '@/components/ui/BaseSection.vue'
 import BaseHeading from '@/components/ui/BaseHeading.vue'
 import BaseText from '@/components/ui/BaseText.vue'
@@ -176,6 +123,11 @@ const openBookingModal = (packageAction: string) => {
 const closeBookingModal = () => {
   showBookingModal.value = false
   selectedPackageAction.value = ''
+}
+
+const handleVoucherClick = () => {
+  // TODO: Implement voucher functionality later
+  console.log('Voucher clicked - functionality to be implemented')
 }
 
 // Package data

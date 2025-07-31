@@ -1,20 +1,13 @@
 <template>
-  <div class="pl-6 border-l-2 border-[var(--color-accent)] py-2" :class="spacing">
-    <BaseText 
-      tag="p" 
-      size="xl" 
-      color="secondary" 
-      :italic="true" 
-      class="font-cormorant"
-    >
+  <div class="relative pl-8 py-4" :class="spacing">
+    <div class="absolute left-0 top-0 w-1 h-full bg-gradient-to-b from-[var(--color-secondary)] to-[var(--color-accent)] rounded-full"></div>
+    <p class="font-cormorant text-xl italic text-[var(--color-secondary)] leading-relaxed">
       <slot />
-    </BaseText>
+    </p>
   </div>
 </template>
 
 <script setup lang="ts">
-import BaseText from './BaseText.vue'
-
 interface Props {
   spacing?: string
 }

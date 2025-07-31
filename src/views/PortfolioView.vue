@@ -1,12 +1,12 @@
 <template>
   <div>
     <!-- Page Header -->
-    <BaseSection background="light" padding="xl">
-      <div class="text-center">
-        <BaseHeading :level="1" align="center" class="mb-4">
-          Capturing Stories, <span class="font-cormorant italic font-normal text-[var(--color-text)]">One Frame at a Time</span>
+    <BaseSection background="light" padding="2xl" spacing="normal">
+      <div class="section-header text-center max-w-4xl mx-auto">
+        <BaseHeading :level="1" align="center" :animate="true" decoration="underline">
+          Capturing Stories, <span class="font-cormorant italic font-normal text-[var(--color-secondary)]">One Frame at a Time</span>
         </BaseHeading>
-        <BaseText size="lg" color="primary" :opacity="70" class="max-w-3xl mx-auto" align="center">
+        <BaseText size="xl" color="primary" :opacity="70" align="center">
           Each story I capture is unique. Take a moment to explore the projects I've been honored to be
           a part of, from family sessions to NGO partnerships. The images here showcase my commitment
           to telling authentic stories and finding beauty in the most humble places.
@@ -40,8 +40,8 @@
     </div>
     
     <!-- Portfolio Gallery -->
-    <BaseSection v-else background="light" padding="lg">
-      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
+    <BaseSection v-else background="light" padding="xl" spacing="normal">
+      <div class="content-grid-tight grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3">
         <PortfolioCard
           v-for="(item, index) in filteredPortfolio" 
           :key="index"
@@ -84,22 +84,12 @@
     />
     
     <!-- CTA Section -->
-    <BaseSection background="alabaster" padding="lg">
-      <div class="text-center">
-        <BaseHeading :level="2" align="center" class="mb-6">
-          Ready to <span class="font-cormorant italic font-normal text-[var(--color-text)]">Tell Your Story?</span>
-        </BaseHeading>
-        <BaseText size="lg" color="primary" :opacity="70" class="max-w-2xl mx-auto mb-10" align="center">
-          Let's work together to capture your authentic moments and create beautiful memories that last a lifetime.
-        </BaseText>
-        <BaseButton 
-          variant="primary"
-          class="transform transition-transform duration-300 hover:scale-105"
-          @click="openBookingModal"
-        >
-          Book Your Story
-        </BaseButton>
-      </div>
+    <BaseSection background="alabaster" padding="xl" spacing="normal">
+      <CallToActionSection
+        custom-heading='Ready to <span class="font-cormorant italic font-normal text-[var(--color-secondary)]">Tell Your Story?</span>'
+        :primary-action="{ text: 'Book Your Story', type: 'button' }"
+        @primary-click="openBookingModal"
+      />
     </BaseSection>
     
     <!-- Booking Modal -->
@@ -118,6 +108,7 @@ import BaseSection from '@/components/ui/BaseSection.vue'
 import BaseHeading from '@/components/ui/BaseHeading.vue'
 import BaseText from '@/components/ui/BaseText.vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
+import CallToActionSection from '@/components/ui/CallToActionSection.vue'
 import FilterButton from '@/components/ui/FilterButton.vue'
 import PortfolioCard from '@/components/ui/PortfolioCard.vue'
 import StickyFilterBar from '@/components/ui/StickyFilterBar.vue'

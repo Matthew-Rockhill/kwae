@@ -18,6 +18,10 @@
 import { useMeta } from 'vue-meta'
 import TheHeader from './components/layout/TheHeader.vue'
 import TheFooter from './components/layout/TheFooter.vue'
+import { useScrollAnimation } from './composables/useScrollAnimation'
+
+// Initialize scroll animations
+useScrollAnimation()
 
 // Set global metadata
 useMeta({

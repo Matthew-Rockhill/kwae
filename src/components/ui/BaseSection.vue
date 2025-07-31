@@ -1,6 +1,6 @@
 <template>
   <section :class="sectionClasses">
-    <div class="container-custom">
+    <div :class="containerClasses">
       <slot />
     </div>
   </section>
@@ -10,16 +10,26 @@
 import { computed } from 'vue'
 
 interface Props {
-  background?: 'light' | 'accent' | 'primary' | 'transparent' | 'alabaster'
-  padding?: 'sm' | 'md' | 'lg' | 'xl' | 'none'
+  background?: 'light' | 'accent' | 'primary' | 'transparent' | 'alabaster' | 'white'
+  padding?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | 'none'
   fullWidth?: boolean
+  spacing?: 'tight' | 'normal' | 'relaxed' | 'loose'
 }
 
 const props = withDefaults(defineProps<Props>(), {
   background: 'transparent',
   padding: 'lg',
-  fullWidth: false
+  fullWidth: false,
+  spacing: 'normal'
 })
+
+// Content spacing classes for internal elements
+const spacingClasses = {
+  tight: 'space-y-4 sm:space-y-6',
+  normal: 'space-y-6 sm:space-y-8', 
+  relaxed: 'space-y-8 sm:space-y-12',
+  loose: 'space-y-12 sm:space-y-16'
+}
 
 const sectionClasses = computed(() => {
   const backgroundClasses = {
@@ -27,15 +37,20 @@ const sectionClasses = computed(() => {
     accent: 'bg-[var(--color-accent)]',
     primary: 'bg-[var(--color-text)]',
     transparent: 'bg-transparent',
-    alabaster: 'bg-[var(--color-alabaster)]'
+    alabaster: 'bg-[var(--color-alabaster)]',
+    white: 'bg-white'
   }
   
+  // Modern spacing system with 2025 standards
   const paddingClasses = {
     none: '',
-    sm: 'py-6 sm:py-8',
-    md: 'py-8 sm:py-12 md:py-16',
-    lg: 'py-12 sm:py-16 md:py-20',
-    xl: 'py-16 sm:py-20 md:py-24'
+    xs: 'py-6 sm:py-8',
+    sm: 'py-8 sm:py-12',
+    md: 'py-12 sm:py-16',
+    lg: 'py-16 sm:py-20',
+    xl: 'py-20 sm:py-24',
+    '2xl': 'py-24 sm:py-32',
+    '3xl': 'py-32 sm:py-40'
   }
   
   return [
@@ -43,6 +58,13 @@ const sectionClasses = computed(() => {
     backgroundClasses[props.background],
     paddingClasses[props.padding]
   ].filter(Boolean).join(' ')
+})
+
+const containerClasses = computed(() => {
+  const baseClasses = 'container-custom'
+  const spacingClass = spacingClasses[props.spacing]
+  
+  return [baseClasses, spacingClass].filter(Boolean).join(' ')
 })
 </script>
 

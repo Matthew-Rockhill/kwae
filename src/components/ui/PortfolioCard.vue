@@ -1,6 +1,6 @@
 <template>
   <div 
-    class="group relative overflow-hidden rounded-lg bg-[var(--color-light)] transform transition-all duration-500 hover:scale-[1.02] hover:shadow-xl cursor-pointer active:scale-[0.98]"
+    class="group relative overflow-hidden rounded-xl bg-[var(--color-light)] transform transition-all duration-500 hover:scale-[1.02] hover:shadow-modern-lg cursor-pointer active:scale-[0.98] shadow-modern-sm animate-on-scroll"
     @click="$emit('click')"
   >
     <!-- Image Container -->
@@ -8,7 +8,7 @@
       <img 
         :src="image.thumbnailUrl || image.src" 
         :alt="image.alt || image.title || 'Portfolio image'" 
-        class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+        class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 transform-gpu"
         :class="imageClasses"
       />
       
@@ -19,7 +19,7 @@
           <BaseText v-if="image.category" tag="span" size="sm" color="primary" :opacity="80" class="uppercase tracking-wider mb-2">
             {{ image.category }}
           </BaseText>
-          <BaseHeading v-if="image.title" :level="3" color="primary" class="mb-2 text-white">
+          <BaseHeading v-if="image.title" :level="5" color="primary" class="mb-2 text-white">
             {{ image.title }}
           </BaseHeading>
           <BaseText v-if="image.description" size="sm" color="white" class="line-clamp-2" :opacity="80">
@@ -40,7 +40,7 @@
         <BaseText v-if="image.category" tag="span" size="sm" color="primary" :opacity="70" class="uppercase tracking-wider">
           {{ image.category }}
         </BaseText>
-        <BaseHeading v-if="image.title" :level="3" class="mt-1">
+        <BaseHeading v-if="image.title" :level="6" class="mt-1">
           {{ image.title }}
         </BaseHeading>
       </div>
