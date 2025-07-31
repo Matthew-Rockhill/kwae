@@ -48,14 +48,14 @@
     </div>
     
     <!-- Portfolio Gallery -->
-    <BaseSection background="light" padding="lg" spacing="tight">
+    <BaseSection background="light" padding="none" spacing="tight" class="pt-0">
       <!-- Loading State -->
-      <div v-if="loading" class="text-center py-12">
+      <div v-if="loading" class="text-center py-12 px-4 sm:px-6 lg:px-8">
         <BaseText size="lg" :opacity="70">Loading {{ currentCategoryName }}...</BaseText>
       </div>
       
       <!-- Error State -->
-      <div v-else-if="error" class="text-center py-12">
+      <div v-else-if="error" class="text-center py-12 px-4 sm:px-6 lg:px-8">
         <div class="max-w-md mx-auto">
           <BaseText size="lg" color="primary" class="text-red-600 mb-4">
             Unable to load portfolio images
@@ -74,7 +74,7 @@
       
       <!-- Gallery Grid -->
       <div v-if="!loading && !error && filteredPortfolio.length > 0" 
-           class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 max-w-7xl mx-auto">
+           class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div
           v-for="(item, index) in filteredPortfolio" 
           :key="`${activeCategory}-${activeSubcategory}-${index}`"
@@ -94,19 +94,19 @@
       </div>
       
       <!-- No images message -->
-      <div v-if="!loading && !error && filteredPortfolio.length === 0" class="text-center py-12">
+      <div v-if="!loading && !error && filteredPortfolio.length === 0" class="text-center py-12 px-4 sm:px-6 lg:px-8">
         <BaseText size="lg" :opacity="70">No images found for this category.</BaseText>
       </div>
       
       
       <!-- Infinite Scroll Trigger -->
-      <div ref="infiniteScrollTrigger" v-if="hasMoreItems" class="flex justify-center items-center py-8">
+      <div ref="infiniteScrollTrigger" v-if="hasMoreItems" class="flex justify-center items-center py-8 px-4 sm:px-6 lg:px-8">
         <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--color-secondary)]"></div>
         <span class="ml-3 text-[var(--color-text)]/60">Loading more images...</span>
       </div>
       
       <!-- End of gallery indicator -->
-      <div v-if="!hasMoreItems && filteredPortfolio.length > 12" class="text-center py-8">
+      <div v-if="!hasMoreItems && filteredPortfolio.length > 12" class="text-center py-8 px-4 sm:px-6 lg:px-8">
         <span class="text-[var(--color-text)]/60">You've seen all {{ filteredPortfolio.length }} images</span>
       </div>
       

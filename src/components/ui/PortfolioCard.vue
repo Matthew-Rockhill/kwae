@@ -49,7 +49,7 @@
       />
       
       <!-- Invisible protection overlay -->
-      <div class="absolute inset-0 select-none pointer-events-auto cursor-pointer" @click="$emit('click')"></div>
+      <div class="absolute inset-0 select-none pointer-events-auto cursor-pointer z-10" @click="$emit('click')"></div>
       
       <!-- Subtle overlay on hover -->
       <div class="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
