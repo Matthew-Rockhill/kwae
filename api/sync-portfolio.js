@@ -182,11 +182,51 @@ async function compareAndSync() {
       }
       
       // Get folder contents from ImageKit
-      console.log(`🔎 Fetching contents for ${dbCategory.name} at path: ${dbCategory.folder_path}`);
-      const folderContents = await fetchFromImageKit(
-        `https://api.imagekit.io/v1/files?path=${dbCategory.folder_path}`
-      );
-      console.log(`📄 Found ${folderContents.length} items in ${dbCategory.name}`);
+      // Try multiple path variations to handle different ImageKit path formats
+      const pathVariations = [
+        dbCategory.folder_path,
+        `/${PORTFOLIO_ROOT}/${folderName}`,
+        `/portfolio/${folderName}`,
+        `portfolio/${folderName}`,
+        folderName
+      ];
+      
+      let folderContents = [];
+      let successfulPath = null;
+      
+      for (const pathVariation of pathVariations) {
+        try {
+          console.log(`🔎 Trying path variation: ${pathVariation}`);
+          const contents = await fetchFromImageKit(
+            `https://api.imagekit.io/v1/files?path=${pathVariation}`
+          );
+          if (contents.length > 0) {
+            folderContents = contents;
+            successfulPath = pathVariation;
+            console.log(`✅ Found ${contents.length} items using path: ${pathVariation}`);
+            break;
+          } else {
+            console.log(`❌ Path ${pathVariation} returned 0 items`);
+          }
+        } catch (error) {
+          console.log(`❌ Path ${pathVariation} failed: ${error.message}`);
+        }
+      }
+      
+      if (!successfulPath) {
+        console.log(`⚠️ No valid path found for ${dbCategory.name}, skipping`);
+        continue;
+      }
+      
+      // Update database with correct path if different
+      if (successfulPath !== dbCategory.folder_path) {
+        console.log(`📝 Updating folder_path for ${dbCategory.name}: "${dbCategory.folder_path}" → "${successfulPath}"`);
+        await supabase
+          .from('portfolio_categories')
+          .update({ folder_path: successfulPath })
+          .eq('id', dbCategory.id);
+        dbCategory.folder_path = successfulPath; // Update local object
+      }
       
       const ikFiles = folderContents.filter(item => item.type === 'file');
       const ikSubfolders = folderContents.filter(item => item.type === 'folder');
