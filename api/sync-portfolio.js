@@ -137,6 +137,8 @@ async function compareAndSync() {
     
     console.log(`📊 Database: ${dbCategories?.length || 0} categories, ${dbItems?.length || 0} items`);
     console.log(`📊 ImageKit: ${ikFolders.length} folders`);
+    console.log(`📁 ImageKit folders found:`, ikFolders.map(f => ({ name: f.name, path: f.filePath, type: f.type })));
+    console.log(`📂 Database categories:`, dbCategories?.map(c => ({ name: c.name, slug: c.slug, folder_path: c.folder_path })));
     
     // Get the current max sort_order to add new categories at the end
     const maxSortOrder = Math.max(...(dbCategories || []).map(cat => cat.sort_order || 0), -1);
@@ -180,9 +182,11 @@ async function compareAndSync() {
       }
       
       // Get folder contents from ImageKit
+      console.log(`🔎 Fetching contents for ${dbCategory.name} at path: ${dbCategory.folder_path}`);
       const folderContents = await fetchFromImageKit(
         `https://api.imagekit.io/v1/files?path=${dbCategory.folder_path}`
       );
+      console.log(`📄 Found ${folderContents.length} items in ${dbCategory.name}`);
       
       const ikFiles = folderContents.filter(item => item.type === 'file');
       const ikSubfolders = folderContents.filter(item => item.type === 'folder');
