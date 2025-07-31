@@ -149,16 +149,6 @@ const handleImageLoad = (event: Event) => {
   imageLoaded.value = true
 }
 
-// Image preloading
-const preloadedImages = new Map<string, HTMLImageElement>()
-
-const preloadImage = (src: string) => {
-  if (!src || preloadedImages.has(src)) return
-  
-  const img = new Image()
-  img.src = src
-  preloadedImages.set(src, img)
-}
 
 // Reset image state when image changes and preload adjacent images
 watch(() => props.currentImage?.src, (newSrc) => {
@@ -273,7 +263,7 @@ const handleTouchMove = (event: TouchEvent) => {
   }
 }
 
-const handleTouchEnd = (event: TouchEvent) => {
+const handleTouchEnd = () => {
   if (!props.showNavigation || !isSwiping.value) return
   
   const deltaX = touchCurrentX.value - touchStartX.value
