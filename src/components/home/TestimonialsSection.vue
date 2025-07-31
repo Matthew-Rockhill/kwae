@@ -69,7 +69,7 @@
               <!-- Navigation Dots -->
               <div class="flex gap-3">
                 <button
-                  v-for="(testimonial, index) in testimonials"
+                  v-for="(_, index) in testimonials"
                   :key="index"
                   @click="goToSlide(index)"
                   class="w-3 h-3 rounded-full transition-all duration-300"
