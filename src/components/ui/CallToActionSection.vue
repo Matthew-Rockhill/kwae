@@ -128,7 +128,4 @@ const handleSecondaryClick = () => {
   emit('secondary-click')
 }
 
-const handleVoucherClick = () => {
-  emit('voucher-click')
-}
 </script>

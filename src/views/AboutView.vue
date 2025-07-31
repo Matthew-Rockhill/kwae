@@ -177,7 +177,6 @@
   import BaseSection from '@/components/ui/BaseSection.vue'
   import BaseHeading from '@/components/ui/BaseHeading.vue'
   import BaseText from '@/components/ui/BaseText.vue'
-  import BaseButton from '@/components/ui/BaseButton.vue'
   import CallToActionSection from '@/components/ui/CallToActionSection.vue'
   import ContentBlock from '@/components/ui/ContentBlock.vue'
   import QuoteBlock from '@/components/ui/QuoteBlock.vue'
