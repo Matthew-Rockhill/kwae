@@ -39,8 +39,8 @@
           class="group relative"
         >
           <span class="relative z-10">{{ category.name }}</span>
-          <span v-if="category.imageCount > 0" class="ml-2 px-2 py-0.5 text-xs bg-[var(--color-accent)]/20 text-[var(--color-primary)]/70 rounded-full font-medium">
-            {{ category.imageCount }}
+          <span v-if="(category.imageCount || 0) > 0" class="ml-2 px-2 py-0.5 text-xs bg-[var(--color-accent)]/20 text-[var(--color-primary)]/70 rounded-full font-medium">
+            {{ category.imageCount || 0 }}
           </span>
           <div class="absolute inset-0 bg-gradient-to-r from-[var(--color-secondary)]/10 to-[var(--color-accent)]/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
         </FilterButton>
@@ -334,7 +334,7 @@ const currentCategoryImageCount = computed(() => {
 });
 
 const currentCategoryDescription = computed(() => {
-  const descriptions = {
+  const descriptions: Record<string, string> = {
     'family': 'Authentic moments and genuine connections that tell the story of your family\'s unique bond. From intimate portraits to playful candid shots, each image captures the love and joy you share.',
     'branding': 'Professional portraits and lifestyle photography that showcase your personal brand and business story. Contemporary, clean imagery that helps you connect with your audience.',
     'ngo-storytelling': 'Documentary-style photography that brings awareness to important causes and showcases the impact of humanitarian work. Visual storytelling that creates emotional connections.',
