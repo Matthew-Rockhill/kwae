@@ -40,9 +40,6 @@ import PackagesPreview from '@/components/home/PackagesPreview.vue'
 import TestimonialsSection from '@/components/home/TestimonialsSection.vue'
 import CallToActionSection from '@/components/ui/CallToActionSection.vue'
 import BaseSection from '@/components/ui/BaseSection.vue'
-import BaseHeading from '@/components/ui/BaseHeading.vue'
-import BaseText from '@/components/ui/BaseText.vue'
-import BaseButton from '@/components/ui/BaseButton.vue'
 import BookingModal from '@/components/BookingModal.vue'
 
 const showBookingModal = ref(false)

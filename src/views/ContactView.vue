@@ -347,7 +347,6 @@ import { ref, reactive } from 'vue'
 import BaseSection from '@/components/ui/BaseSection.vue'
 import BaseHeading from '@/components/ui/BaseHeading.vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
-import CallToActionSection from '@/components/ui/CallToActionSection.vue'
 
 // Form data
 const form = reactive({
