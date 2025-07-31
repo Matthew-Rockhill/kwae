@@ -209,7 +209,6 @@
   <script setup lang="ts">
   import BaseButton from '@/components/ui/BaseButton.vue'
   import BaseHeading from '@/components/ui/BaseHeading.vue'
-  import BaseText from '@/components/ui/BaseText.vue'
   </script>
   
   <style scoped>

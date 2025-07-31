@@ -43,9 +43,12 @@ function apiDevPlugin() {
                 return acc
               }, {})
               Object.assign(process.env, envVars)
+              console.log('Loaded IMAGEKIT_PRIVATE_KEY:', process.env.IMAGEKIT_PRIVATE_KEY ? 'YES' : 'NO')
             } catch (e) {
-              console.warn('Could not load .env file')
+              console.warn('Could not load .env file:', e.message)
             }
+          } else {
+            console.log('IMAGEKIT_PRIVATE_KEY already available:', process.env.IMAGEKIT_PRIVATE_KEY ? 'YES' : 'NO')
           }
           
           const mockRes = {

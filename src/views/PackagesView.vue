@@ -67,7 +67,6 @@
         description="Every story is unique, and I'd love to help you tell yours. If you're unsure which package fits your needs or if you'd like a custom quote, let's chat!"
         :primary-action="{ text: 'Book Your Session', type: 'button' }"
         @primary-click="openBookingModal"
-        @voucher-click="handleVoucherClick"
       />
     </BaseSection>
 
@@ -83,7 +82,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
-import PackagePreviewCard from '@/components/PackagePreviewCard.vue'
 import BookingModal from '@/components/BookingModal.vue'
 import CallToActionSection from '@/components/ui/CallToActionSection.vue'
 import PortraitFamilySection from '@/components/packages/PortraitFamilySection.vue'
@@ -93,7 +91,6 @@ import OrganisationSection from '@/components/packages/OrganisationSection.vue'
 import BaseSection from '@/components/ui/BaseSection.vue'
 import BaseHeading from '@/components/ui/BaseHeading.vue'
 import BaseText from '@/components/ui/BaseText.vue'
-import BaseButton from '@/components/ui/BaseButton.vue'
 
 const route = useRoute()
 const showBookingModal = ref(false)
@@ -125,13 +122,9 @@ const closeBookingModal = () => {
   selectedPackageAction.value = ''
 }
 
-const handleVoucherClick = () => {
-  // TODO: Implement voucher functionality later
-  console.log('Voucher clicked - functionality to be implemented')
-}
 
 // Package data
-const portraitPackages = [
+// const portraitPackages = [
   {
     title: 'Dust & Light',
     subtitle: 'Mini Session',
@@ -190,7 +183,7 @@ const portraitPackages = [
   }
 ]
 
-const lifestylePackages = [
+// const lifestylePackages = [
   {
     title: 'Lifestyle & Events',
     subtitle: 'Birthdays, Gatherings & Content',
@@ -231,7 +224,7 @@ const lifestylePackages = [
   }
 ]
 
-const organizationPackages = [
+// const organizationPackages = [
   {
     title: 'The Raw Thread',
     subtitle: 'Short Story Package',

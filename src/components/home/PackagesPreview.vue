@@ -36,7 +36,6 @@ import { useRouter } from 'vue-router'
 import PackagePreviewCard from '@/components/PackagePreviewCard.vue'
 import BaseHeading from '@/components/ui/BaseHeading.vue'
 import BaseText from '@/components/ui/BaseText.vue'
-import BaseButton from '@/components/ui/BaseButton.vue'
 
 const router = useRouter()
 
