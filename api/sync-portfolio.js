@@ -140,6 +140,20 @@ async function compareAndSync() {
     console.log(`📁 ImageKit folders found:`, ikFolders.map(f => ({ name: f.name, path: f.filePath, type: f.type })));
     console.log(`📂 Database categories:`, dbCategories?.map(c => ({ name: c.name, slug: c.slug, folder_path: c.folder_path })));
     
+    // Debug: List all items in /portfolio to see what's actually there
+    console.log(`🔍 Listing ALL items in /portfolio...`);
+    try {
+      const allPortfolioItems = await fetchFromImageKit(
+        `https://api.imagekit.io/v1/files?path=/portfolio`
+      );
+      console.log(`📄 Found ${allPortfolioItems.length} total items in /portfolio:`);
+      allPortfolioItems.forEach(item => {
+        console.log(`  - ${item.type}: ${item.name} (path: ${item.filePath})`);
+      });
+    } catch (error) {
+      console.log(`❌ Failed to list /portfolio contents: ${error.message}`);
+    }
+    
     // Get the current max sort_order to add new categories at the end
     const maxSortOrder = Math.max(...(dbCategories || []).map(cat => cat.sort_order || 0), -1);
     
@@ -215,6 +229,21 @@ async function compareAndSync() {
       
       if (!successfulPath) {
         console.log(`⚠️ No valid path found for ${dbCategory.name}, skipping`);
+        
+        // For debugging: try to find any files with "lifestyle" in the name anywhere in portfolio
+        if (folderName.toLowerCase() === 'lifestyle') {
+          console.log(`🔍 Searching for lifestyle files anywhere in /portfolio...`);
+          try {
+            const allPortfolioFiles = await fetchFromImageKit(
+              `https://api.imagekit.io/v1/files?path=/portfolio&searchQuery=lifestyle`
+            );
+            console.log(`🔍 Found ${allPortfolioFiles.length} files with 'lifestyle' in name:`, 
+                       allPortfolioFiles.map(f => ({ name: f.name, path: f.filePath })));
+          } catch (error) {
+            console.log(`❌ Search failed: ${error.message}`);
+          }
+        }
+        
         continue;
       }
       
