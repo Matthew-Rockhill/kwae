@@ -85,8 +85,6 @@
             :image="item"
             :category="activeCategory"
             :subcategory="activeSubcategory"
-            :show-overlay="activeCategory === 'ngo-storytelling'"
-            :show-static-content="activeCategory === 'ngo-storytelling'"
             @click="openLightbox(index)"
             class="h-full shadow-lg hover:shadow-2xl transition-shadow duration-500"
           />
