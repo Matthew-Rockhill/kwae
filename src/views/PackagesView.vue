@@ -112,8 +112,8 @@ onMounted(() => {
   }, 100)
 })
 
-const openBookingModal = (packageAction: string) => {
-  selectedPackageAction.value = packageAction
+const openBookingModal = (packageAction?: string) => {
+  selectedPackageAction.value = packageAction || ''
   showBookingModal.value = true
 }
 
@@ -123,8 +123,9 @@ const closeBookingModal = () => {
 }
 
 
-// Package data
-// const portraitPackages = [
+// Package data (commented out - not currently used)
+/*
+const portraitPackages = [
   {
     title: 'Dust & Light',
     subtitle: 'Mini Session',
@@ -184,6 +185,7 @@ const closeBookingModal = () => {
 ]
 
 // const lifestylePackages = [
+/*
   {
     title: 'Lifestyle & Events',
     subtitle: 'Birthdays, Gatherings & Content',
@@ -223,8 +225,10 @@ const closeBookingModal = () => {
     }
   }
 ]
+*/
 
 // const organizationPackages = [
+/*
   {
     title: 'The Raw Thread',
     subtitle: 'Short Story Package',
@@ -282,4 +286,5 @@ const closeBookingModal = () => {
     }
   }
 ]
+*/
 </script>

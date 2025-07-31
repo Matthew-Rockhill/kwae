@@ -77,7 +77,6 @@ import { ref, computed, onMounted } from 'vue'
 import BaseSection from '@/components/ui/BaseSection.vue'
 import BaseHeading from '@/components/ui/BaseHeading.vue'
 import BaseText from '@/components/ui/BaseText.vue'
-import BaseButton from '@/components/ui/BaseButton.vue'
 import PackageDetailCard from '@/components/packages/PackageDetailCard.vue'
 
 const emit = defineEmits<{
