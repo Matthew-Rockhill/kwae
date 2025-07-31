@@ -128,8 +128,10 @@ async function compareAndSync() {
           const baseUrl = IMAGEKIT_PUBLIC_URL + file.filePath.replace(/^\//, '');
           const urls = {
             original: baseUrl,
-            thumbnail: baseUrl + '?tr=w-300,h-300,c-at_max,q-60,f-webp,f-auto,pr-true',
-            full: baseUrl + '?tr=q-85,f-webp,f-auto,pr-true'
+            // High-quality thumbnails for photography portfolio grid
+            thumbnail: baseUrl + '?tr=w-400,h-400,c-at_max,q-85,f-webp,f-auto,pr-true',
+            // Maximum quality for lightbox/full view
+            full: baseUrl + '?tr=q-95,f-webp,f-auto,pr-true'
           };
           
           const altText = `${dbCategory.name} photo ${file.name.replace(/\.[^/.]+$/, '')}`;
