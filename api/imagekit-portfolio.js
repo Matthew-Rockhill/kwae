@@ -66,8 +66,13 @@ export default async function handler(req, res) {
 
     // If folder is specified, return images from that folder
     if (folder) {
-      const folderPath = `/${PORTFOLIO_ROOT}/${folder}`;
-      console.log(`🖼️ Fetching images for folder: ${folder}, path: ${folderPath}`);
+      // Find the actual folder name from categories (case-sensitive)
+      const actualFolderName = folder.split('-').map(word => 
+        word.charAt(0).toUpperCase() + word.slice(1)
+      ).join(' ');
+      
+      const folderPath = `/${PORTFOLIO_ROOT}/${actualFolderName}`;
+      console.log(`🖼️ Fetching images for folder: ${folder} -> ${actualFolderName}, path: ${folderPath}`);
       
       // First, check if this folder has subfolders
       const url = `https://api.imagekit.io/v1/files?path=${folderPath}`;
@@ -134,7 +139,18 @@ export default async function handler(req, res) {
     // If subfolder is specified (folder/subfolder format)
     if (req.query.subfolder) {
       const { subfolder } = req.query;
-      const subfolderPath = `/${PORTFOLIO_ROOT}/${folder}/${subfolder}`;
+      
+      // Convert folder and subfolder to proper case
+      const actualFolderName = folder.split('-').map(word => 
+        word.charAt(0).toUpperCase() + word.slice(1)
+      ).join(' ');
+      
+      const actualSubfolderName = subfolder.split('-').map(word => 
+        word.charAt(0).toUpperCase() + word.slice(1)
+      ).join(' ');
+      
+      const subfolderPath = `/${PORTFOLIO_ROOT}/${actualFolderName}/${actualSubfolderName}`;
+      console.log(`🖼️ Fetching subfolder images: ${folder}/${subfolder} -> ${actualFolderName}/${actualSubfolderName}, path: ${subfolderPath}`);
       
       const response = await fetch(`https://api.imagekit.io/v1/files?path=${subfolderPath}`, {
         headers: {
