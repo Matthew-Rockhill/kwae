@@ -211,7 +211,6 @@ const minSwipeDistance = 50
 
 // Zoom functionality
 const zoomLevel = ref(1)
-const isPanning = ref(false)
 const panX = ref(0)
 const panY = ref(0)
 const maxZoom = 3
