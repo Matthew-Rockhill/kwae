@@ -36,7 +36,6 @@
       
       <!-- Main Image -->
       <img 
-        v-show="imageLoaded && !imageError"
         :src="image.thumbnailUrl || image.src" 
         :alt="image.alt || image.title || 'Portfolio image'" 
         class="w-full h-full object-cover transition-all duration-700 group-hover:scale-110 transform-gpu"
@@ -46,10 +45,6 @@
         loading="lazy"
       />
       
-      <!-- Debug info -->
-      <div v-if="!imageLoaded && !imageError" class="absolute bottom-2 left-2 bg-black/70 text-white text-xs p-1 rounded">
-        Loading: {{ image.thumbnailUrl || image.src }}
-      </div>
       
       <!-- Overlay for NGO category -->
       <template v-if="showOverlay">
@@ -127,8 +122,6 @@ const retryCount = ref(0)
 
 // Reset loading states when image changes
 watch(() => props.image.thumbnailUrl || props.image.src, (newUrl) => {
-  console.log('🖼️ PortfolioCard image changed:', newUrl);
-  console.log('🖼️ Full image object:', props.image);
   imageLoaded.value = false
   imageError.value = false
   retryCount.value = 0
