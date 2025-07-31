@@ -117,11 +117,13 @@ async function getCategoryItems(categorySlug, subcategory = null, limit = 50, of
     sortOrder: item.sort_order
   }));
   
-  // Get unique subfolders/subcategories for this category
+  // Get unique subfolders/subcategories for this category  
+  console.log(`🔍 Looking for subfolders in category: ${categorySlug}`);
+  
   const { data: subfolders, error: subfoldersError } = await supabase
-    .from('portfolio_items')
+    .from('portfolio_items_with_category')
     .select('subcategory')
-    .eq('category_id', items[0]?.category_id)
+    .eq('category_slug', categorySlug)
     .eq('is_active', true)
     .not('subcategory', 'is', null);
   
@@ -129,11 +131,13 @@ async function getCategoryItems(categorySlug, subcategory = null, limit = 50, of
     console.error(`❌ Error fetching subfolders:`, subfoldersError);
   }
   
+  console.log(`📁 Found ${subfolders?.length || 0} items with subcategories:`, subfolders?.map(s => s.subcategory));
+  
   // Only show subfolders if they represent actual folder structures, not individual files
   const validSubfolders = [...new Set(subfolders?.map(s => s.subcategory).filter(Boolean) || [])]
     .filter(subcatName => {
-      // Only include if it looks like a folder path, not a filename
-      return subcatName && !subcatName.match(/\.(jpg|jpeg|png|gif|webp)$/i) && subcatName.includes('/');
+      // Only include if it looks like a folder name, not a filename
+      return subcatName && !subcatName.match(/\.(jpg|jpeg|png|gif|webp)$/i);
     })
     .map(subcatName => ({
       id: subcatName.toLowerCase().replace(/\s+/g, '-'),
