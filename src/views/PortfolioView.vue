@@ -195,7 +195,7 @@ async function fetchCategories() {
     // Set first category with images as active if none selected
     if (!activeCategory.value && categories.value.length > 0) {
       // Find the first category that has images
-      const categoryWithImages = categories.value.find(cat => cat.imageCount > 0);
+      const categoryWithImages = categories.value.find(cat => (cat.imageCount || 0) > 0);
       activeCategory.value = categoryWithImages ? categoryWithImages.id : categories.value[0].id;
       console.log('🎯 Set active category to:', activeCategory.value);
     }
