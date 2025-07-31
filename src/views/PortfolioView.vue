@@ -248,17 +248,26 @@ async function fetchCategoryImages(categoryId: string, subcategory?: string) {
 
 // Initialize portfolio
 onMounted(async () => {
+  console.log('🚀 Portfolio component mounted, initializing...');
   await fetchCategories();
+  console.log('📊 After fetching categories, activeCategory is:', activeCategory.value);
   if (activeCategory.value) {
+    console.log('🎯 Fetching images for initial category:', activeCategory.value);
     await fetchCategoryImages(activeCategory.value);
+  } else {
+    console.log('⚠️ No active category set after fetching categories');
   }
 });
 
 // Watch for category changes
-watch(activeCategory, async (newCategory) => {
+watch(activeCategory, async (newCategory, oldCategory) => {
+  console.log(`🔄 Category changed from "${oldCategory}" to "${newCategory}"`);
   if (newCategory) {
     activeSubcategory.value = ''; // Reset subcategory
+    console.log(`🎯 Fetching images for category: ${newCategory}`);
     await fetchCategoryImages(newCategory);
+  } else {
+    console.log('⚠️ New category is empty/null');
   }
 });
 

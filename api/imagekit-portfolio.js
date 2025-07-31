@@ -49,10 +49,12 @@ export default async function handler(req, res) {
             .map(word => word.charAt(0).toUpperCase() + word.slice(1))
             .join(' ');
           
+          console.log(`📁 Processing folder: ${folderName}, filePath: ${folder.filePath || 'undefined'}`);
+          
           return {
-            id: folderName.toLowerCase(),
+            id: folderName.toLowerCase().replace(/\s+/g, '-'),
             name: displayName,
-            path: folder.filePath,
+            path: folder.filePath || `/${PORTFOLIO_ROOT}/${folderName}`,
             folderName: folderName
           };
         })
@@ -65,20 +67,28 @@ export default async function handler(req, res) {
     // If folder is specified, return images from that folder
     if (folder) {
       const folderPath = `/${PORTFOLIO_ROOT}/${folder}`;
+      console.log(`🖼️ Fetching images for folder: ${folder}, path: ${folderPath}`);
       
       // First, check if this folder has subfolders
-      const folderCheckResponse = await fetch(`https://api.imagekit.io/v1/files?path=${folderPath}`, {
+      const url = `https://api.imagekit.io/v1/files?path=${folderPath}`;
+      console.log(`📡 ImageKit images URL: ${url}`);
+      
+      const folderCheckResponse = await fetch(url, {
         headers: {
           Authorization: `Basic ${auth}`,
         },
       });
       
+      console.log(`📡 ImageKit images response status: ${folderCheckResponse.status}`);
+      
       if (!folderCheckResponse.ok) {
         const error = await folderCheckResponse.text();
+        console.error(`❌ ImageKit images error for ${folder}:`, error);
         return res.status(folderCheckResponse.status).json({ error });
       }
       
       const folderContents = await folderCheckResponse.json();
+      console.log(`📁 Folder contents for ${folder}:`, folderContents);
       
       // Check if there are subfolders
       const subfolders = folderContents
