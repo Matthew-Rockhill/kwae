@@ -1,7 +1,7 @@
 <template>
   <div 
-    class="group relative overflow-hidden rounded-2xl bg-white transform transition-all duration-700 cursor-pointer hover:shadow-xl shadow-lg border border-[var(--color-accent)]/10"
-    @click="$emit('click')"
+    class="portfolio-card group relative overflow-hidden rounded-2xl bg-white transform transition-all duration-700 hover:shadow-xl shadow-lg border border-[var(--color-accent)]/10 select-none"
+    @contextmenu.prevent
   >
     <!-- Image Container -->
     <div class="relative aspect-[4/3] overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100 rounded-t-2xl">
@@ -38,12 +38,18 @@
       <img 
         :src="image.thumbnailUrl || image.src" 
         :alt="image.alt || image.title || 'Portfolio image'" 
-        class="w-full h-full object-cover transition-all duration-700 group-hover:scale-105 transform-gpu filter group-hover:brightness-110"
+        class="w-full h-full object-cover transition-all duration-700 group-hover:scale-105 transform-gpu filter group-hover:brightness-110 select-none pointer-events-none"
         :class="[imageClasses, { 'opacity-0': !imageLoaded }]"
         @load="handleImageLoad"
         @error="handleImageError"
+        @contextmenu.prevent
+        @dragstart.prevent
         loading="lazy"
+        draggable="false"
       />
+      
+      <!-- Invisible protection overlay -->
+      <div class="absolute inset-0 select-none pointer-events-auto cursor-pointer" @click="$emit('click')"></div>
       
       <!-- Subtle overlay on hover -->
       <div class="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
@@ -183,4 +189,29 @@ const imageClasses = computed(() => {
   
   return baseClasses.join(' ')
 })
-</script> 
+</script>
+
+<style scoped>
+/* Additional image protection */
+img {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+  user-drag: none;
+  -webkit-touch-callout: none;
+}
+
+/* Prevent selection on entire card */
+.portfolio-card {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+</style>

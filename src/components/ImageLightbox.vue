@@ -1,6 +1,6 @@
 <template>
-  <div v-if="isOpen" class="fixed inset-0 z-50 bg-black/95 flex items-center justify-center p-2 sm:p-4">
-    <div class="relative mx-auto transition-all duration-300 ease-out">
+  <div v-if="isOpen" class="lightbox-container fixed inset-0 z-50 bg-black/95 flex items-center justify-center p-2 sm:p-4 animate-fade-in" @contextmenu.prevent>
+    <div class="relative mx-auto transition-all duration-500 ease-out animate-scale-in">
       <!-- Close Button - positioned within the container -->
       <button 
         @click="$emit('close')"
@@ -37,19 +37,30 @@
       
       <!-- Image Container -->
       <div 
-        class="relative bg-white/5 rounded-lg overflow-hidden backdrop-blur-sm transition-all duration-300 ease-out"
+        class="relative bg-white/5 rounded-lg overflow-hidden backdrop-blur-sm transition-all duration-300 ease-out touch-none"
         :style="containerStyle"
+        @touchstart="handleTouchStart"
+        @touchmove="handleTouchMove"
+        @touchend="handleTouchEnd"
       >
         <img 
           v-if="currentImage"
           ref="imageRef"
           :src="currentImage.src" 
           :alt="currentImage.alt || 'Gallery image'"
-          class="w-full h-full mx-auto block object-contain"
-          :class="{ 'opacity-0': !imageLoaded, 'opacity-100': imageLoaded }"
+          class="w-full h-full mx-auto block object-contain select-none pointer-events-none transition-all duration-500 ease-out"
+          :class="{ 
+            'opacity-0 scale-95': !imageLoaded, 
+            'opacity-100 scale-100': imageLoaded 
+          }"
           @load="handleImageLoad"
-          @click.stop
+          @contextmenu.prevent
+          @dragstart.prevent
+          draggable="false"
         />
+        
+        <!-- Protection overlay for lightbox -->
+        <div class="absolute inset-0 select-none" style="background: transparent;"></div>
         
         <!-- Loading indicator -->
         <div 
@@ -103,7 +114,7 @@ interface Props {
   showNavigation?: boolean
 }
 
-// Handle keyboard navigation and image loading
+// Handle keyboard navigation, touch gestures and image loading
 import { onMounted, onUnmounted, ref, computed, watch } from 'vue'
 
 const props = defineProps<Props>()
@@ -111,6 +122,7 @@ const emit = defineEmits<{
   close: []
   prev: []
   next: []
+  'preload-adjacent': [index: number]
 }>()
 
 // Image loading and aspect ratio state
@@ -119,6 +131,14 @@ const imageLoaded = ref(false)
 const imageAspectRatio = ref(1)
 const imageNaturalWidth = ref(0)
 const imageNaturalHeight = ref(0)
+
+// Touch gesture state
+const touchStartX = ref(0)
+const touchStartY = ref(0)
+const touchCurrentX = ref(0)
+const touchCurrentY = ref(0)
+const isSwiping = ref(false)
+const minSwipeDistance = 50
 
 // Handle image load to get natural dimensions
 const handleImageLoad = (event: Event) => {
@@ -129,10 +149,28 @@ const handleImageLoad = (event: Event) => {
   imageLoaded.value = true
 }
 
-// Reset image state when image changes
-watch(() => props.currentImage?.src, () => {
+// Image preloading
+const preloadedImages = new Map<string, HTMLImageElement>()
+
+const preloadImage = (src: string) => {
+  if (!src || preloadedImages.has(src)) return
+  
+  const img = new Image()
+  img.src = src
+  preloadedImages.set(src, img)
+}
+
+// Reset image state when image changes and preload adjacent images
+watch(() => props.currentImage?.src, (newSrc) => {
   imageLoaded.value = false
   imageAspectRatio.value = 1
+  
+  // Preload next and previous images if navigation is enabled
+  if (props.showNavigation && newSrc) {
+    // This would need access to the full image array to preload
+    // For now, we'll implement a basic preloading system
+    emit('preload-adjacent', props.currentIndex)
+  }
 }, { immediate: true })
 
 // Computed container dimensions based on aspect ratio
@@ -206,6 +244,56 @@ const handleKeydown = (event: KeyboardEvent) => {
   }
 }
 
+// Touch event handlers
+const handleTouchStart = (event: TouchEvent) => {
+  if (!props.showNavigation) return
+  
+  const touch = event.touches[0]
+  touchStartX.value = touch.clientX
+  touchStartY.value = touch.clientY
+  touchCurrentX.value = touch.clientX
+  touchCurrentY.value = touch.clientY
+  isSwiping.value = false
+}
+
+const handleTouchMove = (event: TouchEvent) => {
+  if (!props.showNavigation) return
+  
+  const touch = event.touches[0]
+  touchCurrentX.value = touch.clientX
+  touchCurrentY.value = touch.clientY
+  
+  const deltaX = Math.abs(touchCurrentX.value - touchStartX.value)
+  const deltaY = Math.abs(touchCurrentY.value - touchStartY.value)
+  
+  // Prevent default scrolling if horizontal swipe is detected
+  if (deltaX > deltaY && deltaX > 10) {
+    event.preventDefault()
+    isSwiping.value = true
+  }
+}
+
+const handleTouchEnd = (event: TouchEvent) => {
+  if (!props.showNavigation || !isSwiping.value) return
+  
+  const deltaX = touchCurrentX.value - touchStartX.value
+  const deltaY = Math.abs(touchCurrentY.value - touchStartY.value)
+  
+  // Only trigger swipe if horizontal movement is greater than vertical
+  if (Math.abs(deltaX) > minSwipeDistance && Math.abs(deltaX) > deltaY) {
+    if (deltaX > 0 && props.currentIndex > 0) {
+      // Swipe right - go to previous image
+      emit('prev')
+    } else if (deltaX < 0 && props.currentIndex < props.totalImages - 1) {
+      // Swipe left - go to next image
+      emit('next')
+    }
+  }
+  
+  // Reset touch state
+  isSwiping.value = false
+}
+
 // Force recalculation on window resize
 const forceRecalculation = ref(0)
 const handleResize = () => {
@@ -220,10 +308,108 @@ watch(forceRecalculation, () => {
 onMounted(() => {
   document.addEventListener('keydown', handleKeydown)
   window.addEventListener('resize', handleResize)
+  
+  // Disable context menu and text selection on the entire lightbox
+  if (props.isOpen) {
+    document.body.style.userSelect = 'none'
+    document.body.style.webkitUserSelect = 'none'
+  }
 })
 
 onUnmounted(() => {
   document.removeEventListener('keydown', handleKeydown)
   window.removeEventListener('resize', handleResize)
+  
+  // Restore text selection
+  document.body.style.userSelect = ''
+  document.body.style.webkitUserSelect = ''
 })
-</script> 
+
+// Watch for lightbox open/close to control body text selection
+watch(() => props.isOpen, (isOpen) => {
+  if (isOpen) {
+    document.body.style.userSelect = 'none'
+    document.body.style.webkitUserSelect = 'none'
+  } else {
+    document.body.style.userSelect = ''
+    document.body.style.webkitUserSelect = ''
+  }
+})
+</script>
+
+<style scoped>
+/* Additional protection styles */
+img {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+  user-drag: none;
+  pointer-events: none;
+}
+
+/* Disable text selection on lightbox */
+.lightbox-container {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Prevent right-click and drag on entire lightbox */
+.lightbox-container * {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Smooth animations */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out;
+}
+
+.animate-scale-in {
+  animation: scale-in 0.4s ease-out;
+}
+
+/* Smooth navigation button hover effects */
+button {
+  transition: all 0.2s ease-out;
+}
+
+button:hover {
+  transform: scale(1.05);
+}
+
+/* Smooth image container transitions */
+.image-container {
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+</style>

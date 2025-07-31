@@ -99,15 +99,15 @@
       </div>
       
       
-      <!-- Show More Button -->
-      <div class="text-center mt-12" v-if="hasMoreItems">
-        <BaseButton 
-          variant="secondary"
-          @click="loadMore"
-          class="transform transition-transform duration-300 hover:scale-105"
-        >
-          Load More ({{ visibleCount }}/{{ filteredPortfolio.length }})
-        </BaseButton>
+      <!-- Infinite Scroll Trigger -->
+      <div ref="infiniteScrollTrigger" v-if="hasMoreItems" class="flex justify-center items-center py-8">
+        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--color-secondary)]"></div>
+        <span class="ml-3 text-[var(--color-text)]/60">Loading more images...</span>
+      </div>
+      
+      <!-- End of gallery indicator -->
+      <div v-if="!hasMoreItems && filteredPortfolio.length > 12" class="text-center py-8">
+        <span class="text-[var(--color-text)]/60">You've seen all {{ filteredPortfolio.length }} images</span>
       </div>
       
     </BaseSection>
@@ -122,6 +122,7 @@
       @close="closeLightbox"
       @prev="prevImage"
       @next="nextImage"
+      @preload-adjacent="preloadAdjacentImages"
     />
     
     <!-- CTA Section -->
@@ -142,7 +143,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import ImageLightbox from '@/components/ImageLightbox.vue'
 import BaseSection from '@/components/ui/BaseSection.vue'
@@ -183,6 +184,8 @@ const activeSubcategory = ref('');
 const visibleCount = ref(12);
 const loading = ref(false);
 const error = ref('');
+const infiniteScrollTrigger = ref<HTMLElement>();
+const isLoadingMore = ref(false);
 
 // Dynamic data
 const categories = ref<PortfolioCategory[]>([]);
@@ -279,6 +282,15 @@ onMounted(async () => {
   } else {
     console.log('⚠️ No active category set after fetching categories');
   }
+  
+  // Setup infinite scroll after initial data is loaded
+  setTimeout(() => {
+    setupInfiniteScroll();
+  }, 100);
+});
+
+onUnmounted(() => {
+  cleanupInfiniteScroll();
 });
 
 // Watch for category changes
@@ -286,8 +298,13 @@ watch(activeCategory, async (newCategory, oldCategory) => {
   console.log(`🔄 Category changed from "${oldCategory}" to "${newCategory}"`);
   if (newCategory) {
     activeSubcategory.value = ''; // Reset subcategory
+    cleanupInfiniteScroll(); // Clean up old observer
     console.log(`🎯 Fetching images for category: ${newCategory}`);
     await fetchCategoryImages(newCategory);
+    // Reset infinite scroll for new category
+    setTimeout(() => {
+      setupInfiniteScroll();
+    }, 100);
   } else {
     console.log('⚠️ New category is empty/null');
   }
@@ -296,7 +313,12 @@ watch(activeCategory, async (newCategory, oldCategory) => {
 // Watch for subcategory changes
 watch(activeSubcategory, async (newSubcategory) => {
   if (activeCategory.value) {
+    cleanupInfiniteScroll(); // Clean up old observer
     await fetchCategoryImages(activeCategory.value, newSubcategory);
+    // Reset infinite scroll for new subcategory
+    setTimeout(() => {
+      setupInfiniteScroll();
+    }, 100);
   }
 });
 
@@ -352,8 +374,77 @@ const nextImage = () => {
   currentLightboxIndex.value = (currentLightboxIndex.value + 1) % filteredPortfolio.value.length;
 };
 
+// Image preloading for better UX
+const preloadedImages = new Set<string>();
+
+const preloadImage = (src: string) => {
+  if (!src || preloadedImages.has(src)) return;
+  
+  const img = new Image();
+  img.src = src;
+  preloadedImages.add(src);
+};
+
+const preloadAdjacentImages = (currentIndex: number) => {
+  const portfolio = filteredPortfolio.value;
+  
+  // Preload previous image
+  if (currentIndex > 0) {
+    const prevItem = portfolio[currentIndex - 1];
+    if (prevItem?.fullUrl) {
+      preloadImage(prevItem.fullUrl);
+    }
+  }
+  
+  // Preload next image
+  if (currentIndex < portfolio.length - 1) {
+    const nextItem = portfolio[currentIndex + 1];
+    if (nextItem?.fullUrl) {
+      preloadImage(nextItem.fullUrl);
+    }
+  }
+};
+
+// Infinite scroll functionality
 const loadMore = () => {
-  visibleCount.value += 12;
+  if (!isLoadingMore.value && hasMoreItems.value) {
+    isLoadingMore.value = true;
+    // Add a small delay to show loading state
+    setTimeout(() => {
+      visibleCount.value += 12;
+      isLoadingMore.value = false;
+    }, 300);
+  }
+};
+
+// Intersection Observer for infinite scroll
+let intersectionObserver: IntersectionObserver | null = null;
+
+const setupInfiniteScroll = () => {
+  if (!infiniteScrollTrigger.value) return;
+  
+  intersectionObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting && hasMoreItems.value && !isLoadingMore.value) {
+          loadMore();
+        }
+      });
+    },
+    {
+      rootMargin: '100px', // Start loading 100px before the trigger comes into view
+      threshold: 0.1
+    }
+  );
+  
+  intersectionObserver.observe(infiniteScrollTrigger.value);
+};
+
+const cleanupInfiniteScroll = () => {
+  if (intersectionObserver) {
+    intersectionObserver.disconnect();
+    intersectionObserver = null;
+  }
 };
 
 // Category/subcategory selection
