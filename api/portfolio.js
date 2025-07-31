@@ -117,9 +117,7 @@ async function getCategoryItems(categorySlug, subcategory = null, limit = 50, of
     sortOrder: item.sort_order
   }));
   
-  // Get unique subfolders/subcategories for this category  
-  console.log(`🔍 Looking for subfolders in category: ${categorySlug}`);
-  
+  // Get unique subfolders/subcategories for this category
   const { data: subfolders, error: subfoldersError } = await supabase
     .from('portfolio_items_with_category')
     .select('subcategory')
@@ -130,8 +128,6 @@ async function getCategoryItems(categorySlug, subcategory = null, limit = 50, of
   if (subfoldersError) {
     console.error(`❌ Error fetching subfolders:`, subfoldersError);
   }
-  
-  console.log(`📁 Found ${subfolders?.length || 0} items with subcategories:`, subfolders?.map(s => s.subcategory));
   
   // Only show subfolders if they represent actual folder structures, not individual files
   const validSubfolders = [...new Set(subfolders?.map(s => s.subcategory).filter(Boolean) || [])]
