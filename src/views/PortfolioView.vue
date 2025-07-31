@@ -116,10 +116,12 @@
       :current-image="currentLightboxImage"
       :current-index="currentLightboxIndex"
       :total-images="totalLightboxImages"
+      :all-images="allLightboxImages"
       :show-navigation="true"
       @close="closeLightbox"
       @prev="prevImage"
       @next="nextImage"
+      @goto="gotoImage"
       @preload-adjacent="preloadAdjacentImages"
     />
     
@@ -351,7 +353,13 @@ const currentLightboxImage = computed(() => {
     alt: 'Gallery image',
   };
 });
-const totalLightboxImages = computed(() => filteredPortfolio.value.length);
+const totalLightboxImages = computed(() => filteredPortfolio.value.length)
+const allLightboxImages = computed(() => {
+  return filteredPortfolio.value.map(item => ({
+    src: item.thumbnailUrl || item.fullUrl,
+    alt: item.alt || 'Gallery image'
+  }))
+});
 
 const openLightbox = (index: number) => {
   currentLightboxIndex.value = index;
@@ -370,6 +378,10 @@ const prevImage = () => {
 
 const nextImage = () => {
   currentLightboxIndex.value = (currentLightboxIndex.value + 1) % filteredPortfolio.value.length;
+};
+
+const gotoImage = (index: number) => {
+  currentLightboxIndex.value = index;
 };
 
 // Image preloading for better UX

@@ -34,6 +34,40 @@
           <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
         </svg>
       </button>
+
+      <!-- Zoom Controls -->
+      <div class="absolute top-4 left-4 z-20 flex flex-col gap-2">
+        <button 
+          @click="zoomIn"
+          :disabled="zoomLevel >= maxZoom"
+          class="p-2 text-white/80 hover:text-white transition-colors duration-200 bg-black/20 hover:bg-black/40 backdrop-blur-sm rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
+          aria-label="Zoom in"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+          </svg>
+        </button>
+        <button 
+          @click="zoomOut"
+          :disabled="zoomLevel <= minZoom"
+          class="p-2 text-white/80 hover:text-white transition-colors duration-200 bg-black/20 hover:bg-black/40 backdrop-blur-sm rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
+          aria-label="Zoom out"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M18 12H6" />
+          </svg>
+        </button>
+        <button 
+          v-if="zoomLevel > 1"
+          @click="resetZoom"
+          class="p-2 text-white/80 hover:text-white transition-colors duration-200 bg-black/20 hover:bg-black/40 backdrop-blur-sm rounded-lg"
+          aria-label="Reset zoom"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+          </svg>
+        </button>
+      </div>
       
       <!-- Image Container -->
       <div 
@@ -52,6 +86,10 @@
           :class="{ 
             'opacity-0 scale-95': !imageLoaded, 
             'opacity-100 scale-100': imageLoaded 
+          }"
+          :style="{
+            transform: `scale(${zoomLevel}) translate(${panX}px, ${panY}px)`,
+            cursor: zoomLevel > 1 ? 'grab' : 'default'
           }"
           @load="handleImageLoad"
           @contextmenu.prevent
@@ -87,6 +125,35 @@
           <p v-if="currentImage.description" class="text-gray-200 text-sm">{{ currentImage.description }}</p>
         </div>
       </div>
+
+      <!-- Thumbnail Strip Navigation -->
+      <div 
+        v-if="showNavigation && allImages && allImages.length > 1" 
+        class="absolute bottom-4 left-1/2 -translate-x-1/2 w-full max-w-md px-4"
+      >
+        <div class="thumbnail-strip flex gap-2 overflow-x-auto scrollbar-hide p-2 bg-black/40 backdrop-blur-sm rounded-lg">
+          <button
+            v-for="(image, index) in allImages"
+            :key="index"
+            @click="$emit('goto', index)"
+            class="flex-shrink-0 w-12 h-12 rounded-md overflow-hidden border-2 transition-all duration-200"
+            :class="[
+              index === currentIndex 
+                ? 'border-white shadow-lg' 
+                : 'border-white/30 hover:border-white/60 opacity-70 hover:opacity-100'
+            ]"
+          >
+            <img 
+              :src="image.src" 
+              :alt="image.alt || `Thumbnail ${index + 1}`"
+              class="w-full h-full object-cover select-none pointer-events-none"
+              @contextmenu.prevent
+              @dragstart.prevent
+              draggable="false"
+            />
+          </button>
+        </div>
+      </div>
     </div>
     
     <!-- Click outside to close -->
@@ -112,6 +179,7 @@ interface Props {
   currentIndex: number
   totalImages: number
   showNavigation?: boolean
+  allImages?: LightboxImage[]
 }
 
 // Handle keyboard navigation, touch gestures and image loading
@@ -122,6 +190,7 @@ const emit = defineEmits<{
   close: []
   prev: []
   next: []
+  goto: [index: number]
   'preload-adjacent': [index: number]
 }>()
 
@@ -140,6 +209,14 @@ const touchCurrentY = ref(0)
 const isSwiping = ref(false)
 const minSwipeDistance = 50
 
+// Zoom functionality
+const zoomLevel = ref(1)
+const isPanning = ref(false)
+const panX = ref(0)
+const panY = ref(0)
+const maxZoom = 3
+const minZoom = 1
+
 // Handle image load to get natural dimensions
 const handleImageLoad = (event: Event) => {
   const img = event.target as HTMLImageElement
@@ -155,6 +232,11 @@ watch(() => props.currentImage?.src, (newSrc) => {
   imageLoaded.value = false
   imageAspectRatio.value = 1
   
+  // Reset zoom when image changes
+  zoomLevel.value = 1
+  panX.value = 0
+  panY.value = 0
+  
   // Preload next and previous images if navigation is enabled
   if (props.showNavigation && newSrc) {
     // This would need access to the full image array to preload
@@ -162,6 +244,30 @@ watch(() => props.currentImage?.src, (newSrc) => {
     emit('preload-adjacent', props.currentIndex)
   }
 }, { immediate: true })
+
+// Zoom functions
+const zoomIn = () => {
+  if (zoomLevel.value < maxZoom) {
+    zoomLevel.value = Math.min(zoomLevel.value + 0.5, maxZoom)
+  }
+}
+
+const zoomOut = () => {
+  if (zoomLevel.value > minZoom) {
+    zoomLevel.value = Math.max(zoomLevel.value - 0.5, minZoom)
+    // Reset pan when zooming out to 1x
+    if (zoomLevel.value === 1) {
+      panX.value = 0
+      panY.value = 0
+    }
+  }
+}
+
+const resetZoom = () => {
+  zoomLevel.value = 1
+  panX.value = 0
+  panY.value = 0
+}
 
 // Computed container dimensions based on aspect ratio
 const containerStyle = computed(() => {
@@ -401,5 +507,24 @@ button:hover {
 /* Smooth image container transitions */
 .image-container {
   transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Hide scrollbar for thumbnail strip */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Smooth thumbnail transitions */
+.thumbnail-strip button {
+  transition: all 0.2s ease-out;
+}
+
+.thumbnail-strip button:hover {
+  transform: scale(1.05);
 }
 </style>
