@@ -15,6 +15,9 @@
     },
     "api/migrate-portfolio.js": {
       "maxDuration": 300
+    },
+    "api/sync-portfolio.js": {
+      "maxDuration": 60
     }
   },
   "rewrites": [
