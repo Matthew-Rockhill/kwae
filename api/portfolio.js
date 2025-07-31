@@ -129,7 +129,12 @@ async function getCategoryItems(categorySlug, subcategory = null, limit = 50, of
     console.error(`❌ Error fetching subfolders:`, subfoldersError);
   }
   
-  const uniqueSubfolders = [...new Set(subfolders?.map(s => s.subcategory).filter(Boolean) || [])]
+  // Only show subfolders if they represent actual folder structures, not individual files
+  const validSubfolders = [...new Set(subfolders?.map(s => s.subcategory).filter(Boolean) || [])]
+    .filter(subcatName => {
+      // Only include if it looks like a folder path, not a filename
+      return subcatName && !subcatName.match(/\.(jpg|jpeg|png|gif|webp)$/i) && subcatName.includes('/');
+    })
     .map(subcatName => ({
       id: subcatName.toLowerCase().replace(/\s+/g, '-'),
       name: subcatName,
@@ -138,13 +143,13 @@ async function getCategoryItems(categorySlug, subcategory = null, limit = 50, of
   
   const result = {
     images: transformedItems,
-    subfolders: uniqueSubfolders.length > 0 ? uniqueSubfolders : null,
+    subfolders: validSubfolders.length > 0 ? validSubfolders : null,
     category: categorySlug,
     total: transformedItems.length
   };
   
   setCache(cacheKey, result);
-  console.log(`✅ Found ${transformedItems.length} items, ${uniqueSubfolders.length} subfolders`);
+  console.log(`✅ Found ${transformedItems.length} items, ${validSubfolders.length} subfolders`);
   
   return result;
 }
