@@ -65,7 +65,7 @@
       </div>
       
       <!-- Gallery Grid -->
-      <div v-else class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div v-if="!loading && !error && filteredPortfolio.length > 0" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <PortfolioCard
           v-for="(item, index) in filteredPortfolio" 
           :key="`${activeCategory}-${activeSubcategory}-${index}`"
@@ -78,14 +78,23 @@
         />
       </div>
       
+      <!-- Fallback if no grid shows -->
+      <div v-else-if="!loading && !error && filteredPortfolio.length === 0" class="text-center py-12">
+        <BaseText size="lg" :opacity="70">No images found for this category.</BaseText>
+      </div>
+      
       <!-- Debug info -->
       <div class="mt-4 p-4 bg-gray-100 rounded text-sm">
         <p><strong>Debug Info:</strong></p>
         <p>Active Category: {{ activeCategory }}</p>
+        <p>Loading: {{ loading }}</p>
+        <p>Error: {{ error || 'none' }}</p>
         <p>Images loaded: {{ images.length }}</p>
         <p>Filtered images: {{ filteredPortfolio.length }}</p>
         <p>Visible count: {{ visibleCount }}</p>
         <p>Sample image URL: {{ filteredPortfolio[0]?.thumbnailUrl }}</p>
+        <p>Has subfolders: {{ hasSubfolders }}</p>
+        <p>Subfolders: {{ subfolders.length }}</p>
       </div>
       
       <!-- Show More Button -->
@@ -99,10 +108,6 @@
         </BaseButton>
       </div>
       
-      <!-- No Images State -->
-      <div v-if="filteredPortfolio.length === 0" class="text-center py-12">
-        <BaseText size="lg" :opacity="70">No images found for this category.</BaseText>
-      </div>
     </BaseSection>
     
     <!-- Lightbox -->
