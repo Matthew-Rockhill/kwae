@@ -190,9 +190,11 @@ async function fetchCategories() {
     console.log('✅ Categories data received:', data);
     categories.value = data.categories || [];
     
-    // Set first category as active if none selected
+    // Set first category with images as active if none selected
     if (!activeCategory.value && categories.value.length > 0) {
-      activeCategory.value = categories.value[0].id;
+      // Find the first category that has images
+      const categoryWithImages = categories.value.find(cat => cat.imageCount > 0);
+      activeCategory.value = categoryWithImages ? categoryWithImages.id : categories.value[0].id;
       console.log('🎯 Set active category to:', activeCategory.value);
     }
   } catch (err: any) {

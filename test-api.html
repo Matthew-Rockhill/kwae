@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Portfolio API Test</title>
+</head>
+<body>
+    <h1>Testing Portfolio API</h1>
+    <div id="results"></div>
+    
+    <script>
+        async function testAPI() {
+            const results = document.getElementById('results');
+            
+            try {
+                console.log('Testing categories API...');
+                const categoriesResponse = await fetch('/api/portfolio?action=categories');
+                console.log('Categories response status:', categoriesResponse.status);
+                console.log('Categories response headers:', categoriesResponse.headers);
+                const categoriesData = await categoriesResponse.json();
+                console.log('Categories data:', categoriesData);
+                
+                if (categoriesData.categories && categoriesData.categories.length > 0) {
+                    const firstCategory = categoriesData.categories[0];
+                    console.log('Testing images for category:', firstCategory.id);
+                    
+                    const imagesResponse = await fetch(`/api/portfolio?category=${firstCategory.id}&limit=5`);
+                    console.log('Images response status:', imagesResponse.status);
+                    const imagesData = await imagesResponse.json();
+                    console.log('Images data:', imagesData);
+                    
+                    results.innerHTML = `
+                        <h2>Categories (${categoriesData.categories.length}):</h2>
+                        <pre>${JSON.stringify(categoriesData.categories, null, 2)}</pre>
+                        
+                        <h2>Images for "${firstCategory.name}" (${imagesData.images ? imagesData.images.length : 0}):</h2>
+                        <pre>${JSON.stringify(imagesData.images ? imagesData.images.slice(0, 2) : [], null, 2)}</pre>
+                        
+                        ${imagesData.images && imagesData.images[0] ? `
+                        <h2>Test Image:</h2>
+                        <img src="${imagesData.images[0].thumbnailUrl}" alt="Test" style="max-width: 200px;" />
+                        ` : ''}
+                    `;
+                } else {
+                    results.innerHTML = `<p>No categories found: ${JSON.stringify(categoriesData)}</p>`;
+                }
+            } catch (error) {
+                console.error('API test error:', error);
+                results.innerHTML = `<p>Error: ${error.message}</p>`;
+            }
+        }
+        
+        testAPI();
+    </script>
+</body>
+</html>
