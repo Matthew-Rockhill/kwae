@@ -171,7 +171,6 @@ import BaseButton from '@/components/ui/BaseButton.vue'
 import CallToActionSection from '@/components/ui/CallToActionSection.vue'
 import FilterButton from '@/components/ui/FilterButton.vue'
 import PortfolioCard from '@/components/ui/PortfolioCard.vue'
-import StickyFilterBar from '@/components/ui/StickyFilterBar.vue'
 import BookingModal from '@/components/BookingModal.vue'
 
 interface PortfolioImage {
