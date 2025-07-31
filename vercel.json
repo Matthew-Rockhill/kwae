@@ -18,6 +18,9 @@
     },
     "api/sync-portfolio.js": {
       "maxDuration": 60
+    },
+    "api/setup-database.js": {
+      "maxDuration": 120
     }
   },
   "rewrites": [
