@@ -4,7 +4,7 @@
     @click="$emit('click')"
   >
     <!-- Image Container -->
-    <div class="relative aspect-[3/4] overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100 rounded-t-2xl">
+    <div class="relative aspect-[4/3] overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100 rounded-t-2xl">
       <!-- Loading Skeleton -->
       <div 
         v-if="!imageLoaded && !imageError" 

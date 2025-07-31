@@ -76,6 +76,9 @@ async function compareAndSync() {
     console.log(`📊 Database: ${dbCategories?.length || 0} categories, ${dbItems?.length || 0} items`);
     console.log(`📊 ImageKit: ${ikFolders.length} folders`);
     
+    // Get the current max sort_order to add new categories at the end
+    const maxSortOrder = Math.max(...(dbCategories || []).map(cat => cat.sort_order || 0), -1);
+    
     // Process each ImageKit folder
     for (const folder of ikFolders) {
       if (folder.type !== 'folder') continue;
@@ -96,7 +99,7 @@ async function compareAndSync() {
             name: displayName,
             slug: slug,
             folder_path: folder.filePath || `/${PORTFOLIO_ROOT}/${folderName}`,
-            sort_order: syncReport.categoriesAdded
+            sort_order: maxSortOrder + 1 + syncReport.categoriesAdded
           }])
           .select()
           .single();

@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- Page Header with Integrated Navigation -->
-    <BaseSection background="light" padding="2xl" spacing="tight">
+    <BaseSection background="light" padding="xl" spacing="tight">
       <div class="section-header text-center max-w-6xl mx-auto">
         <!-- Main Heading -->
         <BaseHeading :level="1" align="center" :animate="true" decoration="underline" class="mb-6">
@@ -48,7 +48,7 @@
     </div>
     
     <!-- Portfolio Gallery -->
-    <BaseSection background="light" padding="xl" spacing="normal">
+    <BaseSection background="light" padding="lg" spacing="tight">
       <!-- Loading State -->
       <div v-if="loading" class="text-center py-12">
         <BaseText size="lg" :opacity="70">Loading {{ currentCategoryName }}...</BaseText>
