@@ -28,7 +28,7 @@ jobs:
           -H "Authorization: Bearer ${{ secrets.SYNC_SECRET }}" \
           -H "Content-Type: application/json" \
           -w "%{http_code}" \
-          https://kristinmathilde.com/api/sync-portfolio?action=sync)
+          https://www.kristinmathilde.com/api/sync-portfolio?action=sync)
         
         # Extract HTTP status code (last 3 characters)
         http_code="${response: -3}"
@@ -58,7 +58,7 @@ jobs:
           -H "Authorization: Bearer ${{ secrets.SYNC_SECRET }}" \
           -H "Content-Type: application/json" \
           -w "%{http_code}" \
-          https://kristinmathilde.com/api/sync-portfolio?action=health)
+          https://www.kristinmathilde.com/api/sync-portfolio?action=health)
         
         health_code="${health_response: -3}"
         health_body="${health_response%???}"
