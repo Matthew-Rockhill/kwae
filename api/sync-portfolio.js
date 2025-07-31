@@ -88,6 +88,21 @@ async function processFile(file, dbCategory, categoryDbItems, syncReport, subcat
     } else {
       syncReport.itemsAdded++;
     }
+  } else {
+    // Update existing item if subcategory has changed
+    if (existingItem.subcategory !== subcategory) {
+      const { error } = await supabase
+        .from('portfolio_items')
+        .update({ subcategory: subcategory })
+        .eq('id', existingItem.id);
+      
+      if (error) {
+        syncReport.errors.push(`Failed to update subcategory for ${file.name}: ${error.message}`);
+      } else {
+        console.log(`✏️ Updated subcategory for ${file.name}: "${existingItem.subcategory}" → "${subcategory}"`);
+        syncReport.categoriesUpdated++;
+      }
+    }
   }
 }
 
