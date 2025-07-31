@@ -52,8 +52,11 @@
           <BaseText size="lg" color="primary" class="text-red-600 mb-4">
             Unable to load portfolio images
           </BaseText>
-          <BaseText size="lg" :opacity="70" class="mb-6">
+          <BaseText size="lg" :opacity="70" class="mb-4">
             The portfolio images could not be fetched at this time. Please check your connection and try again.
+          </BaseText>
+          <BaseText size="sm" :opacity="60" class="mb-6 font-mono bg-gray-100 p-2 rounded text-left">
+            Error: {{ error }}
           </BaseText>
           <BaseButton variant="secondary" @click="activeCategory ? fetchCategoryImages(activeCategory) : fetchCategories()">
             Try Again
@@ -172,19 +175,29 @@ const subfolders = ref<PortfolioSubfolder[]>([]);
 async function fetchCategories() {
   loading.value = true;
   error.value = '';
+  console.log('🔍 Fetching portfolio categories...');
   try {
     const res = await fetch('/api/imagekit-portfolio?action=folders');
-    if (!res.ok) throw new Error('Failed to fetch portfolio categories');
+    console.log('📡 Categories API response status:', res.status);
+    
+    if (!res.ok) {
+      const errorText = await res.text();
+      console.error('❌ Categories API error:', errorText);
+      throw new Error(`Failed to fetch portfolio categories: ${res.status} ${errorText}`);
+    }
+    
     const data = await res.json();
-    categories.value = data.categories;
+    console.log('✅ Categories data received:', data);
+    categories.value = data.categories || [];
     
     // Set first category as active if none selected
     if (!activeCategory.value && categories.value.length > 0) {
       activeCategory.value = categories.value[0].id;
+      console.log('🎯 Set active category to:', activeCategory.value);
     }
   } catch (err: any) {
     error.value = err.message || 'Failed to load portfolio categories';
-    console.error('Portfolio categories error:', err);
+    console.error('❌ Portfolio categories error:', err);
   } finally {
     loading.value = false;
   }
@@ -196,24 +209,36 @@ async function fetchCategoryImages(categoryId: string, subcategory?: string) {
   
   loading.value = true;
   error.value = '';
+  console.log(`🖼️ Fetching images for category: ${categoryId}`, subcategory ? `subcategory: ${subcategory}` : '');
   try {
     let url = `/api/imagekit-portfolio?folder=${categoryId}`;
     if (subcategory) {
       url += `&subfolder=${subcategory}`;
     }
+    console.log('📡 Images API URL:', url);
     
     const res = await fetch(url);
-    if (!res.ok) throw new Error(`Failed to fetch ${categoryId} images`);
+    console.log('📡 Images API response status:', res.status);
+    
+    if (!res.ok) {
+      const errorText = await res.text();
+      console.error(`❌ Images API error for ${categoryId}:`, errorText);
+      throw new Error(`Failed to fetch ${categoryId} images: ${res.status} ${errorText}`);
+    }
+    
     const data = await res.json();
+    console.log(`✅ Images data received for ${categoryId}:`, data);
     
     images.value = data.images || [];
     subfolders.value = data.subfolders || [];
+    
+    console.log(`📊 Found ${images.value.length} images and ${subfolders.value.length} subfolders`);
     
     // Reset visible count when switching categories
     visibleCount.value = 12;
   } catch (err: any) {
     error.value = err.message || `Failed to load ${categoryId} images`;
-    console.error('Portfolio images error:', err);
+    console.error('❌ Portfolio images error:', err);
     images.value = [];
     subfolders.value = [];
   } finally {

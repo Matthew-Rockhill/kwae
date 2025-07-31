@@ -3,10 +3,10 @@
   "functions": {
     "api/bookings.js": {
       "maxDuration": 30
+    },
+    "api/imagekit-portfolio.js": {
+      "maxDuration": 30
     }
-  },
-  "env": {
-    "NODE_ENV": "production"
   },
   "rewrites": [
     {

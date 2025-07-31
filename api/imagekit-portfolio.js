@@ -1,11 +1,16 @@
 export default async function handler(req, res) {
+  console.log('🚀 Portfolio API called with query:', req.query);
+  
   const IMAGEKIT_PRIVATE_KEY = process.env.IMAGEKIT_PRIVATE_KEY;
   const IMAGEKIT_PUBLIC_URL = 'https://ik.imagekit.io/skbxxrf9vm/';
   const PORTFOLIO_ROOT = 'portfolio'; // Root folder for all portfolio content
   
   if (!IMAGEKIT_PRIVATE_KEY) {
+    console.error('❌ Missing IMAGEKIT_PRIVATE_KEY in environment variables');
     return res.status(500).json({ error: 'Missing IMAGEKIT_PRIVATE_KEY in environment variables.' });
   }
+  
+  console.log('✅ ImageKit credentials available');
 
   const auth = Buffer.from(IMAGEKIT_PRIVATE_KEY + ':').toString('base64');
   const { folder, action } = req.query;
@@ -13,18 +18,25 @@ export default async function handler(req, res) {
   try {
     // If action is 'folders', return list of available portfolio categories
     if (action === 'folders') {
-      const response = await fetch(`https://api.imagekit.io/v1/files?path=/${PORTFOLIO_ROOT}&type=folder`, {
+      const url = `https://api.imagekit.io/v1/files?path=/${PORTFOLIO_ROOT}&type=folder`;
+      console.log('📁 Fetching folders from ImageKit:', url);
+      
+      const response = await fetch(url, {
         headers: {
           Authorization: `Basic ${auth}`,
         },
       });
       
+      console.log('📡 ImageKit folders response status:', response.status);
+      
       if (!response.ok) {
         const error = await response.text();
+        console.error('❌ ImageKit folders error:', error);
         return res.status(response.status).json({ error });
       }
       
       const folders = await response.json();
+      console.log('📁 Raw folders data:', folders);
       
       // Transform folders into category structure
       const categories = folders
@@ -46,6 +58,7 @@ export default async function handler(req, res) {
         })
         .sort((a, b) => a.name.localeCompare(b.name));
       
+      console.log('✅ Processed categories:', categories);
       return res.status(200).json({ categories });
     }
 
