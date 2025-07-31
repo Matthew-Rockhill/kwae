@@ -46,6 +46,11 @@
         loading="lazy"
       />
       
+      <!-- Debug info -->
+      <div v-if="!imageLoaded && !imageError" class="absolute bottom-2 left-2 bg-black/70 text-white text-xs p-1 rounded">
+        Loading: {{ image.thumbnailUrl || image.src }}
+      </div>
+      
       <!-- Overlay for NGO category -->
       <template v-if="showOverlay">
         <div class="absolute inset-0 bg-gradient-to-t from-[var(--color-text)]/90 via-[var(--color-text)]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -121,7 +126,9 @@ const imageError = ref(false)
 const retryCount = ref(0)
 
 // Reset loading states when image changes
-watch(() => props.image.thumbnailUrl || props.image.src, () => {
+watch(() => props.image.thumbnailUrl || props.image.src, (newUrl) => {
+  console.log('🖼️ PortfolioCard image changed:', newUrl);
+  console.log('🖼️ Full image object:', props.image);
   imageLoaded.value = false
   imageError.value = false
   retryCount.value = 0

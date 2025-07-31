@@ -151,6 +151,8 @@ interface PortfolioCategory {
   name: string;
   path: string;
   folderName: string;
+  imageCount?: number;
+  featuredImage?: string;
 }
 
 interface PortfolioSubfolder {
