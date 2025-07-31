@@ -8,17 +8,31 @@
         class="h-full w-full object-cover object-center"
       />
       
-      <!-- Text Overlay - Mobile Optimized -->
-      <div class="absolute bottom-8 right-4 left-4 md:left-auto md:right-12 md:bottom-12 text-center md:text-right">
-        <BaseHeading :level="1" variant="hero" color="white" align="center" class="drop-shadow-2xl md:text-right">
-          Capturing Beauty in<br>Humble Places
-        </BaseHeading>
-        <button
-          class="mt-4 md:mt-6 px-6 py-2.5 md:px-8 md:py-3 text-base md:text-lg font-semibold rounded shadow-lg bg-white text-[var(--color-text)] hover:bg-[var(--color-secondary)] hover:text-white transition border border-[var(--color-text)] w-full sm:w-auto max-w-xs mx-auto md:mx-0"
-          @click="$emit('book-now')"
-        >
-          Book Now
-        </button>
+      <!-- Centered Content Overlay -->
+      <div class="absolute inset-0 flex items-center justify-center">
+        <div class="text-center px-4 max-w-4xl mx-auto">
+          <div>
+            <BaseHeading :level="1" variant="hero" color="white" align="center" :shadow="true" :animate="true" class="mb-6" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.8), 0 0 20px rgba(0,0,0,0.5);">
+              Capturing Beauty in <span class="font-cormorant italic font-light text-white" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">Humble Places</span>
+            </BaseHeading>
+            <BaseText size="xl" color="white" :opacity="100" align="center" class="animate-fade-in-up animation-delay-300 mb-8 font-light" style="text-shadow: 1px 1px 3px rgba(0,0,0,0.8);">
+              Capturing beauty in humble places and telling stories that matter
+            </BaseText>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up animation-delay-600">
+              <button
+                class="px-8 py-3 text-base font-medium rounded-lg shadow-2xl bg-white text-[var(--color-text)] hover:bg-gray-100 hover:scale-105 transition-all duration-300 border-2 border-white"
+                @click="$emit('book-now')"
+              >
+                Book Your Session
+              </button>
+              <router-link to="/portfolio">
+                <button class="px-8 py-3 text-base font-medium rounded-lg shadow-xl bg-transparent text-white border-2 border-white hover:bg-white hover:text-[var(--color-text)] hover:scale-105 transition-all duration-300 backdrop-blur-sm">
+                  View Portfolio
+                </button>
+              </router-link>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -26,4 +40,5 @@
 
 <script setup lang="ts">
 import BaseHeading from '@/components/ui/BaseHeading.vue'
+import BaseText from '@/components/ui/BaseText.vue'
 </script>

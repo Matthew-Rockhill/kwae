@@ -20,6 +20,40 @@
     
     --font-montserrat: 'Montserrat', sans-serif;
     --font-cormorant: 'Cormorant Garamond', serif;
+
+    /* Modern Typography Scale - Based on 2025 standards */
+    --text-xs: 0.75rem;     /* 12px */
+    --text-sm: 0.875rem;    /* 14px */
+    --text-base: 1rem;      /* 16px */
+    --text-lg: 1.125rem;    /* 18px */
+    --text-xl: 1.25rem;     /* 20px */
+    --text-2xl: 1.5rem;     /* 24px */
+    --text-3xl: 1.875rem;   /* 30px */
+    --text-4xl: 2.25rem;    /* 36px */
+    --text-5xl: 3rem;       /* 48px */
+    --text-6xl: 3.75rem;    /* 60px */
+    --text-7xl: 4.5rem;     /* 72px */
+    --text-8xl: 6rem;       /* 96px */
+
+    /* Modern Spacing Scale */
+    --space-xs: 0.5rem;     /* 8px */
+    --space-sm: 0.75rem;    /* 12px */
+    --space-md: 1rem;       /* 16px */
+    --space-lg: 1.5rem;     /* 24px */
+    --space-xl: 2rem;       /* 32px */
+    --space-2xl: 2.5rem;    /* 40px */
+    --space-3xl: 3rem;      /* 48px */
+    --space-4xl: 4rem;      /* 64px */
+    --space-5xl: 5rem;      /* 80px */
+    --space-6xl: 6rem;      /* 96px */
+    --space-8xl: 8rem;      /* 128px */
+
+    /* Line Heights */
+    --leading-tight: 1.25;
+    --leading-snug: 1.375;
+    --leading-normal: 1.5;
+    --leading-relaxed: 1.625;
+    --leading-loose: 2;
     
     --breakpoint-sm: 640px;
     --breakpoint-md: 768px;
@@ -142,21 +176,58 @@
     max-width: 80rem;
     margin-left: auto;
     margin-right: auto;
-    padding-left: 1rem;
-    padding-right: 1rem;
+    padding-left: var(--space-md);
+    padding-right: var(--space-md);
   }
   
   @media (min-width: 640px) {
     .container-custom {
-      padding-left: 1.5rem;
-      padding-right: 1.5rem;
+      padding-left: var(--space-lg);
+      padding-right: var(--space-lg);
     }
   }
   
   @media (min-width: 1024px) {
     .container-custom {
-      padding-left: 2rem;
-      padding-right: 2rem;
+      padding-left: var(--space-xl);
+      padding-right: var(--space-xl);
+    }
+  }
+
+  /* Modern Spacing Utilities */
+  .section-header {
+    margin-bottom: var(--space-3xl);
+  }
+
+  .section-header h1,
+  .section-header h2 {
+    margin-bottom: var(--space-lg);
+  }
+
+  .section-header p {
+    margin-bottom: var(--space-md);
+  }
+
+  /* Content Grid Spacing */
+  .content-grid {
+    display: grid;
+    gap: var(--space-xl);
+  }
+
+  @media (min-width: 768px) {
+    .content-grid {
+      gap: var(--space-2xl);
+    }
+  }
+
+  .content-grid-tight {
+    display: grid;
+    gap: var(--space-lg);
+  }
+
+  @media (min-width: 768px) {
+    .content-grid-tight {
+      gap: var(--space-xl);
     }
   }
   
@@ -251,6 +322,100 @@
   
   .elegant-shadow {
     box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+  }
+
+  /* Modern Animation Utilities */
+  @keyframes fade-in-up {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes subtle-float {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-3px);
+    }
+  }
+
+  .animate-fade-in-up {
+    animation: fade-in-up 0.8s ease-out forwards;
+    opacity: 0;
+  }
+
+  .animate-subtle-float {
+    animation: subtle-float 3s ease-in-out infinite;
+  }
+
+  /* Gradient animation for text */
+  @keyframes gradient {
+    0%, 100% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+  }
+  
+  .animate-gradient {
+    background-size: 200% 200%;
+    animation: gradient 5s ease infinite;
+  }
+  
+  /* Modern text effects */
+  .drop-shadow-glow {
+    filter: drop-shadow(0 0 20px rgba(106, 78, 56, 0.3));
+  }
+
+  /* Modern Shadow System */
+  .shadow-modern-sm {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04), 0 1px 3px rgba(0,0,0,0.06);
+  }
+
+  .shadow-modern-md {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08), 0 2px 6px rgba(0,0,0,0.1);
+  }
+
+  .shadow-modern-lg {
+    box-shadow: 0 8px 32px rgba(0,0,0,0.12), 0 4px 12px rgba(0,0,0,0.14);
+  }
+
+  /* Glassmorphism utilities */
+  .glass-effect {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  /* Scroll-triggered animations */
+  @media (prefers-reduced-motion: no-preference) {
+    .animate-on-scroll {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.6s ease-out;
+    }
+
+    .animate-on-scroll.in-view {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-fade-in-up,
+    .animate-subtle-float,
+    .animate-on-scroll {
+      animation: none;
+      transform: none;
+      opacity: 1;
+    }
   }
 }
 

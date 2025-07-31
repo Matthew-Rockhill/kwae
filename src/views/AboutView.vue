@@ -1,19 +1,20 @@
 <template>
     <div>
-      <!-- Page Header -->
-      <BaseSection background="light" padding="xl">
-        <div class="max-w-3xl mx-auto text-center">
-          <BaseHeading :level="1" align="center" class="mb-6">
-            About Kristin – <span class="font-cormorant italic font-normal text-[var(--color-text)]">Your Storyteller Behind the Lens</span>
+      <!-- About Me Section -->
+      <BaseSection background="white" padding="xl" spacing="relaxed">
+        <!-- Page Header -->
+        <div class="text-center mb-12">
+          <BaseHeading :level="1" align="center" :animate="true" class="mb-6">
+            About Me<br><span class="font-cormorant italic font-normal text-[var(--color-secondary)]">Behind the Lens</span>
           </BaseHeading>
-          <BaseText size="lg" color="primary" :opacity="70" weight="light" leading="relaxed" align="center">
-            Through my lens, I tell stories that matter, preserving memories that last a lifetime.
-          </BaseText>
         </div>
-      </BaseSection>
-      
-      <!-- Main Content -->
-      <BaseSection background="light" padding="xl">
+
+        <div class="relative">
+          <!-- Background decorative elements -->
+          <div class="absolute -top-20 -right-20 w-40 h-40 bg-[var(--color-secondary)]/5 rounded-full blur-3xl"></div>
+          <div class="absolute -bottom-20 -left-20 w-60 h-60 bg-[var(--color-accent)]/20 rounded-full blur-3xl"></div>
+          
+          <div class="relative">
         <!-- First Content Block -->
         <ContentBlock 
           :image="{ src: aboutImage1, alt: 'Kristin' }" 
@@ -69,26 +70,105 @@
             Let's tell yours together.
           </BaseText>
         </ContentBlock>
+          </div>
+        </div>
+      </BaseSection>
+      
+      <!-- Recent Recognition Section -->
+      <BaseSection background="light" padding="xl" spacing="relaxed">
+        
+        <div class="text-center max-w-4xl mx-auto mb-16">
+          <BaseHeading :level="2" align="center" class="mb-6">
+            Recent <span class="font-cormorant italic font-normal text-[var(--color-secondary)]">Recognition</span>
+          </BaseHeading>
+          <BaseText size="lg" color="primary" weight="light" leading="relaxed" align="center">
+            Honored to be recognized for visual storytelling that inspires environmental conservation and positive change.
+          </BaseText>
+        </div>
+
+        <!-- Full Width Image with Card Overlay -->
+        <div class="max-w-6xl mx-auto">
+          <div class="bg-white rounded-3xl shadow-2xl overflow-hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-0">
+              
+              <!-- Left Column - Winning Image -->
+              <div class="relative">
+                <img 
+                  :src="winningImage" 
+                  alt="WWF Believe in Better competition winning photograph" 
+                  class="w-full h-64 lg:h-full object-cover"
+                />
+                
+                <!-- 5th Place Badge Overlay -->
+                <div class="absolute top-6 left-6">
+                  <div class="bg-[var(--color-secondary)] text-white px-4 py-3 rounded-xl shadow-xl">
+                    <div class="text-center">
+                      <div class="text-3xl font-bold">5th</div>
+                      <div class="text-sm uppercase tracking-wide font-medium">Place</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Right Column - Award Details -->
+              <div class="p-8 lg:p-12 flex flex-col justify-center">
+              <BaseHeading :level="3" class="mb-4">
+                Believe in Better
+              </BaseHeading>
+              <BaseText size="xl" color="primary" weight="medium" class="mb-6">
+                WWF Photography Competition
+              </BaseText>
+              <BaseText size="lg" color="primary" :opacity="70" weight="light" leading="relaxed" class="mb-6">
+                Recognized among the top 5 finalists for visual storytelling that inspires environmental conservation and positive change.
+              </BaseText>
+              
+              <div class="mb-6">
+                <div class="text-lg font-medium text-[var(--color-text)] mb-2">2025</div>
+                <span class="inline-block px-4 py-2 bg-[var(--color-secondary)]/10 text-[var(--color-secondary)] text-sm rounded-full font-medium">
+                  Top 5 Finalist
+                </span>
+              </div>
+              
+              <!-- WWF Logo and Competition Link -->
+              <div class="space-y-4">
+                <!-- WWF Logo -->
+                <div class="flex items-center gap-3">
+                  <img 
+                    :src="wwfLogo" 
+                    alt="World Wildlife Foundation logo" 
+                    class="h-12 w-auto"
+                  />
+                  <span class="text-sm text-[var(--color-text)]/80 font-medium">World Wildlife Foundation</span>
+                </div>
+                
+                <!-- View Competition Link -->
+                <a 
+                  href="https://believeinbetter.wwf.org.za/home" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  class="inline-flex items-center gap-2 px-4 py-2 bg-[var(--color-secondary)]/10 hover:bg-[var(--color-secondary)]/20 text-[var(--color-secondary)] rounded-lg transition-colors duration-300 text-sm font-medium"
+                >
+                  View Competition
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                  </svg>
+                </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </BaseSection>
       
       <!-- CTA Section -->
-      <BaseSection background="accent" padding="lg">
-        <div class="text-center">
-          <BaseHeading :level="2" align="center" class="mb-6">
-            Ready to <span class="font-cormorant italic font-normal text-[var(--color-text)]">Tell Your Story?</span>
-          </BaseHeading>
-          <BaseText size="lg" color="primary" :opacity="70" weight="light" class="max-w-2xl mx-auto mb-10" align="center">
-            Let's work together to capture your authentic moments and create beautiful memories that last a lifetime.
-          </BaseText>
-          <div class="flex flex-col sm:flex-row gap-4 justify-center">
-            <router-link to="/portfolio">
-              <BaseButton variant="primary">See My Work</BaseButton>
-            </router-link>
-            <router-link to="/contact">
-              <BaseButton variant="secondary">Get in Touch</BaseButton>
-            </router-link>
-          </div>
-        </div>
+      <BaseSection background="alabaster" padding="xl" spacing="normal">
+        <CallToActionSection
+          custom-heading='Ready to <span class="font-cormorant italic font-normal text-[var(--color-secondary)]">Tell Your Story?</span>'
+          description="Let's work together to capture your authentic moments and create beautiful memories that last a lifetime."
+          :primary-action="{ text: 'See My Work', type: 'router-link', to: '/portfolio' }"
+          :secondary-action="{ text: 'Get in Touch', type: 'router-link', to: '/contact' }"
+          background="alabaster"
+        />
       </BaseSection>
     </div>
   </template>
@@ -98,10 +178,13 @@
   import BaseHeading from '@/components/ui/BaseHeading.vue'
   import BaseText from '@/components/ui/BaseText.vue'
   import BaseButton from '@/components/ui/BaseButton.vue'
+  import CallToActionSection from '@/components/ui/CallToActionSection.vue'
   import ContentBlock from '@/components/ui/ContentBlock.vue'
   import QuoteBlock from '@/components/ui/QuoteBlock.vue'
   
   // Import images
   import aboutImage1 from '@/assets/images/about-1.jpg'
   import aboutImage2 from '@/assets/images/about-2.jpg'
+  import winningImage from '@/assets/images/family/dsc-0175.jpg'
+  import wwfLogo from '@/assets/images/wwf-logo.png'
   </script>

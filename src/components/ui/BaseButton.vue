@@ -30,13 +30,13 @@ defineEmits<{
 }>()
 
 const buttonClasses = computed(() => {
-  const baseClasses = 'transition-all duration-300 rounded-none uppercase tracking-wider font-light'
+  const baseClasses = 'transition-all duration-300 rounded-lg uppercase tracking-wider font-light hover:scale-105 hover:shadow-lg transform-gpu'
   
   const variantClasses = {
-    primary: 'bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] text-[var(--color-text-light)]',
-    secondary: 'bg-transparent hover:bg-[var(--color-secondary)]/10 text-[var(--color-secondary)] border border-[var(--color-secondary)]',
-    ghost: 'bg-transparent hover:bg-[var(--color-text)]/5 text-[var(--color-text)]',
-    white: 'bg-white hover:bg-gray-100 text-[var(--color-text)] border border-white'
+    primary: 'bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-primary-hover)] hover:from-[var(--color-primary-hover)] hover:to-[var(--color-primary)] text-[var(--color-text-light)] shadow-md',
+    secondary: 'bg-transparent hover:bg-[var(--color-secondary)]/10 text-[var(--color-secondary)] border border-[var(--color-secondary)] hover:border-[var(--color-secondary-hover)] hover:shadow-md',
+    ghost: 'bg-transparent hover:bg-[var(--color-text)]/5 text-[var(--color-text)] hover:shadow-sm',
+    white: 'bg-white hover:bg-gray-50 text-[var(--color-text)] border border-white hover:shadow-md'
   }
   
   const sizeClasses = {
@@ -46,7 +46,7 @@ const buttonClasses = computed(() => {
   }
   
   const widthClass = props.fullWidth ? 'w-full' : ''
-  const disabledClass = props.disabled ? 'opacity-50 cursor-not-allowed' : ''
+  const disabledClass = props.disabled ? 'opacity-50 cursor-not-allowed hover:scale-100 hover:shadow-none' : ''
   
   return [
     baseClasses,

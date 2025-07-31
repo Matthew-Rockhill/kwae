@@ -26,13 +26,13 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const cardClasses = computed(() => {
-  const baseClasses = 'transition-all duration-300'
+  const baseClasses = 'transition-all duration-300 transform-gpu'
   
   const variantClasses = {
-    default: 'bg-[var(--color-light)]',
-    elevated: 'bg-[var(--color-light)] shadow-lg hover:shadow-xl',
-    outlined: 'bg-transparent border border-[var(--color-text)]/20',
-    ghost: 'bg-transparent'
+    default: 'bg-[var(--color-light)] shadow-modern-sm hover:shadow-modern-md',
+    elevated: 'bg-[var(--color-light)] shadow-modern-md hover:shadow-modern-lg hover:-translate-y-1',
+    outlined: 'bg-transparent border border-[var(--color-text)]/20 hover:border-[var(--color-text)]/30 hover:shadow-modern-sm',
+    ghost: 'bg-transparent hover:bg-[var(--color-light)]/50'
   }
   
   const paddingClasses = {
@@ -49,8 +49,8 @@ const cardClasses = computed(() => {
     transparent: 'bg-transparent'
   }
   
-  const shadowClass = props.shadow && props.variant !== 'elevated' ? 'shadow-md hover:shadow-lg' : ''
-  const roundedClass = props.rounded ? 'rounded-lg' : ''
+  const shadowClass = props.shadow && props.variant !== 'elevated' ? 'shadow-modern-sm hover:shadow-modern-md' : ''
+  const roundedClass = props.rounded ? 'rounded-xl' : ''
   const heightClass = props.fullHeight ? 'h-full' : ''
   
   return [
