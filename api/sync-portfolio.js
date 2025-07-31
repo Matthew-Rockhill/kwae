@@ -280,21 +280,7 @@ export default async function handler(req, res) {
   
   // Basic auth check
   const authHeader = req.headers.authorization;
-  const expectedAuth = `Bearer ${process.env.SYNC_SECRET}`;
-  
-  console.log('Auth debugging:', { 
-    hasAuthHeader: !!authHeader,
-    authHeaderLength: authHeader?.length || 0,
-    hasSyncSecret: !!process.env.SYNC_SECRET,
-    syncSecretLength: process.env.SYNC_SECRET?.length || 0,
-    expectedAuthLength: expectedAuth.length
-  });
-  
-  if (!authHeader || authHeader !== expectedAuth) {
-    console.log('Auth failed:', { 
-      authHeader: authHeader ? '[REDACTED]' : 'missing',
-      expectedAuth: '[REDACTED]' 
-    });
+  if (!authHeader || authHeader !== `Bearer ${process.env.SYNC_SECRET}`) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
   
