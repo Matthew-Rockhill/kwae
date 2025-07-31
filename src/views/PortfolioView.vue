@@ -65,45 +65,24 @@
       </div>
       
       <!-- Gallery Grid -->
-      <div class="border-4 border-green-500 p-4 mb-4">
-        <p class="text-green-500 font-bold mb-2">Gallery Container (should show {{ filteredPortfolio.length }} cards)</p>
-        <div v-if="!loading && !error && filteredPortfolio.length > 0" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <!-- Test element -->
-          <div class="bg-yellow-500 p-4 text-white">
-            Test Card - Grid is rendering!
-          </div>
-          
-          <PortfolioCard
-            v-for="(item, index) in filteredPortfolio" 
-            :key="`${activeCategory}-${activeSubcategory}-${index}`"
-            :image="item"
-            :category="activeCategory"
-            :subcategory="activeSubcategory"
-            :show-overlay="activeCategory === 'ngo'"
-            :show-static-content="activeCategory === 'ngo'"
-            @click="openLightbox(index)"
-          />
-        </div>
+      <div v-if="!loading && !error && filteredPortfolio.length > 0" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <PortfolioCard
+          v-for="(item, index) in filteredPortfolio" 
+          :key="`${activeCategory}-${activeSubcategory}-${index}`"
+          :image="item"
+          :category="activeCategory"
+          :subcategory="activeSubcategory"
+          :show-overlay="activeCategory === 'ngo'"
+          :show-static-content="activeCategory === 'ngo'"
+          @click="openLightbox(index)"
+        />
       </div>
       
-      <!-- Fallback if no grid shows -->
-      <div v-else-if="!loading && !error && filteredPortfolio.length === 0" class="text-center py-12">
+      <!-- No images message -->
+      <div v-if="!loading && !error && filteredPortfolio.length === 0" class="text-center py-12">
         <BaseText size="lg" :opacity="70">No images found for this category.</BaseText>
       </div>
       
-      <!-- Debug info -->
-      <div class="mt-4 p-4 bg-gray-100 rounded text-sm">
-        <p><strong>Debug Info:</strong></p>
-        <p>Active Category: {{ activeCategory }}</p>
-        <p>Loading: {{ loading }}</p>
-        <p>Error: {{ error || 'none' }}</p>
-        <p>Images loaded: {{ images.length }}</p>
-        <p>Filtered images: {{ filteredPortfolio.length }}</p>
-        <p>Visible count: {{ visibleCount }}</p>
-        <p>Sample image URL: {{ filteredPortfolio[0]?.thumbnailUrl }}</p>
-        <p>Has subfolders: {{ hasSubfolders }}</p>
-        <p>Subfolders: {{ subfolders.length }}</p>
-      </div>
       
       <!-- Show More Button -->
       <div class="text-center mt-12" v-if="hasMoreItems">

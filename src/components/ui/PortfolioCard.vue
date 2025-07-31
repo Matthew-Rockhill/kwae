@@ -1,12 +1,8 @@
 <template>
   <div 
-    class="group relative overflow-hidden rounded-xl bg-[var(--color-light)] transform transition-all duration-500 hover:scale-[1.02] hover:shadow-modern-lg cursor-pointer active:scale-[0.98] shadow-modern-sm animate-on-scroll border-2 border-red-500"
+    class="group relative overflow-hidden rounded-xl bg-[var(--color-light)] transform transition-all duration-500 hover:scale-[1.02] hover:shadow-modern-lg cursor-pointer active:scale-[0.98] shadow-modern-sm"
     @click="$emit('click')"
   >
-    <!-- Debug overlay -->
-    <div class="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded z-10">
-      Card: {{ image.alt || 'No Alt' }}
-    </div>
     <!-- Image Container -->
     <div class="relative aspect-[4/3] overflow-hidden bg-gray-100">
       <!-- Loading Skeleton -->
