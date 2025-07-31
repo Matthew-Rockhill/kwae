@@ -31,25 +31,6 @@
           </div>
         </div>
         
-        <!-- Category-specific descriptions -->
-        <div v-if="currentCategoryDescription" class="p-8 bg-white/90 backdrop-blur-sm rounded-3xl border border-[var(--color-accent)]/15 max-w-4xl mx-auto shadow-lg">
-          <BaseHeading :level="2" align="center" class="mb-6 text-[var(--color-secondary)] font-cormorant">
-            {{ currentCategoryName }}
-          </BaseHeading>
-          <BaseText size="lg" color="primary" :opacity="85" align="center" class="mb-6 leading-relaxed">
-            {{ currentCategoryDescription }}
-          </BaseText>
-          <div class="flex items-center justify-center space-x-6 text-sm text-[var(--color-primary)]/60">
-            <div class="flex items-center space-x-2">
-              <div class="w-2 h-2 bg-[var(--color-secondary)]/60 rounded-full"></div>
-              <span class="font-medium">{{ currentCategoryImageCount }} {{ currentCategoryImageCount === 1 ? 'image' : 'images' }}</span>
-            </div>
-            <div class="flex items-center space-x-2">
-              <div class="w-2 h-2 bg-[var(--color-accent)]/60 rounded-full"></div>
-              <span>{{ currentCategoryName }} Photography</span>
-            </div>
-          </div>
-        </div>
       </div>
     </BaseSection>
     
@@ -93,11 +74,11 @@
       
       <!-- Gallery Grid -->
       <div v-if="!loading && !error && filteredPortfolio.length > 0" 
-           class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
+           class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 max-w-7xl mx-auto">
         <div
           v-for="(item, index) in filteredPortfolio" 
           :key="`${activeCategory}-${activeSubcategory}-${index}`"
-          class="group transform transition-all duration-500 hover:scale-[1.02] hover:-translate-y-2"
+          class="group transform transition-all duration-500 hover:scale-[1.02] hover:-translate-y-1"
           :style="{ animationDelay: `${index * 50}ms` }"
         >
           <PortfolioCard
@@ -333,20 +314,6 @@ const currentCategoryName = computed(() => {
   return category?.name || '';
 });
 
-const currentCategoryImageCount = computed(() => {
-  const category = categories.value.find(cat => cat.id === activeCategory.value);
-  return category?.imageCount || 0;
-});
-
-const currentCategoryDescription = computed(() => {
-  const descriptions: Record<string, string> = {
-    'family': 'Authentic moments and genuine connections that tell the story of your family\'s unique bond. From intimate portraits to playful candid shots, each image captures the love and joy you share.',
-    'branding': 'Professional portraits and lifestyle photography that showcase your personal brand and business story. Contemporary, clean imagery that helps you connect with your audience.',
-    'ngo-storytelling': 'Documentary-style photography that brings awareness to important causes and showcases the impact of humanitarian work. Visual storytelling that creates emotional connections.',
-    'lifestyle': 'Beautiful, natural photography that captures life\'s special moments and everyday beauty. From events to personal milestones, celebrating life as it unfolds.'
-  };
-  return descriptions[activeCategory.value] || '';
-});
 
 const hasSubfolders = computed(() => {
   return subfolders.value && subfolders.value.length > 0;
