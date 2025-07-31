@@ -1,0 +1,85 @@
+name: Sync Portfolio from ImageKit
+
+on:
+  # Run daily at 2 AM UTC
+  schedule:
+    - cron: '0 2 * * *'
+  
+  # Allow manual trigger
+  workflow_dispatch:
+    inputs:
+      force_sync:
+        description: 'Force complete resync'
+        required: false
+        default: 'false'
+        type: boolean
+
+jobs:
+  sync-portfolio:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Trigger Portfolio Sync
+      run: |
+        echo "🔄 Starting portfolio sync..."
+        
+        # Call the sync API endpoint
+        response=$(curl -s -X POST \
+          -H "Authorization: Bearer ${{ secrets.SYNC_SECRET }}" \
+          -H "Content-Type: application/json" \
+          -w "%{http_code}" \
+          https://kristinmathilde.com/api/sync-portfolio?action=sync)
+        
+        # Extract HTTP status code (last 3 characters)
+        http_code="${response: -3}"
+        response_body="${response%???}"
+        
+        echo "📡 API Response Code: $http_code"
+        echo "📊 Response: $response_body"
+        
+        # Check if sync was successful
+        if [ "$http_code" -eq 200 ]; then
+          echo "✅ Portfolio sync completed successfully"
+          
+          # Parse response to show sync stats
+          echo "$response_body" | grep -o '"categoriesAdded":[0-9]*\|"itemsAdded":[0-9]*\|"itemsRemoved":[0-9]*' || echo "📊 Sync stats not available"
+        else
+          echo "❌ Portfolio sync failed with HTTP $http_code"
+          echo "Error details: $response_body"
+          exit 1
+        fi
+    
+    - name: Health Check
+      if: success()
+      run: |
+        echo "🩺 Running health check..."
+        
+        health_response=$(curl -s -X GET \
+          -H "Authorization: Bearer ${{ secrets.SYNC_SECRET }}" \
+          -H "Content-Type: application/json" \
+          -w "%{http_code}" \
+          https://kristinmathilde.com/api/sync-portfolio?action=health)
+        
+        health_code="${health_response: -3}"
+        health_body="${health_response%???}"
+        
+        echo "🩺 Health Check Code: $health_code"
+        echo "📊 Health Status: $health_body"
+        
+        if [ "$health_code" -eq 200 ]; then
+          echo "✅ System health check passed"
+        else
+          echo "⚠️ Health check warning (HTTP $health_code)"
+        fi
+
+    - name: Notify on Failure
+      if: failure()
+      run: |
+        echo "🚨 Portfolio sync failed!"
+        echo "This workflow failed to sync the portfolio from ImageKit."
+        echo "Please check the logs above and verify:"
+        echo "1. SYNC_SECRET is properly configured"
+        echo "2. API endpoint is accessible"
+        echo "3. ImageKit and Supabase connections are working"
+        echo ""
+        echo "Manual sync can be triggered from: https://github.com/${{ github.repository }}/actions"

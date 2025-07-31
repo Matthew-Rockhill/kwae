@@ -1,10 +1,10 @@
 <template>
   <div 
-    class="group relative overflow-hidden rounded-xl bg-[var(--color-light)] transform transition-all duration-500 hover:scale-[1.02] hover:shadow-modern-lg cursor-pointer active:scale-[0.98] shadow-modern-sm"
+    class="group relative overflow-hidden rounded-2xl bg-white transform transition-all duration-700 cursor-pointer hover:shadow-xl shadow-lg border border-[var(--color-accent)]/10"
     @click="$emit('click')"
   >
     <!-- Image Container -->
-    <div class="relative aspect-[4/3] overflow-hidden bg-gray-100">
+    <div class="relative aspect-[4/3] overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100 rounded-t-2xl">
       <!-- Loading Skeleton -->
       <div 
         v-if="!imageLoaded && !imageError" 
@@ -38,12 +38,15 @@
       <img 
         :src="image.thumbnailUrl || image.src" 
         :alt="image.alt || image.title || 'Portfolio image'" 
-        class="w-full h-full object-cover transition-all duration-700 group-hover:scale-110 transform-gpu"
+        class="w-full h-full object-cover transition-all duration-700 group-hover:scale-105 transform-gpu filter group-hover:brightness-110"
         :class="[imageClasses, { 'opacity-0': !imageLoaded }]"
         @load="handleImageLoad"
         @error="handleImageError"
         loading="lazy"
       />
+      
+      <!-- Subtle overlay on hover -->
+      <div class="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
       
       
       <!-- Overlay for NGO category -->

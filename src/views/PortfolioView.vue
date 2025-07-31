@@ -2,28 +2,49 @@
   <div>
     <!-- Page Header -->
     <BaseSection background="light" padding="2xl" spacing="normal">
-      <div class="section-header text-center max-w-4xl mx-auto">
+      <div class="section-header text-center max-w-5xl mx-auto">
         <BaseHeading :level="1" align="center" :animate="true" decoration="underline">
           Capturing Stories, <span class="font-cormorant italic font-normal text-[var(--color-secondary)]">One Frame at a Time</span>
         </BaseHeading>
-        <BaseText size="xl" color="primary" :opacity="70" align="center">
+        <BaseText size="xl" color="primary" :opacity="70" align="center" class="mb-8">
           Each story I capture is unique. Take a moment to explore the projects I've been honored to be
-          a part of, from family sessions to NGO partnerships. The images here showcase my commitment
-          to telling authentic stories and finding beauty in the most humble places.
+          a part of, from family sessions to NGO partnerships.
         </BaseText>
+        
+        <!-- Category-specific descriptions -->
+        <div v-if="currentCategoryDescription" class="mt-8 p-6 bg-white/80 backdrop-blur-sm rounded-2xl border border-[var(--color-accent)]/20 max-w-3xl mx-auto">
+          <BaseHeading :level="3" align="center" class="mb-4 text-[var(--color-secondary)]">
+            {{ currentCategoryName }}
+          </BaseHeading>
+          <BaseText size="lg" color="primary" :opacity="80" align="center">
+            {{ currentCategoryDescription }}
+          </BaseText>
+          <div class="flex items-center justify-center mt-4 space-x-4 text-sm text-[var(--color-primary)]/60">
+            <span>{{ currentCategoryImageCount }} {{ currentCategoryImageCount === 1 ? 'image' : 'images' }}</span>
+            <span class="w-1 h-1 bg-[var(--color-primary)]/40 rounded-full"></span>
+            <span>{{ currentCategoryName }} Photography</span>
+          </div>
+        </div>
       </div>
     </BaseSection>
     
     <!-- Portfolio Filters -->
     <StickyFilterBar>
-      <FilterButton
-        v-for="category in categories" 
-        :key="category.id"
-        :active="activeCategory === category.id"
-        @click="setActiveCategory(category.id)"
-      >
-        {{ category.name }}
-      </FilterButton>
+      <div class="flex flex-wrap justify-center gap-3">
+        <FilterButton
+          v-for="category in categories" 
+          :key="category.id"
+          :active="activeCategory === category.id"
+          @click="setActiveCategory(category.id)"
+          class="group relative"
+        >
+          <span class="relative z-10">{{ category.name }}</span>
+          <span v-if="category.imageCount > 0" class="ml-2 px-2 py-0.5 text-xs bg-[var(--color-accent)]/20 text-[var(--color-primary)]/70 rounded-full font-medium">
+            {{ category.imageCount }}
+          </span>
+          <div class="absolute inset-0 bg-gradient-to-r from-[var(--color-secondary)]/10 to-[var(--color-accent)]/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+        </FilterButton>
+      </div>
     </StickyFilterBar>
     
     <!-- Dynamic Subcategory selector -->
@@ -65,17 +86,24 @@
       </div>
       
       <!-- Gallery Grid -->
-      <div v-if="!loading && !error && filteredPortfolio.length > 0" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <PortfolioCard
+      <div v-if="!loading && !error && filteredPortfolio.length > 0" 
+           class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
+        <div
           v-for="(item, index) in filteredPortfolio" 
           :key="`${activeCategory}-${activeSubcategory}-${index}`"
-          :image="item"
-          :category="activeCategory"
-          :subcategory="activeSubcategory"
-          :show-overlay="activeCategory === 'ngo'"
-          :show-static-content="activeCategory === 'ngo'"
-          @click="openLightbox(index)"
-        />
+          class="group transform transition-all duration-500 hover:scale-[1.02] hover:-translate-y-2"
+          :style="{ animationDelay: `${index * 50}ms` }"
+        >
+          <PortfolioCard
+            :image="item"
+            :category="activeCategory"
+            :subcategory="activeSubcategory"
+            :show-overlay="activeCategory === 'ngo-storytelling'"
+            :show-static-content="activeCategory === 'ngo-storytelling'"
+            @click="openLightbox(index)"
+            class="h-full shadow-lg hover:shadow-2xl transition-shadow duration-500"
+          />
+        </div>
       </div>
       
       <!-- No images message -->
@@ -298,6 +326,21 @@ const hasMoreItems = computed(() => {
 const currentCategoryName = computed(() => {
   const category = categories.value.find(cat => cat.id === activeCategory.value);
   return category?.name || '';
+});
+
+const currentCategoryImageCount = computed(() => {
+  const category = categories.value.find(cat => cat.id === activeCategory.value);
+  return category?.imageCount || 0;
+});
+
+const currentCategoryDescription = computed(() => {
+  const descriptions = {
+    'family': 'Authentic moments and genuine connections that tell the story of your family\'s unique bond. From intimate portraits to playful candid shots, each image captures the love and joy you share.',
+    'branding': 'Professional portraits and lifestyle photography that showcase your personal brand and business story. Contemporary, clean imagery that helps you connect with your audience.',
+    'ngo-storytelling': 'Documentary-style photography that brings awareness to important causes and showcases the impact of humanitarian work. Visual storytelling that creates emotional connections.',
+    'lifestyle': 'Beautiful, natural photography that captures life\'s special moments and everyday beauty. From events to personal milestones, celebrating life as it unfolds.'
+  };
+  return descriptions[activeCategory.value] || '';
 });
 
 const hasSubfolders = computed(() => {

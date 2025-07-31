@@ -132,4 +132,4 @@ JOIN portfolio_categories pc ON pi.category_id = pc.id
 WHERE pi.is_active = true AND pc.is_active = true;
 
 -- Grant access to the view
-GRANT SELECT ON portfolio_items_with_category TO anon, authenticated;
+GRANT SELECT ON portfolio_items_with_category TO anon, authenticated;do it
