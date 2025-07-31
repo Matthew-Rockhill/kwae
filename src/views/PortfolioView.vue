@@ -171,13 +171,13 @@ const categories = ref<PortfolioCategory[]>([]);
 const images = ref<PortfolioImage[]>([]);
 const subfolders = ref<PortfolioSubfolder[]>([]);
 
-// Fetch available portfolio categories from ImageKit
+// Fetch available portfolio categories from database
 async function fetchCategories() {
   loading.value = true;
   error.value = '';
-  console.log('🔍 Fetching portfolio categories...');
+  console.log('🔍 Fetching portfolio categories from database...');
   try {
-    const res = await fetch('/api/imagekit-portfolio?action=folders');
+    const res = await fetch('/api/portfolio?action=categories');
     console.log('📡 Categories API response status:', res.status);
     
     if (!res.ok) {
@@ -203,18 +203,20 @@ async function fetchCategories() {
   }
 }
 
-// Fetch images for a specific category
+// Fetch images for a specific category from database
 async function fetchCategoryImages(categoryId: string, subcategory?: string) {
   if (!categoryId) return;
   
   loading.value = true;
   error.value = '';
-  console.log(`🖼️ Fetching images for category: ${categoryId}`, subcategory ? `subcategory: ${subcategory}` : '');
+  console.log(`🖼️ Fetching images from database for category: ${categoryId}`, subcategory ? `subcategory: ${subcategory}` : '');
   try {
-    let url = `/api/imagekit-portfolio?folder=${categoryId}`;
+    let url = `/api/portfolio?category=${categoryId}`;
     if (subcategory) {
-      url += `&subfolder=${subcategory}`;
+      url += `&subcategory=${subcategory}`;
     }
+    // Add pagination parameters
+    url += `&limit=50&offset=0`;
     console.log('📡 Images API URL:', url);
     
     const res = await fetch(url);

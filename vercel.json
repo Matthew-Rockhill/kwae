@@ -6,6 +6,15 @@
     },
     "api/imagekit-portfolio.js": {
       "maxDuration": 30
+    },
+    "api/portfolio.js": {
+      "maxDuration": 10
+    },
+    "api/imagekit-webhook.js": {
+      "maxDuration": 30
+    },
+    "api/migrate-portfolio.js": {
+      "maxDuration": 300
     }
   },
   "rewrites": [
