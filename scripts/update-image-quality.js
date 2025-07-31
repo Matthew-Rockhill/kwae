@@ -20,8 +20,8 @@ function generateHighQualityUrls(filePath) {
   
   return {
     original: baseUrl,
-    // Premium quality thumbnails optimized for photography
-    thumbnail: baseUrl + '?tr=w-500,h-500,c-maintain_ar,q-90,e-sharpen,f-webp,f-auto,pr-true',
+    // Larger premium quality thumbnails optimized for photography
+    thumbnail: baseUrl + '?tr=w-700,h-700,c-maintain_ar,q-92,e-sharpen,f-webp,f-auto,pr-true',
     // Maximum quality for lightbox/full view with sharpening
     full: baseUrl + '?tr=q-95,e-sharpen,f-webp,f-auto,pr-true'
   };

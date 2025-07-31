@@ -1,51 +1,57 @@
 <template>
   <div>
-    <!-- Page Header -->
-    <BaseSection background="light" padding="2xl" spacing="normal">
-      <div class="section-header text-center max-w-5xl mx-auto">
-        <BaseHeading :level="1" align="center" :animate="true" decoration="underline">
+    <!-- Page Header with Integrated Navigation -->
+    <BaseSection background="light" padding="2xl" spacing="tight">
+      <div class="section-header text-center max-w-6xl mx-auto">
+        <!-- Main Heading -->
+        <BaseHeading :level="1" align="center" :animate="true" decoration="underline" class="mb-6">
           Capturing Stories, <span class="font-cormorant italic font-normal text-[var(--color-secondary)]">One Frame at a Time</span>
         </BaseHeading>
-        <BaseText size="xl" color="primary" :opacity="70" align="center" class="mb-8">
+        <BaseText size="xl" color="primary" :opacity="70" align="center" class="mb-12">
           Each story I capture is unique. Take a moment to explore the projects I've been honored to be
           a part of, from family sessions to NGO partnerships.
         </BaseText>
         
+        <!-- Integrated Filter Bar -->
+        <div class="mb-8">
+          <div class="flex flex-wrap justify-center gap-4">
+            <FilterButton
+              v-for="category in categories" 
+              :key="category.id"
+              :active="activeCategory === category.id"
+              @click="setActiveCategory(category.id)"
+              class="group relative transition-all duration-300 hover:scale-105"
+            >
+              <span class="relative z-10 font-medium">{{ category.name }}</span>
+              <span v-if="(category.imageCount || 0) > 0" class="ml-2 px-2.5 py-1 text-xs bg-[var(--color-accent)]/20 text-[var(--color-primary)]/70 rounded-full font-semibold">
+                {{ category.imageCount || 0 }}
+              </span>
+              <div class="absolute inset-0 bg-gradient-to-r from-[var(--color-secondary)]/10 to-[var(--color-accent)]/10 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            </FilterButton>
+          </div>
+        </div>
+        
         <!-- Category-specific descriptions -->
-        <div v-if="currentCategoryDescription" class="mt-8 p-6 bg-white/80 backdrop-blur-sm rounded-2xl border border-[var(--color-accent)]/20 max-w-3xl mx-auto">
-          <BaseHeading :level="3" align="center" class="mb-4 text-[var(--color-secondary)]">
+        <div v-if="currentCategoryDescription" class="p-8 bg-white/90 backdrop-blur-sm rounded-3xl border border-[var(--color-accent)]/15 max-w-4xl mx-auto shadow-lg">
+          <BaseHeading :level="2" align="center" class="mb-6 text-[var(--color-secondary)] font-cormorant">
             {{ currentCategoryName }}
           </BaseHeading>
-          <BaseText size="lg" color="primary" :opacity="80" align="center">
+          <BaseText size="lg" color="primary" :opacity="85" align="center" class="mb-6 leading-relaxed">
             {{ currentCategoryDescription }}
           </BaseText>
-          <div class="flex items-center justify-center mt-4 space-x-4 text-sm text-[var(--color-primary)]/60">
-            <span>{{ currentCategoryImageCount }} {{ currentCategoryImageCount === 1 ? 'image' : 'images' }}</span>
-            <span class="w-1 h-1 bg-[var(--color-primary)]/40 rounded-full"></span>
-            <span>{{ currentCategoryName }} Photography</span>
+          <div class="flex items-center justify-center space-x-6 text-sm text-[var(--color-primary)]/60">
+            <div class="flex items-center space-x-2">
+              <div class="w-2 h-2 bg-[var(--color-secondary)]/60 rounded-full"></div>
+              <span class="font-medium">{{ currentCategoryImageCount }} {{ currentCategoryImageCount === 1 ? 'image' : 'images' }}</span>
+            </div>
+            <div class="flex items-center space-x-2">
+              <div class="w-2 h-2 bg-[var(--color-accent)]/60 rounded-full"></div>
+              <span>{{ currentCategoryName }} Photography</span>
+            </div>
           </div>
         </div>
       </div>
     </BaseSection>
-    
-    <!-- Portfolio Filters -->
-    <StickyFilterBar>
-      <div class="flex flex-wrap justify-center gap-3">
-        <FilterButton
-          v-for="category in categories" 
-          :key="category.id"
-          :active="activeCategory === category.id"
-          @click="setActiveCategory(category.id)"
-          class="group relative"
-        >
-          <span class="relative z-10">{{ category.name }}</span>
-          <span v-if="(category.imageCount || 0) > 0" class="ml-2 px-2 py-0.5 text-xs bg-[var(--color-accent)]/20 text-[var(--color-primary)]/70 rounded-full font-medium">
-            {{ category.imageCount || 0 }}
-          </span>
-          <div class="absolute inset-0 bg-gradient-to-r from-[var(--color-secondary)]/10 to-[var(--color-accent)]/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-        </FilterButton>
-      </div>
-    </StickyFilterBar>
     
     <!-- Dynamic Subcategory selector -->
     <div v-if="hasSubfolders" class="flex justify-center items-center space-x-4 mb-4 mt-4 min-h-[60px]">
