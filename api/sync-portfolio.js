@@ -44,6 +44,53 @@ async function fetchFromImageKit(url) {
   return response.json();
 }
 
+// Process a single file from ImageKit
+async function processFile(file, dbCategory, categoryDbItems, syncReport, subcategory = null) {
+  const existingItem = categoryDbItems.find(item => item.imagekit_file_id === file.fileId);
+  
+  if (!existingItem) {
+    const subcategoryText = subcategory ? ` (${subcategory})` : '';
+    console.log(`➕ Adding missing item: ${file.name}${subcategoryText}`);
+    
+    const baseUrl = IMAGEKIT_PUBLIC_URL + file.filePath.replace(/^\//, '');
+    const urls = {
+      original: baseUrl,
+      // Larger premium quality thumbnails optimized for photography
+      thumbnail: baseUrl + '?tr=w-700,h-700,c-maintain_ar,q-92,e-sharpen,f-webp,f-auto,pr-true',
+      // Maximum quality for lightbox/full view with sharpening
+      full: baseUrl + '?tr=q-95,e-sharpen,f-webp,f-auto,pr-true'
+    };
+    
+    const altText = `${dbCategory.name} photo ${file.name.replace(/\.[^/.]+$/, '')}`;
+    const sortMatch = file.name.match(/(\d+)/);
+    const sortOrder = sortMatch ? parseInt(sortMatch[1]) : syncReport.itemsAdded;
+    
+    const { error } = await supabase
+      .from('portfolio_items')
+      .insert([{
+        category_id: dbCategory.id,
+        filename: file.name,
+        imagekit_file_id: file.fileId,
+        imagekit_url: urls.original,
+        thumbnail_url: urls.thumbnail,
+        full_url: urls.full,
+        alt_text: altText,
+        sort_order: sortOrder,
+        subcategory: subcategory, // THIS IS THE KEY FIX
+        metadata: {
+          file_path: file.filePath,
+          synced_at: new Date().toISOString()
+        }
+      }]);
+    
+    if (error) {
+      syncReport.errors.push(`Failed to add item ${file.name}: ${error.message}`);
+    } else {
+      syncReport.itemsAdded++;
+    }
+  }
+}
+
 // Compare ImageKit with database and find differences
 async function compareAndSync() {
   console.log('🔄 Starting sync comparison...');
@@ -119,55 +166,43 @@ async function compareAndSync() {
       );
       
       const ikFiles = folderContents.filter(item => item.type === 'file');
+      const ikSubfolders = folderContents.filter(item => item.type === 'folder');
       const categoryDbItems = dbItems?.filter(item => item.category_id === dbCategory.id) || [];
       
-      // Check for new items in ImageKit
+      // Process files directly in the main category folder (no subcategory)
       for (const file of ikFiles) {
-        const existingItem = categoryDbItems.find(item => item.imagekit_file_id === file.fileId);
+        await processFile(file, dbCategory, categoryDbItems, syncReport, null);
+      }
+      
+      // Process subfolders and their files
+      for (const subfolder of ikSubfolders) {
+        console.log(`📁 Processing subfolder: ${subfolder.name}`);
         
-        if (!existingItem) {
-          console.log(`➕ Adding missing item: ${file.name}`);
-          
-          const baseUrl = IMAGEKIT_PUBLIC_URL + file.filePath.replace(/^\//, '');
-          const urls = {
-            original: baseUrl,
-            // Larger premium quality thumbnails optimized for photography
-            thumbnail: baseUrl + '?tr=w-700,h-700,c-maintain_ar,q-92,e-sharpen,f-webp,f-auto,pr-true',
-            // Maximum quality for lightbox/full view with sharpening
-            full: baseUrl + '?tr=q-95,e-sharpen,f-webp,f-auto,pr-true'
-          };
-          
-          const altText = `${dbCategory.name} photo ${file.name.replace(/\.[^/.]+$/, '')}`;
-          const sortMatch = file.name.match(/(\d+)/);
-          const sortOrder = sortMatch ? parseInt(sortMatch[1]) : syncReport.itemsAdded;
-          
-          const { error } = await supabase
-            .from('portfolio_items')
-            .insert([{
-              category_id: dbCategory.id,
-              filename: file.name,
-              imagekit_file_id: file.fileId,
-              imagekit_url: urls.original,
-              thumbnail_url: urls.thumbnail,
-              full_url: urls.full,
-              alt_text: altText,
-              sort_order: sortOrder,
-              metadata: {
-                file_path: file.filePath,
-                synced_at: new Date().toISOString()
-              }
-            }]);
-          
-          if (error) {
-            syncReport.errors.push(`Failed to add item ${file.name}: ${error.message}`);
-          } else {
-            syncReport.itemsAdded++;
-          }
+        const subfolderContents = await fetchFromImageKit(
+          `https://api.imagekit.io/v1/files?path=${subfolder.filePath}`
+        );
+        
+        const subfolderFiles = subfolderContents.filter(item => item.type === 'file');
+        const subcategoryName = subfolder.name;
+        
+        // Process files in this subfolder
+        for (const file of subfolderFiles) {
+          await processFile(file, dbCategory, categoryDbItems, syncReport, subcategoryName);
         }
       }
       
       // Check for items in database that no longer exist in ImageKit
-      const ikFileIds = new Set(ikFiles.map(f => f.fileId));
+      // Collect all file IDs from main folder and subfolders
+      const allIkFiles = [...ikFiles];
+      for (const subfolder of ikSubfolders) {
+        const subfolderContents = await fetchFromImageKit(
+          `https://api.imagekit.io/v1/files?path=${subfolder.filePath}`
+        );
+        const subfolderFiles = subfolderContents.filter(item => item.type === 'file');
+        allIkFiles.push(...subfolderFiles);
+      }
+      
+      const ikFileIds = new Set(allIkFiles.map(f => f.fileId));
       const orphanedItems = categoryDbItems.filter(item => !ikFileIds.has(item.imagekit_file_id));
       
       for (const orphanedItem of orphanedItems) {
