@@ -65,7 +65,7 @@
       </div>
       
       <!-- Gallery Grid -->
-      <div v-else class="content-grid-tight grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3">
+      <div v-else class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <PortfolioCard
           v-for="(item, index) in filteredPortfolio" 
           :key="`${activeCategory}-${activeSubcategory}-${index}`"
@@ -76,6 +76,16 @@
           :show-static-content="activeCategory === 'ngo'"
           @click="openLightbox(index)"
         />
+      </div>
+      
+      <!-- Debug info -->
+      <div class="mt-4 p-4 bg-gray-100 rounded text-sm">
+        <p><strong>Debug Info:</strong></p>
+        <p>Active Category: {{ activeCategory }}</p>
+        <p>Images loaded: {{ images.length }}</p>
+        <p>Filtered images: {{ filteredPortfolio.length }}</p>
+        <p>Visible count: {{ visibleCount }}</p>
+        <p>Sample image URL: {{ filteredPortfolio[0]?.thumbnailUrl }}</p>
       </div>
       
       <!-- Show More Button -->
