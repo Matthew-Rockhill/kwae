@@ -48,10 +48,17 @@
       
       <!-- Error State -->
       <div v-else-if="error" class="text-center py-12">
-        <BaseText size="lg" color="primary" class="text-red-600 mb-4">{{ error }}</BaseText>
-        <BaseButton variant="secondary" @click="fetchCategories">
-          Try Again
-        </BaseButton>
+        <div class="max-w-md mx-auto">
+          <BaseText size="lg" color="primary" class="text-red-600 mb-4">
+            Unable to load portfolio images
+          </BaseText>
+          <BaseText size="lg" :opacity="70" class="mb-6">
+            The portfolio images could not be fetched at this time. Please check your connection and try again.
+          </BaseText>
+          <BaseButton variant="secondary" @click="activeCategory ? fetchCategoryImages(activeCategory) : fetchCategories()">
+            Try Again
+          </BaseButton>
+        </div>
       </div>
       
       <!-- Gallery Grid -->
@@ -176,18 +183,8 @@ async function fetchCategories() {
       activeCategory.value = categories.value[0].id;
     }
   } catch (err: any) {
-    // Fallback to mock data for development if API fails
-    console.warn('API failed, using mock data:', err.message);
-    categories.value = [
-      { id: 'family', name: 'Family', path: '/portfolio/family', folderName: 'family' },
-      { id: 'lifestyle', name: 'Lifestyle', path: '/portfolio/lifestyle', folderName: 'lifestyle' },
-      { id: 'ngo', name: 'NGO', path: '/portfolio/ngo', folderName: 'ngo' },
-      { id: 'branding', name: 'Branding', path: '/portfolio/branding', folderName: 'branding' }
-    ];
-    
-    if (!activeCategory.value && categories.value.length > 0) {
-      activeCategory.value = categories.value[0].id;
-    }
+    error.value = err.message || 'Failed to load portfolio categories';
+    console.error('Portfolio categories error:', err);
   } finally {
     loading.value = false;
   }
@@ -215,28 +212,10 @@ async function fetchCategoryImages(categoryId: string, subcategory?: string) {
     // Reset visible count when switching categories
     visibleCount.value = 12;
   } catch (err: any) {
-    // Fallback to mock data for development
-    console.warn(`API failed for ${categoryId}, using mock data:`, err.message);
-    
-    // Mock images for testing
-    images.value = [
-      {
-        thumbnailUrl: '/src/assets/images/family/dsc-0175.jpg',
-        fullUrl: '/src/assets/images/family/dsc-0175.jpg',
-        alt: `${categoryId} photo 1`,
-        fileName: 'mock-1.jpg',
-        filePath: '/mock/path/1.jpg'
-      },
-      {
-        thumbnailUrl: '/src/assets/images/family/dsc-0167.jpg',
-        fullUrl: '/src/assets/images/family/dsc-0167.jpg',
-        alt: `${categoryId} photo 2`,
-        fileName: 'mock-2.jpg',
-        filePath: '/mock/path/2.jpg'
-      }
-    ];
+    error.value = err.message || `Failed to load ${categoryId} images`;
+    console.error('Portfolio images error:', err);
+    images.value = [];
     subfolders.value = [];
-    visibleCount.value = 12;
   } finally {
     loading.value = false;
   }

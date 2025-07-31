@@ -31,6 +31,23 @@ function apiDevPlugin() {
             body: req.body
           }
           
+          // Ensure environment variables are available
+          if (!process.env.IMAGEKIT_PRIVATE_KEY) {
+            const fs = await import('fs')
+            const path = await import('path')
+            try {
+              const envContent = fs.readFileSync(path.resolve('.env'), 'utf8')
+              const envVars = envContent.split('\n').reduce((acc, line) => {
+                const [key, value] = line.split('=')
+                if (key && value) acc[key.trim()] = value.trim()
+                return acc
+              }, {})
+              Object.assign(process.env, envVars)
+            } catch (e) {
+              console.warn('Could not load .env file')
+            }
+          }
+          
           const mockRes = {
             status: (code) => ({ json: (data) => {
               res.statusCode = code
