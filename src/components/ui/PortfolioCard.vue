@@ -5,7 +5,7 @@
   >
     <!-- Debug overlay -->
     <div class="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded z-10">
-      Card: {{ image.fileName }}
+      Card: {{ image.alt || 'No Alt' }}
     </div>
     <!-- Image Container -->
     <div class="relative aspect-[4/3] overflow-hidden bg-gray-100">
