@@ -121,7 +121,7 @@ const imageError = ref(false)
 const retryCount = ref(0)
 
 // Reset loading states when image changes
-watch(() => props.image.thumbnailUrl || props.image.src, (newUrl) => {
+watch(() => props.image.thumbnailUrl || props.image.src, () => {
   imageLoaded.value = false
   imageError.value = false
   retryCount.value = 0
