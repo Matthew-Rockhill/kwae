@@ -65,17 +65,25 @@
       </div>
       
       <!-- Gallery Grid -->
-      <div v-if="!loading && !error && filteredPortfolio.length > 0" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <PortfolioCard
-          v-for="(item, index) in filteredPortfolio" 
-          :key="`${activeCategory}-${activeSubcategory}-${index}`"
-          :image="item"
-          :category="activeCategory"
-          :subcategory="activeSubcategory"
-          :show-overlay="activeCategory === 'ngo'"
-          :show-static-content="activeCategory === 'ngo'"
-          @click="openLightbox(index)"
-        />
+      <div class="border-4 border-green-500 p-4 mb-4">
+        <p class="text-green-500 font-bold mb-2">Gallery Container (should show {{ filteredPortfolio.length }} cards)</p>
+        <div v-if="!loading && !error && filteredPortfolio.length > 0" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- Test element -->
+          <div class="bg-yellow-500 p-4 text-white">
+            Test Card - Grid is rendering!
+          </div>
+          
+          <PortfolioCard
+            v-for="(item, index) in filteredPortfolio" 
+            :key="`${activeCategory}-${activeSubcategory}-${index}`"
+            :image="item"
+            :category="activeCategory"
+            :subcategory="activeSubcategory"
+            :show-overlay="activeCategory === 'ngo'"
+            :show-static-content="activeCategory === 'ngo'"
+            @click="openLightbox(index)"
+          />
+        </div>
       </div>
       
       <!-- Fallback if no grid shows -->
