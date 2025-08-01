@@ -10,7 +10,7 @@
         leave-from="opacity-100"
         leave-to="opacity-0"
       >
-        <div class="fixed inset-0 bg-black/30" />
+        <div class="fixed inset-0 bg-black/40 backdrop-blur-sm" />
       </TransitionChild>
 
       <div class="fixed inset-0 overflow-y-auto">
@@ -24,30 +24,67 @@
             leave-from="opacity-100 scale-100"
             leave-to="opacity-0 scale-95"
           >
-            <DialogPanel class="w-full max-w-2xl transform overflow-hidden rounded-2xl bg-[var(--color-light)] p-6 text-left align-middle shadow-xl transition-all">
-              <DialogTitle as="template">
-                <BaseHeading :level="3" variant="hero" class="mb-4">
-                  Book Your Session
-                </BaseHeading>
-              </DialogTitle>
+            <DialogPanel class="relative w-full max-w-3xl transform overflow-hidden rounded-3xl bg-gradient-to-br from-white via-white to-[var(--color-accent)]/10 shadow-2xl transition-all">
+              <!-- Background decorative elements -->
+              <div class="absolute -top-20 -right-20 w-40 h-40 bg-[var(--color-secondary)]/5 rounded-full blur-3xl"></div>
+              <div class="absolute -bottom-20 -left-20 w-60 h-60 bg-[var(--color-accent)]/10 rounded-full blur-3xl"></div>
               
-              <p class="text-[var(--color-text)]/70 text-sm mb-6">
-                Fill out the form below and I'll get back to you within 24-48 hours at 
-                <a href="mailto:hello@kristinmathilde.com" class="text-[var(--color-secondary)] hover:underline">hello@kristinmathilde.com</a>
-              </p>
+              <div class="relative p-8 lg:p-10">
+                <!-- Close button -->
+                <button
+                  @click="closeModal"
+                  class="absolute top-6 right-6 p-2 rounded-full hover:bg-[var(--color-text)]/5 transition-colors duration-300"
+                  aria-label="Close dialog"
+                >
+                  <svg class="w-5 h-5 text-[var(--color-text)]/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                  </svg>
+                </button>
+
+                <DialogTitle as="template">
+                  <BaseHeading :level="3" align="center" class="mb-3">
+                    Book Your <span class="font-cormorant italic font-normal text-[var(--color-secondary)]">Story Session</span>
+                  </BaseHeading>
+                </DialogTitle>
+                
+                <p class="text-[var(--color-text)]/70 text-center mb-8 max-w-xl mx-auto">
+                  I'm excited to learn about your vision! Fill out the form below and I'll get back to you within 24-48 hours to discuss the details.
+                </p>
 
               <!-- Success Message -->
-              <div v-if="submitSuccess" class="mb-6 p-4 bg-[var(--color-secondary)]/10 border border-[var(--color-secondary)]/20 rounded-lg">
-                <div class="flex items-center">
-                  <svg class="w-5 h-5 text-[var(--color-secondary)] mr-2" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                  </svg>
-                  <span class="text-[var(--color-secondary)] font-medium">Success!</span>
+              <Transition
+                enter-active-class="transition ease-out duration-300"
+                enter-from-class="transform opacity-0 scale-95"
+                enter-to-class="transform opacity-100 scale-100"
+                leave-active-class="transition ease-in duration-200"
+                leave-from-class="transform opacity-100 scale-100"
+                leave-to-class="transform opacity-0 scale-95"
+              >
+                <div v-if="submitSuccess" class="text-center py-12">
+                  <div class="mb-6">
+                    <div class="mx-auto w-20 h-20 bg-[var(--color-secondary)]/10 rounded-full flex items-center justify-center">
+                      <svg class="w-10 h-10 text-[var(--color-secondary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                      </svg>
+                    </div>
+                  </div>
+                  <BaseHeading :level="4" align="center" class="mb-3">
+                    Thank you for your booking request!
+                  </BaseHeading>
+                  <p class="text-[var(--color-text)]/70 mb-2">
+                    I've received your request and I'm excited to learn more about your vision.
+                  </p>
+                  <p class="text-[var(--color-text)]/70 mb-8">
+                    I'll get back to you at <span class="font-medium text-[var(--color-secondary)]">{{ formData.email }}</span> within 24-48 hours.
+                  </p>
+                  <BaseButton 
+                    variant="secondary" 
+                    @click="closeModal"
+                  >
+                    Close
+                  </BaseButton>
                 </div>
-                <p class="text-[var(--color-text)] text-sm mt-1">
-                  Your booking request has been submitted successfully. I'll get back to you within 24-48 hours!
-                </p>
-              </div>
+              </Transition>
 
               <!-- Error Message -->
               <div v-if="submitError" class="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
@@ -60,16 +97,18 @@
                 <p class="text-red-600 text-sm mt-1">{{ submitError }}</p>
               </div>
 
-              <form @submit.prevent="submitForm" class="mt-4" v-if="!submitSuccess">
+              <form @submit.prevent="submitForm" class="space-y-6" v-if="!submitSuccess">
                 <!-- Package Selection -->
-                <div class="mb-6">
-                  <label for="package" class="block text-[var(--color-text)] font-medium mb-2">Package/Service *</label>
+                <div>
+                  <label for="package" class="block text-sm font-medium text-[var(--color-text)] mb-2">
+                    What are you interested in? *
+                  </label>
                   <select 
                     id="package"
                     v-model="formData.selectedPackage"
                     required
-                    class="w-full px-4 py-2 border border-[var(--color-card-header)] focus:outline-none focus:ring-2 focus:ring-[var(--color-secondary)] focus:border-transparent rounded-lg"
-                    :class="{ 'border-red-500': errors.selectedPackage }"
+                    class="w-full px-4 py-3 border border-[var(--color-text)]/10 rounded-xl focus:ring-2 focus:ring-[var(--color-secondary)] focus:border-transparent transition-all duration-300 bg-white/80"
+                    :class="{ 'border-red-400 focus:ring-red-400/30 focus:border-red-400': errors.selectedPackage }"
                   >
                     <option value="">Select a package...</option>
                     <optgroup label="Portrait & Family Sessions">
@@ -91,119 +130,134 @@
                   <p v-if="errors.selectedPackage" class="text-red-500 text-sm mt-1">{{ errors.selectedPackage }}</p>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                  <!-- First Name Input -->
+                <!-- Name Row -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label for="firstName" class="block text-[var(--color-text)] font-medium mb-2">First Name *</label>
+                    <label for="firstName" class="block text-sm font-medium text-[var(--color-text)] mb-2">
+                      First Name *
+                    </label>
                     <input 
                       type="text" 
                       id="firstName"
                       v-model="formData.firstName"
                       required
-                      class="w-full px-4 py-2 border border-[var(--color-card-header)] focus:outline-none focus:ring-2 focus:ring-[var(--color-secondary)] focus:border-transparent rounded-lg"
-                      :class="{ 'border-red-500': errors.firstName }"
+                      placeholder="Your first name"
+                      class="w-full px-4 py-3 border border-[var(--color-text)]/10 rounded-xl focus:ring-2 focus:ring-[var(--color-secondary)] focus:border-transparent transition-all duration-300 bg-white/80"
+                      :class="{ 'border-red-400 focus:ring-red-400/30 focus:border-red-400': errors.firstName }"
                     />
                     <p v-if="errors.firstName" class="text-red-500 text-sm mt-1">{{ errors.firstName }}</p>
                   </div>
                   
-                  <!-- Last Name Input -->
                   <div>
-                    <label for="lastName" class="block text-[var(--color-text)] font-medium mb-2">Last Name *</label>
+                    <label for="lastName" class="block text-sm font-medium text-[var(--color-text)] mb-2">
+                      Last Name *
+                    </label>
                     <input 
                       type="text" 
                       id="lastName"
                       v-model="formData.lastName"
                       required
-                      class="w-full px-4 py-2 border border-[var(--color-card-header)] focus:outline-none focus:ring-2 focus:ring-[var(--color-secondary)] focus:border-transparent rounded-lg"
-                      :class="{ 'border-red-500': errors.lastName }"
+                      placeholder="Your last name"
+                      class="w-full px-4 py-3 border border-[var(--color-text)]/10 rounded-xl focus:ring-2 focus:ring-[var(--color-secondary)] focus:border-transparent transition-all duration-300 bg-white/80"
+                      :class="{ 'border-red-400 focus:ring-red-400/30 focus:border-red-400': errors.lastName }"
                     />
                     <p v-if="errors.lastName" class="text-red-500 text-sm mt-1">{{ errors.lastName }}</p>
                   </div>
                 </div>
 
-                <!-- Email Input -->
-                <div class="mb-6">
-                  <label for="email" class="block text-[var(--color-text)] font-medium mb-2">Email *</label>
-                  <input 
-                    type="email" 
-                    id="email"
-                    v-model="formData.email"
-                    required
-                    class="w-full px-4 py-2 border border-[var(--color-card-header)] focus:outline-none focus:ring-2 focus:ring-[var(--color-secondary)] focus:border-transparent rounded-lg"
-                    :class="{ 'border-red-500': errors.email }"
-                  />
-                  <p v-if="errors.email" class="text-red-500 text-sm mt-1">{{ errors.email }}</p>
-                </div>
+                <!-- Contact Details Row -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label for="email" class="block text-sm font-medium text-[var(--color-text)] mb-2">
+                      Email Address *
+                    </label>
+                    <input 
+                      type="email" 
+                      id="email"
+                      v-model="formData.email"
+                      required
+                      placeholder="your.email@example.com"
+                      class="w-full px-4 py-3 border border-[var(--color-text)]/10 rounded-xl focus:ring-2 focus:ring-[var(--color-secondary)] focus:border-transparent transition-all duration-300 bg-white/80"
+                      :class="{ 'border-red-400 focus:ring-red-400/30 focus:border-red-400': errors.email }"
+                    />
+                    <p v-if="errors.email" class="text-red-500 text-sm mt-1">{{ errors.email }}</p>
+                  </div>
 
-                <!-- Phone Input -->
-                <div class="mb-6">
-                  <label for="phone" class="block text-[var(--color-text)] font-medium mb-2">Phone Number *</label>
-                  <input 
-                    type="tel" 
-                    id="phone"
-                    v-model="formData.phone"
-                    required
-                    class="w-full px-4 py-2 border border-[var(--color-card-header)] focus:outline-none focus:ring-2 focus:ring-[var(--color-secondary)] focus:border-transparent rounded-lg"
-                    :class="{ 'border-red-500': errors.phone }"
-                  />
-                  <p v-if="errors.phone" class="text-red-500 text-sm mt-1">{{ errors.phone }}</p>
+                  <div>
+                    <label for="phone" class="block text-sm font-medium text-[var(--color-text)] mb-2">
+                      Mobile Number *
+                    </label>
+                    <input 
+                      type="tel" 
+                      id="phone"
+                      v-model="formData.phone"
+                      required
+                      placeholder="+27 XX XXX XXXX"
+                      class="w-full px-4 py-3 border border-[var(--color-text)]/10 rounded-xl focus:ring-2 focus:ring-[var(--color-secondary)] focus:border-transparent transition-all duration-300 bg-white/80"
+                      :class="{ 'border-red-400 focus:ring-red-400/30 focus:border-red-400': errors.phone }"
+                    />
+                    <p v-if="errors.phone" class="text-red-500 text-sm mt-1">{{ errors.phone }}</p>
+                  </div>
                 </div>
 
                 <!-- Event Date -->
-                <div class="mb-6">
-                  <label for="eventDate" class="block text-[var(--color-text)] font-medium mb-2">Preferred Date</label>
+                <div>
+                  <label for="eventDate" class="block text-sm font-medium text-[var(--color-text)] mb-2">
+                    Preferred Date
+                  </label>
                   <input 
                     type="date" 
                     id="eventDate"
                     v-model="formData.eventDate"
-                    class="w-full px-4 py-2 border border-[var(--color-card-header)] focus:outline-none focus:ring-2 focus:ring-[var(--color-secondary)] focus:border-transparent rounded-lg"
+                    :min="minDate"
+                    class="w-full px-4 py-3 border border-[var(--color-text)]/10 rounded-xl focus:ring-2 focus:ring-[var(--color-secondary)] focus:border-transparent transition-all duration-300 bg-white/80"
                   />
+                  <p class="text-[var(--color-text)]/60 text-sm mt-1">I recommend booking at least 2-4 weeks in advance</p>
                 </div>
 
                 <!-- Additional Notes -->
-                <div class="mb-6">
-                  <label for="additionalNotes" class="block text-[var(--color-text)] font-medium mb-2">Additional Notes</label>
+                <div>
+                  <label for="additionalNotes" class="block text-sm font-medium text-[var(--color-text)] mb-2">
+                    Tell me about your vision
+                  </label>
                   <textarea 
                     id="additionalNotes"
                     v-model="formData.additionalNotes"
-                    rows="3"
-                    placeholder="Any specific requirements or questions?"
-                    class="w-full px-4 py-2 border border-[var(--color-card-header)] focus:outline-none focus:ring-2 focus:ring-[var(--color-secondary)] focus:border-transparent rounded-lg"
+                    rows="5"
+                    placeholder="Share your story, vision, or any questions you have. The more details you provide, the better I can understand how to help bring your ideas to life."
+                    class="w-full px-4 py-3 border border-[var(--color-text)]/10 rounded-xl focus:ring-2 focus:ring-[var(--color-secondary)] focus:border-transparent transition-all duration-300 resize-none bg-white/80"
                   ></textarea>
                 </div>
 
-                <div class="mt-6 flex justify-end gap-4">
-                  <button
-                    type="button"
-                    class="px-4 py-2 text-[var(--color-text)] hover:text-[var(--color-secondary)] transition-colors"
-                    @click="closeModal"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    class="btn-primary px-4 py-2"
+                <!-- Submit Section -->
+                <div class="pt-4">
+                  <BaseButton 
+                    type="submit" 
+                    variant="primary" 
+                    size="lg" 
+                    full-width
                     :disabled="isSubmitting"
+                    class="min-h-[56px] mb-6"
                   >
-                    <span v-if="isSubmitting">
-                      <ArrowPathIcon class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline-block" />
-                      Submitting...
+                    <span v-if="isSubmitting" class="flex items-center justify-center">
+                      <ArrowPathIcon class="animate-spin -ml-1 mr-2 h-5 w-5 text-white" />
+                      Sending your request...
                     </span>
-                    <span v-else>Submit Booking</span>
-                  </button>
+                    <span v-else>Send Booking Request</span>
+                  </BaseButton>
+                  
+                  <!-- Response Time Note -->
+                  <div class="flex items-center justify-center text-center">
+                    <div class="flex items-center">
+                      <svg class="w-5 h-5 text-[var(--color-secondary)] mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                      </svg>
+                      <p class="text-[var(--color-text)]/70 text-sm">I typically respond within 24-48 hours</p>
+                    </div>
+                  </div>
                 </div>
               </form>
               
-              <!-- Close button for success state -->
-              <div v-if="submitSuccess" class="mt-6 flex justify-end">
-                <button
-                  type="button"
-                  class="btn-primary px-4 py-2"
-                  @click="closeModal"
-                >
-                  Close
-                </button>
-              </div>
             </DialogPanel>
           </TransitionChild>
         </div>
@@ -213,11 +267,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, watch } from 'vue'
-import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
+import { ref, reactive, watch, computed } from 'vue'
+import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot, Transition } from '@headlessui/vue'
 import { ArrowPathIcon } from '@heroicons/vue/24/outline'
 import { bookingService } from '@/services/bookingService'
 import BaseHeading from '@/components/ui/BaseHeading.vue'
+import BaseButton from '@/components/ui/BaseButton.vue'
 
 const props = defineProps<{
   isOpen: boolean
@@ -241,6 +296,13 @@ const formData = reactive({
   phone: '',
   eventDate: '',
   additionalNotes: ''
+})
+
+// Compute minimum date (2 weeks from today)
+const minDate = computed(() => {
+  const date = new Date()
+  date.setDate(date.getDate() + 14)
+  return date.toISOString().split('T')[0]
 })
 
 const errors = reactive({
@@ -316,6 +378,9 @@ const validateForm = () => {
   if (!formData.phone.trim()) {
     errors.phone = 'Phone number is required'
     isValid = false
+  } else if (!/^(\+27|0)[0-9]{9}$/.test(formData.phone.replace(/\s+/g, ''))) {
+    errors.phone = 'Please enter a valid South African phone number'
+    isValid = false
   }
   
   return isValid
@@ -342,19 +407,10 @@ const submitForm = async () => {
     const result = await bookingService.submitBooking(bookingData)
     
     if (result.success) {
-    submitSuccess.value = true
-      
-      // Reset form
-      Object.keys(formData).forEach(key => {
-        formData[key as keyof typeof formData] = ''
-      })
-      
-      // Show success message for a few seconds then close
-      setTimeout(() => {
-        closeModal()
-      }, 3000)
+      submitSuccess.value = true
+      // Don't reset form data yet - user might want to see what they submitted
     } else {
-      submitError.value = result.message
+      submitError.value = result.message || 'Failed to submit booking. Please try again or contact me directly.'
     }
   } catch (error) {
     console.error('Booking submission error:', error)

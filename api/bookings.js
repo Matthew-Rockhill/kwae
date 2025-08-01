@@ -14,7 +14,7 @@ async function sendBookingEmails(bookingData) {
   const { bookingId, selectedPackage, firstName, lastName, email, phone, eventDate, additionalNotes } = bookingData;
   
   const adminEmail = {
-    to: process.env.ADMIN_EMAIL || 'hello@kristinmathilde.com',
+    to: process.env.ADMIN_EMAIL || 'rockhill.kristin@gmail.com',
     from: process.env.FROM_EMAIL || 'hello@kristinmathilde.com',
     subject: `🌟 New Booking Request #${bookingId} - ${selectedPackage}`,
     html: `
