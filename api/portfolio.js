@@ -85,6 +85,17 @@ async function getCategoryItems(categorySlug, subcategory = null, limit = 50, of
     return cached;
   }
   
+  // First, check if this category has any subfolders
+  const { data: subfoldersCheck } = await supabase
+    .from('portfolio_items_with_category')
+    .select('subcategory')
+    .eq('category_slug', categorySlug)
+    .eq('is_active', true)
+    .not('subcategory', 'is', null)
+    .limit(1);
+  
+  const hasSubfolders = subfoldersCheck && subfoldersCheck.length > 0;
+  
   let query = supabase
     .from('portfolio_items_with_category')
     .select('*')
@@ -92,11 +103,13 @@ async function getCategoryItems(categorySlug, subcategory = null, limit = 50, of
     .eq('is_active', true);
   
   if (subcategory) {
+    // If specific subcategory requested, filter to that subcategory
     query = query.eq('subcategory', subcategory);
-  } else {
-    // When no subcategory specified, only show items without subcategory
+  } else if (!hasSubfolders) {
+    // If no subfolders exist, only show items without subcategory
     query = query.is('subcategory', null);
   }
+  // If no subcategory specified but subfolders exist, show all images (no additional filter)
   
   const { data: items, error } = await query
     .order('sort_order', { ascending: true })
