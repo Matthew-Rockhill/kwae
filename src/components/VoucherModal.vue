@@ -42,24 +42,59 @@
                 </button>
 
                 <DialogTitle as="template">
-                  <BaseHeading :level="3" align="center" class="mb-3">
-                    <span v-if="voucherType === 'sponsorship'">
-                      Sponsor an <span class="font-cormorant italic font-normal text-[var(--color-secondary)]">Organisation</span>
-                    </span>
-                    <span v-else>
-                      Gift a <span class="font-cormorant italic font-normal text-[var(--color-secondary)]">Story Session</span>
-                    </span>
+                  <BaseHeading :level="3" align="center" class="mb-6">
+                    Choose Your <span class="font-cormorant italic font-normal text-[var(--color-secondary)]">Voucher Type</span>
                   </BaseHeading>
                 </DialogTitle>
                 
-                <p class="text-[var(--color-text)]/70 text-center mb-8 max-w-2xl mx-auto">
-                  <span v-if="voucherType === 'sponsorship'">
-                    Support meaningful storytelling by sponsoring a photography session for an organisation or cause close to your heart.
-                  </span>
-                  <span v-else>
-                    Give the gift of beautiful memories! Purchase a voucher for someone special to capture their story.
-                  </span>
-                </p>
+                <!-- Voucher Type Selection -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                  <!-- Gift Voucher Option -->
+                  <button
+                    @click="selectedVoucherType = 'gift'"
+                    class="p-6 border-2 rounded-xl transition-all duration-300 text-left"
+                    :class="selectedVoucherType === 'gift' 
+                      ? 'border-[var(--color-secondary)] bg-[var(--color-secondary)]/5' 
+                      : 'border-[var(--color-text)]/10 hover:border-[var(--color-secondary)]/30'"
+                  >
+                    <div class="flex items-center justify-between mb-3">
+                      <h4 class="font-medium text-lg">Gift a Story Session</h4>
+                      <div class="w-5 h-5 rounded-full border-2 flex items-center justify-center"
+                           :class="selectedVoucherType === 'gift' 
+                             ? 'border-[var(--color-secondary)] bg-[var(--color-secondary)]' 
+                             : 'border-[var(--color-text)]/20'"
+                      >
+                        <div v-if="selectedVoucherType === 'gift'" class="w-2 h-2 bg-white rounded-full"></div>
+                      </div>
+                    </div>
+                    <p class="text-[var(--color-text)]/70 text-sm">
+                      Purchase a voucher for someone special to capture their story and create beautiful memories.
+                    </p>
+                  </button>
+                  
+                  <!-- Sponsorship Option -->
+                  <button
+                    @click="selectedVoucherType = 'sponsorship'"
+                    class="p-6 border-2 rounded-xl transition-all duration-300 text-left"
+                    :class="selectedVoucherType === 'sponsorship' 
+                      ? 'border-[var(--color-secondary)] bg-[var(--color-secondary)]/5' 
+                      : 'border-[var(--color-text)]/10 hover:border-[var(--color-secondary)]/30'"
+                  >
+                    <div class="flex items-center justify-between mb-3">
+                      <h4 class="font-medium text-lg">Sponsor an Organisation</h4>
+                      <div class="w-5 h-5 rounded-full border-2 flex items-center justify-center"
+                           :class="selectedVoucherType === 'sponsorship' 
+                             ? 'border-[var(--color-secondary)] bg-[var(--color-secondary)]' 
+                             : 'border-[var(--color-text)]/20'"
+                      >
+                        <div v-if="selectedVoucherType === 'sponsorship'" class="w-2 h-2 bg-white rounded-full"></div>
+                      </div>
+                    </div>
+                    <p class="text-[var(--color-text)]/70 text-sm">
+                      Support meaningful storytelling by sponsoring a photography session for an organisation or cause.
+                    </p>
+                  </button>
+                </div>
 
               <!-- Success Message -->
               <Transition
@@ -79,11 +114,11 @@
                     </div>
                   </div>
                   <BaseHeading :level="4" align="center" class="mb-3">
-                    <span v-if="voucherType === 'sponsorship'">Sponsorship Request Received!</span>
+                    <span v-if="selectedVoucherType === 'sponsorship'">Sponsorship Request Received!</span>
                     <span v-else>Voucher Request Received!</span>
                   </BaseHeading>
                   <p class="text-[var(--color-text)]/70 mb-2">
-                    Thank you for your {{ voucherType === 'sponsorship' ? 'generous sponsorship' : 'thoughtful gift' }}!
+                    Thank you for your {{ selectedVoucherType === 'sponsorship' ? 'generous sponsorship' : 'thoughtful gift' }}!
                   </p>
                   <p class="text-[var(--color-text)]/70 mb-8">
                     I'll send payment instructions to <span class="font-medium text-[var(--color-secondary)]">{{ formData.purchaserEmail }}</span> within 24 hours.
@@ -112,7 +147,7 @@
                 <!-- Package Selection -->
                 <div>
                   <label for="package" class="block text-sm font-medium text-[var(--color-text)] mb-2">
-                    <span v-if="voucherType === 'sponsorship'">Choose Sponsorship Package *</span>
+                    <span v-if="selectedVoucherType === 'sponsorship'">Choose Sponsorship Package *</span>
                     <span v-else">Select Package for Gift Voucher *</span>
                   </label>
                   <select 
@@ -123,12 +158,12 @@
                     :class="{ 'border-red-400 focus:ring-red-400/30 focus:border-red-400': errors.selectedPackage }"
                   >
                     <option value="">Select a package...</option>
-                    <optgroup v-if="voucherType !== 'sponsorship'" label="Portrait & Family Sessions">
+                    <optgroup v-if="selectedVoucherType !== 'sponsorship'" label="Portrait & Family Sessions">
                       <option value="dust-light">Dust & Light - Mini Session (R1,500)</option>
                       <option value="field-frame">Field & Frame - Full Session (R2,500)</option>
                       <option value="soil-sun">Soil & Sun - Golden Hour Session (R4,000)</option>
                     </optgroup>
-                    <optgroup v-if="voucherType === 'sponsorship'" label="Organisation Storytelling">
+                    <optgroup v-if="selectedVoucherType === 'sponsorship'" label="Organisation Storytelling">
                       <option value="raw-thread">The Raw Thread - Short Story Package (R4,000)</option>
                       <option value="narrative-journey">The Narrative Journey - Campaigns & Reports (R6,500)</option>
                     </optgroup>
@@ -139,7 +174,7 @@
                 <!-- Purchaser/Sponsor Details -->
                 <div>
                   <h4 class="text-lg font-medium text-[var(--color-text)] mb-4">
-                    <span v-if="voucherType === 'sponsorship'">Your Details (Sponsor)</span>
+                    <span v-if="selectedVoucherType === 'sponsorship'">Your Details (Sponsor)</span>
                     <span v-else">Your Details (Purchaser)</span>
                   </h4>
                   
@@ -217,14 +252,14 @@
                 <!-- Recipient/Organisation Details -->
                 <div>
                   <h4 class="text-lg font-medium text-[var(--color-text)] mb-4">
-                    <span v-if="voucherType === 'sponsorship'">Organisation Details</span>
+                    <span v-if="selectedVoucherType === 'sponsorship'">Organisation Details</span>
                     <span v-else">Gift Recipient Details</span>
                   </h4>
                   
                   <!-- Recipient Name -->
                   <div class="mb-6">
                     <label for="recipientName" class="block text-sm font-medium text-[var(--color-text)] mb-2">
-                      <span v-if="voucherType === 'sponsorship'">Organisation Name *</span>
+                      <span v-if="selectedVoucherType === 'sponsorship'">Organisation Name *</span>
                       <span v-else">Recipient Name *</span>
                     </label>
                     <input 
@@ -232,7 +267,7 @@
                       id="recipientName"
                       v-model="formData.recipientName"
                       required
-                      :placeholder="voucherType === 'sponsorship' ? 'Organisation or NGO name' : 'Gift recipient full name'"
+                      :placeholder="selectedVoucherType === 'sponsorship' ? 'Organisation or NGO name' : 'Gift recipient full name'"
                       class="w-full px-4 py-3 border border-[var(--color-text)]/10 rounded-xl focus:ring-2 focus:ring-[var(--color-secondary)] focus:border-transparent transition-all duration-300 bg-white/80"
                       :class="{ 'border-red-400 focus:ring-red-400/30 focus:border-red-400': errors.recipientName }"
                     />
@@ -243,21 +278,21 @@
                   <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <label for="recipientEmail" class="block text-sm font-medium text-[var(--color-text)] mb-2">
-                        <span v-if="voucherType === 'sponsorship'">Contact Email (Optional)</span>
+                        <span v-if="selectedVoucherType === 'sponsorship'">Contact Email (Optional)</span>
                         <span v-else">Recipient Email (Optional)</span>
                       </label>
                       <input 
                         type="email" 
                         id="recipientEmail"
                         v-model="formData.recipientEmail"
-                        :placeholder="voucherType === 'sponsorship' ? 'organisation@example.com' : 'recipient@example.com'"
+                        :placeholder="selectedVoucherType === 'sponsorship' ? 'organisation@example.com' : 'recipient@example.com'"
                         class="w-full px-4 py-3 border border-[var(--color-text)]/10 rounded-xl focus:ring-2 focus:ring-[var(--color-secondary)] focus:border-transparent transition-all duration-300 bg-white/80"
                       />
                     </div>
 
                     <div>
                       <label for="recipientPhone" class="block text-sm font-medium text-[var(--color-text)] mb-2">
-                        <span v-if="voucherType === 'sponsorship'">Contact Number (Optional)</span>
+                        <span v-if="selectedVoucherType === 'sponsorship'">Contact Number (Optional)</span>
                         <span v-else">Recipient Phone (Optional)</span>
                       </label>
                       <input 
@@ -274,14 +309,14 @@
                 <!-- Message -->
                 <div>
                   <label for="message" class="block text-sm font-medium text-[var(--color-text)] mb-2">
-                    <span v-if="voucherType === 'sponsorship'">Sponsorship Message (Optional)</span>
+                    <span v-if="selectedVoucherType === 'sponsorship'">Sponsorship Message (Optional)</span>
                     <span v-else">Gift Message (Optional)</span>
                   </label>
                   <textarea 
                     id="message"
                     v-model="formData.message"
                     rows="4"
-                    :placeholder="voucherType === 'sponsorship' ? 'Why are you sponsoring this organisation? Share your message of support...' : 'Add a personal message for the gift recipient...'"
+                    :placeholder="selectedVoucherType === 'sponsorship' ? 'Why are you sponsoring this organisation? Share your message of support...' : 'Add a personal message for the gift recipient...'"
                     class="w-full px-4 py-3 border border-[var(--color-text)]/10 rounded-xl focus:ring-2 focus:ring-[var(--color-secondary)] focus:border-transparent transition-all duration-300 resize-none bg-white/80"
                   ></textarea>
                 </div>
@@ -298,11 +333,11 @@
                   >
                     <span v-if="isSubmitting" class="flex items-center justify-center">
                       <ArrowPathIcon class="animate-spin -ml-1 mr-2 h-5 w-5 text-white" />
-                      <span v-if="voucherType === 'sponsorship'">Submitting sponsorship...</span>
+                      <span v-if="selectedVoucherType === 'sponsorship'">Submitting sponsorship...</span>
                       <span v-else>Creating voucher...</span>
                     </span>
                     <span v-else>
-                      <span v-if="voucherType === 'sponsorship'">Submit Sponsorship Request</span>
+                      <span v-if="selectedVoucherType === 'sponsorship'">Submit Sponsorship Request</span>
                       <span v-else">Create Gift Voucher</span>
                     </span>
                   </BaseButton>
@@ -338,12 +373,9 @@ import { voucherService, type VoucherData } from '@/services/voucherService'
 
 interface Props {
   isOpen: boolean
-  voucherType?: 'gift' | 'sponsorship'
 }
 
-const props = withDefaults(defineProps<Props>(), {
-  voucherType: 'gift'
-})
+defineProps<Props>()
 
 const emit = defineEmits<{
   close: []
@@ -352,6 +384,7 @@ const emit = defineEmits<{
 const isSubmitting = ref(false)
 const submitSuccess = ref(false)
 const submitError = ref('')
+const selectedVoucherType = ref<'gift' | 'sponsorship'>('gift')
 
 const formData = reactive({
   selectedPackage: '',
@@ -420,7 +453,7 @@ const validateForm = () => {
   
   // Validate recipient name
   if (!formData.recipientName.trim()) {
-    errors.recipientName = props.voucherType === 'sponsorship' ? 'Organisation name is required' : 'Recipient name is required'
+    errors.recipientName = selectedVoucherType.value === 'sponsorship' ? 'Organisation name is required' : 'Recipient name is required'
     isValid = false
   }
   
@@ -436,14 +469,14 @@ const submitForm = async () => {
   try {
     const voucherData: VoucherData = {
       packageType: formData.selectedPackage,
-      voucherType: props.voucherType,
+      voucherType: selectedVoucherType.value,
       purchaserName: `${formData.purchaserFirstName} ${formData.purchaserLastName}`,
       purchaserEmail: formData.purchaserEmail,
       personalMessage: formData.message || undefined
     }
 
     // Add voucher type specific fields
-    if (props.voucherType === 'gift') {
+    if (selectedVoucherType.value === 'gift') {
       voucherData.recipientName = formData.recipientName
       voucherData.recipientEmail = formData.recipientEmail || undefined
     } else {

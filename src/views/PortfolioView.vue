@@ -145,8 +145,7 @@
     <!-- Voucher Modal -->
     <VoucherModal
       :is-open="showVoucherModal"
-      :voucher-type="voucherType"
-      @close="closeVoucherModal"
+            @close="closeVoucherModal"
     />
   </div>
 </template>
@@ -488,10 +487,8 @@ const closeBookingModal = () => {
 
 // Voucher modal state
 const showVoucherModal = ref(false);
-const voucherType = ref<'gift' | 'sponsorship'>('gift');
 
 const openVoucherModal = () => {
-  voucherType.value = 'gift'; // Default to gift voucher
   showVoucherModal.value = true;
 };
 
