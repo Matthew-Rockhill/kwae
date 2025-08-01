@@ -167,23 +167,47 @@
           description="Let's work together to capture your authentic moments and create beautiful memories that last a lifetime."
           :primary-action="{ text: 'See My Work', type: 'router-link', to: '/portfolio' }"
           :secondary-action="{ text: 'Get in Touch', type: 'router-link', to: '/contact' }"
+          :show-voucher-action="true"
           background="alabaster"
+          @voucher-click="openVoucherModal"
         />
       </BaseSection>
+      
+      <!-- Voucher Modal -->
+      <VoucherModal
+        :is-open="showVoucherModal"
+        :voucher-type="voucherType"
+        @close="closeVoucherModal"
+      />
     </div>
   </template>
   
   <script setup lang="ts">
+  import { ref } from 'vue'
   import BaseSection from '@/components/ui/BaseSection.vue'
   import BaseHeading from '@/components/ui/BaseHeading.vue'
   import BaseText from '@/components/ui/BaseText.vue'
   import CallToActionSection from '@/components/ui/CallToActionSection.vue'
   import ContentBlock from '@/components/ui/ContentBlock.vue'
   import QuoteBlock from '@/components/ui/QuoteBlock.vue'
+  import VoucherModal from '@/components/VoucherModal.vue'
   
   // Import images
   import aboutImage1 from '@/assets/images/about-1.jpg'
   import aboutImage2 from '@/assets/images/about-2.jpg'
   import winningImage from '@/assets/images/family/dsc-0175.jpg'
   import wwfLogo from '@/assets/images/wwf-logo.png'
+  
+  // Voucher modal state
+  const showVoucherModal = ref(false)
+  const voucherType = ref<'gift' | 'sponsorship'>('gift')
+
+  const openVoucherModal = () => {
+    voucherType.value = 'gift' // Default to gift voucher
+    showVoucherModal.value = true
+  }
+
+  const closeVoucherModal = () => {
+    showVoucherModal.value = false
+  }
   </script>

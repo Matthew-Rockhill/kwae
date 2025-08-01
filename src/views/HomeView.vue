@@ -20,13 +20,19 @@
     <BaseSection background="alabaster" padding="xl" spacing="normal">
       <CallToActionSection
         :primary-action="{ text: 'Book Your Session', type: 'button' }"
+        :show-voucher-action="true"
         @primary-click="openBookingModal"
-        @voucher-click="handleVoucherClick"
+        @voucher-click="openVoucherModal"
       />
     </BaseSection>
     <BookingModal
       :is-open="showBookingModal"
       @close="closeBookingModal"
+    />
+    <VoucherModal
+      :is-open="showVoucherModal"
+      :voucher-type="voucherType"
+      @close="closeVoucherModal"
     />
   </div>
 </template>
@@ -41,7 +47,9 @@ import TestimonialsSection from '@/components/home/TestimonialsSection.vue'
 import CallToActionSection from '@/components/ui/CallToActionSection.vue'
 import BaseSection from '@/components/ui/BaseSection.vue'
 import BookingModal from '@/components/BookingModal.vue'
+import VoucherModal from '@/components/VoucherModal.vue'
 
+// Booking modal state
 const showBookingModal = ref(false)
 const openBookingModal = () => {
   showBookingModal.value = true
@@ -50,9 +58,17 @@ const closeBookingModal = () => {
   showBookingModal.value = false
 }
 
-const handleVoucherClick = () => {
-  // TODO: Implement voucher functionality later
-  console.log('Voucher clicked - functionality to be implemented')
+// Voucher modal state
+const showVoucherModal = ref(false)
+const voucherType = ref<'gift' | 'sponsorship'>('gift')
+
+const openVoucherModal = () => {
+  voucherType.value = 'gift' // Default to gift voucher on home page
+  showVoucherModal.value = true
+}
+
+const closeVoucherModal = () => {
+  showVoucherModal.value = false
 }
 
 </script>

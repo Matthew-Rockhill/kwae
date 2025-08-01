@@ -66,7 +66,9 @@
         custom-heading='Interested in <span class="font-cormorant italic font-normal text-[var(--color-secondary)]">working together?</span>'
         description="Every story is unique, and I'd love to help you tell yours. If you're unsure which package fits your needs or if you'd like a custom quote, let's chat!"
         :primary-action="{ text: 'Book Your Session', type: 'button' }"
+        :show-voucher-action="true"
         @primary-click="openBookingModal"
+        @voucher-click="openVoucherModal"
       />
     </BaseSection>
 
@@ -76,6 +78,13 @@
       :pre-selected-package="selectedPackageAction"
       @close="closeBookingModal"
     />
+    
+    <!-- Voucher Modal -->
+    <VoucherModal
+      :is-open="showVoucherModal"
+      :voucher-type="voucherType"
+      @close="closeVoucherModal"
+    />
   </div>
 </template>
 
@@ -83,6 +92,7 @@
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import BookingModal from '@/components/BookingModal.vue'
+import VoucherModal from '@/components/VoucherModal.vue'
 import CallToActionSection from '@/components/ui/CallToActionSection.vue'
 import PortraitFamilySection from '@/components/packages/PortraitFamilySection.vue'
 import LifestyleEventsSection from '@/components/packages/LifestyleEventsSection.vue'
@@ -120,6 +130,19 @@ const openBookingModal = (packageAction?: string) => {
 const closeBookingModal = () => {
   showBookingModal.value = false
   selectedPackageAction.value = ''
+}
+
+// Voucher modal state
+const showVoucherModal = ref(false)
+const voucherType = ref<'gift' | 'sponsorship'>('gift')
+
+const openVoucherModal = () => {
+  voucherType.value = 'gift' // Default to gift voucher
+  showVoucherModal.value = true
+}
+
+const closeVoucherModal = () => {
+  showVoucherModal.value = false
 }
 
 

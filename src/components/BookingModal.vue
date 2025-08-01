@@ -257,6 +257,7 @@
                   </div>
                 </div>
               </form>
+              </div>
               
             </DialogPanel>
           </TransitionChild>
@@ -267,8 +268,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, watch, computed } from 'vue'
-import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot, Transition } from '@headlessui/vue'
+import { ref, reactive, watch, computed, Transition } from 'vue'
+import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import { ArrowPathIcon } from '@heroicons/vue/24/outline'
 import { bookingService } from '@/services/bookingService'
 import BaseHeading from '@/components/ui/BaseHeading.vue'

@@ -130,7 +130,9 @@
       <CallToActionSection
         custom-heading='Ready to <span class="font-cormorant italic font-normal text-[var(--color-secondary)]">Tell Your Story?</span>'
         :primary-action="{ text: 'Book Your Story', type: 'button' }"
+        :show-voucher-action="true"
         @primary-click="openBookingModal"
+        @voucher-click="openVoucherModal"
       />
     </BaseSection>
     
@@ -138,6 +140,13 @@
     <BookingModal
       :is-open="showBookingModal"
       @close="closeBookingModal"
+    />
+    
+    <!-- Voucher Modal -->
+    <VoucherModal
+      :is-open="showVoucherModal"
+      :voucher-type="voucherType"
+      @close="closeVoucherModal"
     />
   </div>
 </template>
@@ -154,6 +163,7 @@ import CallToActionSection from '@/components/ui/CallToActionSection.vue'
 import FilterButton from '@/components/ui/FilterButton.vue'
 import PortfolioCard from '@/components/ui/PortfolioCard.vue'
 import BookingModal from '@/components/BookingModal.vue'
+import VoucherModal from '@/components/VoucherModal.vue'
 
 interface PortfolioImage {
   thumbnailUrl: string;
@@ -474,5 +484,18 @@ const openBookingModal = () => {
 };
 const closeBookingModal = () => {
   showBookingModal.value = false;
+};
+
+// Voucher modal state
+const showVoucherModal = ref(false);
+const voucherType = ref<'gift' | 'sponsorship'>('gift');
+
+const openVoucherModal = () => {
+  voucherType.value = 'gift'; // Default to gift voucher
+  showVoucherModal.value = true;
+};
+
+const closeVoucherModal = () => {
+  showVoucherModal.value = false;
 };
 </script>
