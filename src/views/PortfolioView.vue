@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- Page Header with Integrated Navigation -->
-    <BaseSection background="light" padding="xl" spacing="tight">
+    <BaseSection background="light" padding="lg" spacing="tight">
       <div class="section-header text-center max-w-6xl mx-auto">
         <!-- Main Heading -->
         <BaseHeading :level="1" align="center" :animate="true" decoration="underline" class="mb-6">
@@ -13,7 +13,7 @@
         </BaseText>
         
         <!-- Integrated Filter Bar -->
-        <div class="mb-8">
+        <div class="mb-4">
           <div class="flex flex-wrap justify-center gap-4">
             <FilterButton
               v-for="category in categories" 
@@ -31,21 +31,21 @@
           </div>
         </div>
         
+        <!-- Dynamic Subcategory selector -->
+        <div v-if="hasSubfolders" class="flex justify-center items-center gap-3 mt-6">
+          <FilterButton
+            v-for="subfolder in subfolders"
+            :key="subfolder.id"
+            :active="activeSubcategory === subfolder.id"
+            @click="setActiveSubcategory(subfolder.id)"
+            class="capitalize"
+          >
+            {{ subfolder.name }}
+          </FilterButton>
+        </div>
+        
       </div>
     </BaseSection>
-    
-    <!-- Dynamic Subcategory selector -->
-    <div v-if="hasSubfolders" class="flex justify-center items-center space-x-4 mb-4 mt-4 min-h-[60px]">
-      <FilterButton
-        v-for="subfolder in subfolders"
-        :key="subfolder.id"
-        :active="activeSubcategory === subfolder.id"
-        @click="setActiveSubcategory(subfolder.id)"
-        class="capitalize"
-      >
-        {{ subfolder.name }}
-      </FilterButton>
-    </div>
     
     <!-- Portfolio Gallery -->
     <BaseSection background="light" padding="none" spacing="tight" class="pt-0">
