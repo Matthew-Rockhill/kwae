@@ -152,7 +152,7 @@ async function getCategoryItems(categorySlug, subcategory = null, limit = 50, of
       return subcatName && !subcatName.match(/\.(jpg|jpeg|png|gif|webp)$/i);
     })
     .map(subcatName => ({
-      id: subcatName.toLowerCase().replace(/\s+/g, '-'),
+      id: subcatName, // Use original name as ID for API filtering
       name: subcatName,
       path: `/${categorySlug}/${subcatName}`
     }));
