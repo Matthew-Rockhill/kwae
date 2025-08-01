@@ -30,7 +30,7 @@ defineEmits<{
 }>()
 
 const buttonClasses = computed(() => {
-  const baseClasses = 'transition-all duration-300 rounded-lg uppercase tracking-wider font-light hover:scale-105 hover:shadow-lg transform-gpu'
+  const baseClasses = 'transition-all duration-300 rounded-lg uppercase tracking-wider font-light hover:scale-105 hover:shadow-lg transform-gpu flex items-center justify-center'
   
   const variantClasses = {
     primary: 'bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-primary-hover)] hover:from-[var(--color-primary-hover)] hover:to-[var(--color-primary)] text-[var(--color-text-light)] shadow-md',
