@@ -208,6 +208,7 @@ async function compareAndSync() {
       let folderContents = [];
       let successfulPath = null;
       
+      // First, try to get folder contents normally
       for (const pathVariation of pathVariations) {
         try {
           console.log(`🔎 Trying path variation: ${pathVariation}`);
@@ -227,23 +228,63 @@ async function compareAndSync() {
         }
       }
       
-      if (!successfulPath) {
-        console.log(`⚠️ No valid path found for ${dbCategory.name}, skipping`);
+      // If no contents found, try with includeFolder parameter to get subfolders
+      if (!successfulPath || folderContents.length === 0) {
+        console.log(`🔍 No items found, trying with includeFolder=true...`);
         
-        // For debugging: try to find any files with "lifestyle" in the name anywhere in portfolio
-        if (folderName.toLowerCase() === 'lifestyle') {
-          console.log(`🔍 Searching for lifestyle files anywhere in /portfolio...`);
+        for (const pathVariation of pathVariations) {
           try {
-            const allPortfolioFiles = await fetchFromImageKit(
-              `https://api.imagekit.io/v1/files?path=/portfolio&searchQuery=lifestyle`
+            const contentsWithFolders = await fetchFromImageKit(
+              `https://api.imagekit.io/v1/files?path=${pathVariation}&includeFolder=true`
             );
-            console.log(`🔍 Found ${allPortfolioFiles.length} files with 'lifestyle' in name:`, 
-                       allPortfolioFiles.map(f => ({ name: f.name, path: f.filePath })));
+            if (contentsWithFolders.length > 0) {
+              folderContents = contentsWithFolders;
+              successfulPath = pathVariation;
+              console.log(`✅ Found ${contentsWithFolders.length} items with includeFolder=true using path: ${pathVariation}`);
+              break;
+            }
           } catch (error) {
-            console.log(`❌ Search failed: ${error.message}`);
+            console.log(`❌ includeFolder attempt failed for ${pathVariation}: ${error.message}`);
+          }
+        }
+      }
+      
+      // Special handling for Lifestyle - check for known subfolders directly
+      if (!successfulPath && folderName.toLowerCase() === 'lifestyle') {
+        console.log(`🔍 Special handling for Lifestyle folder - checking known subfolders...`);
+        
+        const knownLifestyleSubfolders = ['Events', 'Traditional Wedding', 'Rockpooling'];
+        const foundSubfolders = [];
+        
+        for (const subfolder of knownLifestyleSubfolders) {
+          const subfolderPath = `/${PORTFOLIO_ROOT}/${folderName}/${subfolder}`;
+          try {
+            const subfolderCheck = await fetchFromImageKit(
+              `https://api.imagekit.io/v1/files?path=${subfolderPath}&limit=1`
+            );
+            if (subfolderCheck.length > 0) {
+              foundSubfolders.push({
+                type: 'folder',
+                name: subfolder,
+                filePath: subfolderPath,
+                folderPath: subfolderPath
+              });
+              console.log(`✅ Found subfolder: ${subfolder}`);
+            }
+          } catch (error) {
+            console.log(`❌ Subfolder ${subfolder} check failed: ${error.message}`);
           }
         }
         
+        if (foundSubfolders.length > 0) {
+          folderContents = foundSubfolders;
+          successfulPath = dbCategory.folder_path || `/${PORTFOLIO_ROOT}/${folderName}`;
+          console.log(`✅ Using known subfolders for Lifestyle (${foundSubfolders.length} found)`);
+        }
+      }
+      
+      if (!successfulPath && folderContents.length === 0) {
+        console.log(`⚠️ No valid path found for ${dbCategory.name}, skipping`);
         continue;
       }
       
