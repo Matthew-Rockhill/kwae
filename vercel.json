@@ -21,6 +21,9 @@
     },
     "api/setup-database.js": {
       "maxDuration": 60
+    },
+    "api/contact.js": {
+      "maxDuration": 30
     }
   },
   "rewrites": [

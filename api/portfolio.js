@@ -77,7 +77,6 @@ async function getCategories() {
 // Get portfolio items for a specific category
 async function getCategoryItems(categorySlug, subcategory = null, limit = 50, offset = 0) {
   console.log(`🖼️ Fetching items for category: ${categorySlug}${subcategory ? `, subcategory: ${subcategory}` : ''}`);
-  console.log('🔍 Raw subcategory value:', subcategory, 'Type:', typeof subcategory);
   
   const cacheKey = getCacheKey('items', { categorySlug, subcategory, limit, offset });
   const cached = getFromCache(cacheKey);
@@ -105,14 +104,10 @@ async function getCategoryItems(categorySlug, subcategory = null, limit = 50, of
   
   if (subcategory) {
     // If specific subcategory requested, filter to that subcategory
-    console.log(`🎯 Filtering for subcategory: "${subcategory}"`);
     query = query.eq('subcategory', subcategory);
   } else if (!hasSubfolders) {
     // If no subfolders exist, only show items without subcategory
-    console.log('📍 No subfolders exist, showing only items without subcategory');
     query = query.is('subcategory', null);
-  } else {
-    console.log('📍 Showing all images (category has subfolders but none selected)');
   }
   // If no subcategory specified but subfolders exist, show all images (no additional filter)
   
@@ -126,17 +121,6 @@ async function getCategoryItems(categorySlug, subcategory = null, limit = 50, of
     throw error;
   }
   
-  console.log(`📊 Query returned ${items?.length || 0} items`);
-  if (subcategory && items?.length === 0) {
-    console.log('⚠️ No items found for subcategory, checking if subcategory exists in DB...');
-    const { data: checkSubcat } = await supabase
-      .from('portfolio_items_with_category')
-      .select('subcategory')
-      .eq('category_slug', categorySlug)
-      .eq('subcategory', subcategory)
-      .limit(1);
-    console.log('🔍 Subcategory check result:', checkSubcat);
-  }
   
   // Transform to match frontend expectations
   const transformedItems = items.map(item => ({
@@ -164,7 +148,6 @@ async function getCategoryItems(categorySlug, subcategory = null, limit = 50, of
   
   // Only show subfolders if they represent actual folder structures, not individual files
   const uniqueSubcategories = [...new Set(subfolders?.map(s => s.subcategory).filter(Boolean) || [])];
-  console.log('📁 Unique subcategories found:', uniqueSubcategories);
   
   const validSubfolders = uniqueSubcategories
     .filter(subcatName => {
@@ -176,8 +159,6 @@ async function getCategoryItems(categorySlug, subcategory = null, limit = 50, of
       name: subcatName,
       path: `/${categorySlug}/${subcatName}`
     }));
-  
-  console.log('✅ Valid subfolders:', validSubfolders);
   
   const result = {
     images: transformedItems,

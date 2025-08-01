@@ -256,8 +256,6 @@ async function fetchCategoryImages(categoryId: string, subcategory?: string) {
     }
     // Add pagination parameters
     url += `&limit=50&offset=0`;
-    console.log('📡 Images API URL:', url);
-    console.log('🔍 Subcategory parameter:', subcategory);
     
     const res = await fetch(url);
     console.log('📡 Images API response status:', res.status);
@@ -273,9 +271,6 @@ async function fetchCategoryImages(categoryId: string, subcategory?: string) {
     
     images.value = data.images || [];
     subfolders.value = data.subfolders || [];
-    
-    console.log(`📊 Found ${images.value.length} images and ${subfolders.value.length} subfolders`);
-    console.log('📁 Subfolders data:', JSON.stringify(subfolders.value, null, 2));
     
     // Reset visible count when switching categories
     visibleCount.value = 12;
@@ -330,7 +325,6 @@ watch(activeCategory, async (newCategory, oldCategory) => {
 
 // Watch for subcategory changes
 watch(activeSubcategory, async (newSubcategory) => {
-  console.log('👀 Subcategory watch triggered, new value:', newSubcategory);
   if (activeCategory.value) {
     cleanupInfiniteScroll(); // Clean up old observer
     await fetchCategoryImages(activeCategory.value, newSubcategory);
@@ -483,7 +477,6 @@ function setActiveCategory(categoryId: string) {
 }
 
 function setActiveSubcategory(subcategoryId: string) {
-  console.log('🎯 Setting active subcategory to:', subcategoryId);
   activeSubcategory.value = subcategoryId;
 }
 

@@ -399,10 +399,21 @@ const submitForm = async () => {
   isSubmitting.value = true
   
   try {
-    // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 2000))
+    const response = await fetch('/api/contact', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(form)
+    })
     
-    // Reset form
+    const data = await response.json()
+    
+    if (!response.ok) {
+      throw new Error(data.error || 'Failed to send message')
+    }
+    
+    // Reset form on success
     Object.assign(form, {
       firstName: '',
       lastName: '',
@@ -412,8 +423,9 @@ const submitForm = async () => {
       message: ''
     })
     
-    alert('Thank you for your message! I\'ll get back to you within 24-48 hours.')
+    alert(data.message || 'Thank you for your message! I\'ll get back to you within 24-48 hours.')
   } catch (error) {
+    console.error('Contact form error:', error)
     alert('There was an error sending your message. Please try again or contact me directly.')
   } finally {
     isSubmitting.value = false
