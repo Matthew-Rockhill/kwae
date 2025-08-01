@@ -14,13 +14,13 @@
       "maxDuration": 30
     },
     "api/migrate-portfolio.js": {
-      "maxDuration": 300
+      "maxDuration": 60
     },
     "api/sync-portfolio.js": {
       "maxDuration": 60
     },
     "api/setup-database.js": {
-      "maxDuration": 120
+      "maxDuration": 60
     }
   },
   "rewrites": [

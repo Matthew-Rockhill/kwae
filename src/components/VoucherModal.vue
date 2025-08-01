@@ -43,12 +43,35 @@
 
                 <DialogTitle as="template">
                   <BaseHeading :level="3" align="center" class="mb-6">
-                    Choose Your <span class="font-cormorant italic font-normal text-[var(--color-secondary)]">Voucher Type</span>
+                    <span v-if="selectedVoucherType === 'sponsorship'">Support an <span class="font-cormorant italic font-normal text-[var(--color-secondary)]">Organisation</span></span>
+                    <span v-else>Choose Your <span class="font-cormorant italic font-normal text-[var(--color-secondary)]">Voucher Type</span></span>
                   </BaseHeading>
                 </DialogTitle>
                 
+                <!-- Selected Voucher Type Display -->
+                <div v-if="selectedVoucherType" class="mb-6 p-4 bg-[var(--color-secondary)]/10 rounded-xl border border-[var(--color-secondary)]/20">
+                  <div class="flex items-center justify-between">
+                    <div>
+                      <h4 class="font-medium text-lg text-[var(--color-text)]">
+                        <span v-if="selectedVoucherType === 'sponsorship'">Sponsor an Organisation</span>
+                        <span v-else>Gift a Story Session</span>
+                      </h4>
+                      <p class="text-[var(--color-text)]/70 text-sm mt-1">
+                        <span v-if="selectedVoucherType === 'sponsorship'">Support meaningful storytelling by sponsoring a photography session for an organisation or cause.</span>
+                        <span v-else>Purchase a voucher for someone special to capture their story and create beautiful memories.</span>
+                      </p>
+                    </div>
+                    <button
+                      @click="selectedVoucherType = selectedVoucherType === 'gift' ? 'sponsorship' : 'gift'"
+                      class="px-4 py-2 text-sm bg-white/80 border border-[var(--color-secondary)]/30 rounded-lg hover:bg-[var(--color-secondary)]/10 transition-colors duration-300"
+                    >
+                      Switch Type
+                    </button>
+                  </div>
+                </div>
+
                 <!-- Voucher Type Selection -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                <div v-if="!selectedVoucherType" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
                   <!-- Gift Voucher Option -->
                   <button
                     @click="selectedVoucherType = 'gift'"
@@ -143,12 +166,12 @@
                 <p class="text-red-600 text-sm mt-1">{{ submitError }}</p>
               </div>
 
-              <form @submit.prevent="submitForm" class="space-y-8" v-if="!submitSuccess">
+              <form @submit.prevent="submitForm" class="space-y-8" v-if="!submitSuccess && selectedVoucherType">
                 <!-- Package Selection -->
                 <div>
                   <label for="package" class="block text-sm font-medium text-[var(--color-text)] mb-2">
                     <span v-if="selectedVoucherType === 'sponsorship'">Choose Sponsorship Package *</span>
-                    <span v-else">Select Package for Gift Voucher *</span>
+                    <span v-else>Select Package for Gift Voucher *</span>
                   </label>
                   <select 
                     id="package"
@@ -364,7 +387,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, Transition } from 'vue'
+import { ref, reactive, Transition, watch } from 'vue'
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import { ArrowPathIcon } from '@heroicons/vue/24/outline'
 import BaseHeading from '@/components/ui/BaseHeading.vue'
@@ -384,7 +407,7 @@ const emit = defineEmits<{
 const isSubmitting = ref(false)
 const submitSuccess = ref(false)
 const submitError = ref('')
-const selectedVoucherType = ref<'gift' | 'sponsorship'>('gift')
+const selectedVoucherType = ref<'gift' | 'sponsorship' | null>(null)
 
 const formData = reactive({
   selectedPackage: '',
@@ -469,7 +492,7 @@ const submitForm = async () => {
   try {
     const voucherData: VoucherData = {
       packageType: formData.selectedPackage,
-      voucherType: selectedVoucherType.value,
+      voucherType: selectedVoucherType.value as 'gift' | 'sponsorship',
       purchaserName: `${formData.purchaserFirstName} ${formData.purchaserLastName}`,
       purchaserEmail: formData.purchaserEmail,
       personalMessage: formData.message || undefined
@@ -499,14 +522,29 @@ const submitForm = async () => {
   }
 }
 
+// Watch for voucher type changes and reset package selection
+watch(selectedVoucherType, (newType, oldType) => {
+  if (newType !== oldType) {
+    formData.selectedPackage = ''
+    // Clear any validation errors
+    errors.selectedPackage = ''
+  }
+})
+
 const closeModal = () => {
   emit('close')
   submitSuccess.value = false
   submitError.value = ''
+  selectedVoucherType.value = null // Reset to selection screen
   
   // Reset form
   Object.keys(formData).forEach(key => {
     formData[key as keyof typeof formData] = ''
+  })
+  
+  // Reset errors
+  Object.keys(errors).forEach(key => {
+    errors[key as keyof typeof errors] = ''
   })
 }
 </script>
