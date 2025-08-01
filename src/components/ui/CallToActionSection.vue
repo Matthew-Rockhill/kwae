@@ -32,18 +32,34 @@
             <!-- Action Buttons -->
             <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <!-- Primary Action -->
-              <component 
-                :is="primaryAction.type || 'button'"
-                :to="primaryAction.type === 'router-link' ? primaryAction.to : undefined"
-                :href="primaryAction.type === 'a' ? primaryAction.href : undefined"
-                :target="primaryAction.type === 'a' && primaryAction.external ? '_blank' : undefined"
-                @click="primaryAction.type === 'button' ? handlePrimaryClick : undefined"
-                class="inline-block"
-              >
-                <BaseButton variant="primary" size="lg" class="min-w-[200px]">
-                  {{ primaryAction.text || 'Book Your Session' }}
-                </BaseButton>
-              </component>
+              <template v-if="primaryAction.type === 'button'">
+                <button @click="handlePrimaryClick" class="inline-block">
+                  <BaseButton variant="primary" size="lg" class="min-w-[180px]">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/>
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    </svg>
+                    {{ primaryAction.text || 'Book Your Session' }}
+                  </BaseButton>
+                </button>
+              </template>
+              <template v-else>
+                <component 
+                  :is="primaryAction.type || 'router-link'"
+                  :to="primaryAction.type === 'router-link' ? primaryAction.to : undefined"
+                  :href="primaryAction.type === 'a' ? primaryAction.href : undefined"
+                  :target="primaryAction.type === 'a' && primaryAction.external ? '_blank' : undefined"
+                  class="inline-block"
+                >
+                  <BaseButton variant="primary" size="lg" class="min-w-[180px]">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/>
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    </svg>
+                    {{ primaryAction.text || 'Book Your Session' }}
+                  </BaseButton>
+                </component>
+              </template>
               
               <!-- Voucher Action (if enabled) -->
               <button 
@@ -51,7 +67,7 @@
                 @click="handleVoucherClick"
                 class="inline-block"
               >
-                <BaseButton variant="secondary" size="lg" class="min-w-[200px]">
+                <BaseButton variant="secondary" size="lg" class="min-w-[180px]">
                   <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/>
                   </svg>
@@ -60,19 +76,28 @@
               </button>
               
               <!-- Secondary Action (optional) -->
-              <component 
-                v-if="secondaryAction"
-                :is="secondaryAction.type || 'router-link'"
-                :to="secondaryAction.type === 'router-link' ? secondaryAction.to : undefined"
-                :href="secondaryAction.type === 'a' ? secondaryAction.href : undefined"
-                :target="secondaryAction.type === 'a' && secondaryAction.external ? '_blank' : undefined"
-                @click="secondaryAction.type === 'button' ? handleSecondaryClick : undefined"
-                class="inline-block"
-              >
-                <BaseButton variant="ghost" size="lg" class="min-w-[200px]">
-                  {{ secondaryAction.text }}
-                </BaseButton>
-              </component>
+              <template v-if="secondaryAction">
+                <template v-if="secondaryAction.type === 'button'">
+                  <button @click="handleSecondaryClick" class="inline-block">
+                    <BaseButton variant="ghost" size="lg" class="min-w-[180px]">
+                      {{ secondaryAction.text }}
+                    </BaseButton>
+                  </button>
+                </template>
+                <template v-else>
+                  <component 
+                    :is="secondaryAction.type || 'router-link'"
+                    :to="secondaryAction.type === 'router-link' ? secondaryAction.to : undefined"
+                    :href="secondaryAction.type === 'a' ? secondaryAction.href : undefined"
+                    :target="secondaryAction.type === 'a' && secondaryAction.external ? '_blank' : undefined"
+                    class="inline-block"
+                  >
+                    <BaseButton variant="ghost" size="lg" class="min-w-[180px]">
+                      {{ secondaryAction.text }}
+                    </BaseButton>
+                  </component>
+                </template>
+              </template>
             </div>
             
             <!-- Optional additional content slot -->
