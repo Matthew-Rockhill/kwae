@@ -93,6 +93,9 @@ async function getCategoryItems(categorySlug, subcategory = null, limit = 50, of
   
   if (subcategory) {
     query = query.eq('subcategory', subcategory);
+  } else {
+    // When no subcategory specified, only show items without subcategory
+    query = query.is('subcategory', null);
   }
   
   const { data: items, error } = await query
