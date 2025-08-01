@@ -166,7 +166,6 @@
           custom-heading='Ready to <span class="font-cormorant italic font-normal text-[var(--color-secondary)]">Tell Your Story?</span>'
           description="Let's work together to capture your authentic moments and create beautiful memories that last a lifetime."
           :primary-action="{ text: 'See My Work', type: 'router-link', to: '/portfolio' }"
-          :secondary-action="{ text: 'Get in Touch', type: 'router-link', to: '/contact' }"
           :show-voucher-action="true"
           background="alabaster"
           @voucher-click="openVoucherModal"
