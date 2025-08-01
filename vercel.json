@@ -13,9 +13,6 @@
     "api/imagekit-webhook.js": {
       "maxDuration": 30
     },
-    "api/migrate-portfolio.js": {
-      "maxDuration": 60
-    },
     "api/sync-portfolio.js": {
       "maxDuration": 60
     },
