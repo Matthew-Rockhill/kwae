@@ -24,6 +24,9 @@
     },
     "api/contact.js": {
       "maxDuration": 30
+    },
+    "api/setup-contact-table.js": {
+      "maxDuration": 60
     }
   },
   "rewrites": [

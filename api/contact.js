@@ -1,7 +1,14 @@
 import sgMail from '@sendgrid/mail';
+import { createClient } from '@supabase/supabase-js';
 
 // Configure SendGrid
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
+// Initialize Supabase client with service role key for admin operations
+const supabase = createClient(
+  process.env.VITE_SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE_KEY
+);
 
 export default async function handler(req, res) {
   console.log('📧 Contact form API called');
@@ -54,6 +61,30 @@ export default async function handler(req, res) {
     }
     
     console.log('📝 Processing contact form submission:', { firstName, lastName, email, sessionType });
+    
+    // Save to database first
+    console.log('💾 Saving contact inquiry to database...');
+    const { data: savedInquiry, error: dbError } = await supabase
+      .from('contact_inquiries')
+      .insert({
+        first_name: firstName,
+        last_name: lastName,
+        email: email,
+        mobile: mobile,
+        session_type: sessionType,
+        message: message || null,
+        status: 'new'
+      })
+      .select()
+      .single();
+    
+    if (dbError) {
+      console.error('❌ Database error:', dbError);
+      // Continue with email sending even if database fails
+      console.log('⚠️ Continuing with email sending despite database error');
+    } else {
+      console.log('✅ Contact inquiry saved to database with ID:', savedInquiry.id);
+    }
     
     // Prepare email content
     const sessionTypeLabels = {
@@ -117,7 +148,8 @@ export default async function handler(req, res) {
             <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #ecf0f1;">
               <p style="color: #7f8c8d; font-size: 14px; margin: 0;">
                 This inquiry was submitted through your website contact form.<br>
-                <strong>Response Time Goal:</strong> 24-48 hours
+                <strong>Response Time Goal:</strong> 24-48 hours<br>
+                ${savedInquiry ? `<strong>Database ID:</strong> ${savedInquiry.id}` : '<strong>Note:</strong> Database save failed - email only'}
               </p>
             </div>
           </div>
