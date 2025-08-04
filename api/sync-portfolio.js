@@ -45,12 +45,13 @@ async function fetchFromImageKit(url) {
 }
 
 // Process a single file from ImageKit
-async function processFile(file, dbCategory, categoryDbItems, syncReport, subcategory = null) {
-  const existingItem = categoryDbItems.find(item => item.imagekit_file_id === file.fileId);
+async function processFile(file, dbCategory, allDbItems, syncReport, subcategory = null) {
+  // Check both active and inactive items to see if this file already exists
+  const existingItem = allDbItems.find(item => item.imagekit_file_id === file.fileId);
   
   if (!existingItem) {
     const subcategoryText = subcategory ? ` (${subcategory})` : '';
-    console.log(`➕ Adding missing item: ${file.name}${subcategoryText}`);
+    console.log(`➕ Adding new item: ${file.name}${subcategoryText}`);
     
     const baseUrl = IMAGEKIT_PUBLIC_URL + file.filePath.replace(/^\//, '');
     const urls = {
@@ -76,7 +77,8 @@ async function processFile(file, dbCategory, categoryDbItems, syncReport, subcat
         full_url: urls.full,
         alt_text: altText,
         sort_order: sortOrder,
-        subcategory: subcategory, // THIS IS THE KEY FIX
+        subcategory: subcategory,
+        is_active: true,
         metadata: {
           file_path: file.filePath,
           synced_at: new Date().toISOString()
@@ -89,18 +91,35 @@ async function processFile(file, dbCategory, categoryDbItems, syncReport, subcat
       syncReport.itemsAdded++;
     }
   } else {
-    // Update existing item if subcategory has changed
+    // Check if item needs to be reactivated or updated
+    let updates = {};
+    
+    if (!existingItem.is_active) {
+      console.log(`♻️ Reactivating item: ${file.name}`);
+      updates.is_active = true;
+      syncReport.itemsReactivated = (syncReport.itemsReactivated || 0) + 1;
+    }
+    
     if (existingItem.subcategory !== subcategory) {
+      console.log(`✏️ Updating subcategory for ${file.name}: "${existingItem.subcategory}" → "${subcategory}"`);
+      updates.subcategory = subcategory;
+    }
+    
+    if (Object.keys(updates).length > 0) {
+      updates.metadata = {
+        ...existingItem.metadata,
+        synced_at: new Date().toISOString()
+      };
+      
       const { error } = await supabase
         .from('portfolio_items')
-        .update({ subcategory: subcategory })
+        .update(updates)
         .eq('id', existingItem.id);
       
       if (error) {
-        syncReport.errors.push(`Failed to update subcategory for ${file.name}: ${error.message}`);
+        syncReport.errors.push(`Failed to update item ${file.name}: ${error.message}`);
       } else {
-        console.log(`✏️ Updated subcategory for ${file.name}: "${existingItem.subcategory}" → "${subcategory}"`);
-        syncReport.categoriesUpdated++;
+        syncReport.itemsUpdated = (syncReport.itemsUpdated || 0) + 1;
       }
     }
   }
@@ -114,6 +133,8 @@ async function compareAndSync() {
     categoriesAdded: 0,
     categoriesUpdated: 0,
     itemsAdded: 0,
+    itemsUpdated: 0,
+    itemsReactivated: 0,
     itemsRemoved: 0,
     errors: []
   };
@@ -125,10 +146,10 @@ async function compareAndSync() {
       .select('*')
       .eq('is_active', true);
     
+    // Get ALL items (active and inactive) to properly handle reactivation
     const { data: dbItems } = await supabase
       .from('portfolio_items')
-      .select('*')
-      .eq('is_active', true);
+      .select('*');
     
     // Get ImageKit state
     const ikFolders = await fetchFromImageKit(
@@ -249,37 +270,68 @@ async function compareAndSync() {
         }
       }
       
-      // Special handling for Lifestyle - check for known subfolders directly
-      if (!successfulPath && folderName.toLowerCase() === 'lifestyle') {
-        console.log(`🔍 Special handling for Lifestyle folder - checking known subfolders...`);
+      // Special handling for folders with no direct contents - check for subfolders
+      if (!successfulPath || folderContents.length === 0) {
+        console.log(`🔍 No direct contents found for ${folderName}, checking for subfolders...`);
         
-        const knownLifestyleSubfolders = ['Events', 'Traditional Wedding', 'Rockpooling'];
-        const foundSubfolders = [];
-        
-        for (const subfolder of knownLifestyleSubfolders) {
-          const subfolderPath = `/${PORTFOLIO_ROOT}/${folderName}/${subfolder}`;
-          try {
-            const subfolderCheck = await fetchFromImageKit(
-              `https://api.imagekit.io/v1/files?path=${subfolderPath}&limit=1`
+        // Try to list all items recursively to find subfolders
+        try {
+          // Use search parameter to find all items under this folder
+          const searchPath = `/${PORTFOLIO_ROOT}/${folderName}`;
+          console.log(`🔎 Searching recursively in: ${searchPath}`);
+          
+          // First, try to get folder listing with includeFolder=true
+          const foldersResponse = await fetchFromImageKit(
+            `https://api.imagekit.io/v1/files?path=${searchPath}&type=folder`
+          );
+          
+          if (foldersResponse.length > 0) {
+            folderContents = foldersResponse;
+            successfulPath = searchPath;
+            console.log(`✅ Found ${foldersResponse.length} subfolders using type=folder`);
+          } else {
+            // If that doesn't work, try getting all files and detecting subfolder patterns
+            const allFiles = await fetchFromImageKit(
+              `https://api.imagekit.io/v1/files?searchQuery=path:"${searchPath}"&limit=1000`
             );
-            if (subfolderCheck.length > 0) {
-              foundSubfolders.push({
+            
+            console.log(`📄 Found ${allFiles.length} total files under ${searchPath}`);
+            
+            // Extract unique subfolder paths from file paths
+            const subfolderPaths = new Set();
+            allFiles.forEach(file => {
+              // Extract subfolder from file path
+              const relativePath = file.filePath.replace(searchPath + '/', '');
+              const pathParts = relativePath.split('/');
+              if (pathParts.length > 1) {
+                // This file is in a subfolder
+                const subfolderName = pathParts[0];
+                subfolderPaths.add(subfolderName);
+              }
+            });
+            
+            if (subfolderPaths.size > 0) {
+              // Create folder objects for detected subfolders
+              folderContents = Array.from(subfolderPaths).map(subfolderName => ({
                 type: 'folder',
-                name: subfolder,
-                filePath: subfolderPath,
-                folderPath: subfolderPath
+                name: subfolderName,
+                filePath: `${searchPath}/${subfolderName}`,
+                folderPath: `${searchPath}/${subfolderName}`
+              }));
+              
+              // Also add any direct files
+              const directFiles = allFiles.filter(file => {
+                const relativePath = file.filePath.replace(searchPath + '/', '');
+                return !relativePath.includes('/');
               });
-              console.log(`✅ Found subfolder: ${subfolder}`);
+              
+              folderContents.push(...directFiles);
+              successfulPath = searchPath;
+              console.log(`✅ Detected ${subfolderPaths.size} subfolders from file paths`);
             }
-          } catch (error) {
-            console.log(`❌ Subfolder ${subfolder} check failed: ${error.message}`);
           }
-        }
-        
-        if (foundSubfolders.length > 0) {
-          folderContents = foundSubfolders;
-          successfulPath = dbCategory.folder_path || `/${PORTFOLIO_ROOT}/${folderName}`;
-          console.log(`✅ Using known subfolders for Lifestyle (${foundSubfolders.length} found)`);
+        } catch (error) {
+          console.log(`❌ Recursive search failed: ${error.message}`);
         }
       }
       
@@ -300,6 +352,7 @@ async function compareAndSync() {
       
       const ikFiles = folderContents.filter(item => item.type === 'file');
       const ikSubfolders = folderContents.filter(item => item.type === 'folder');
+      // Get ALL items for this category (active and inactive)
       const categoryDbItems = dbItems?.filter(item => item.category_id === dbCategory.id) || [];
       
       // Process files directly in the main category folder (no subcategory)
@@ -340,10 +393,13 @@ async function compareAndSync() {
       }
       
       const ikFileIds = new Set(allIkFiles.map(f => f.fileId));
-      const orphanedItems = categoryDbItems.filter(item => !ikFileIds.has(item.imagekit_file_id));
+      // Only check active items for orphaned status
+      const orphanedItems = categoryDbItems.filter(item => 
+        item.is_active && !ikFileIds.has(item.imagekit_file_id)
+      );
       
       for (const orphanedItem of orphanedItems) {
-        console.log(`🗑️ Removing orphaned item: ${orphanedItem.filename}`);
+        console.log(`🗑️ Deactivating orphaned item: ${orphanedItem.filename}`);
         
         const { error } = await supabase
           .from('portfolio_items')
@@ -351,7 +407,7 @@ async function compareAndSync() {
           .eq('id', orphanedItem.id);
         
         if (error) {
-          syncReport.errors.push(`Failed to remove item ${orphanedItem.filename}: ${error.message}`);
+          syncReport.errors.push(`Failed to deactivate item ${orphanedItem.filename}: ${error.message}`);
         } else {
           syncReport.itemsRemoved++;
         }
