@@ -167,8 +167,12 @@ async function compareAndSync() {
     console.log(`📁 Found ${ikFolders.length} folders, ${ikFiles.length} files`);
     
     // Group items by category folders (direct children of /portfolio/)
+    // Use folderPath since filePath might be undefined for folders
     const categoryFolders = ikFolders.filter(folder => {
-      const pathParts = folder.filePath.split('/').filter(Boolean);
+      const folderPath = folder.folderPath || folder.filePath;
+      if (!folderPath) return false;
+      
+      const pathParts = folderPath.split('/').filter(Boolean);
       return pathParts.length === 2 && pathParts[0] === 'portfolio';
     });
     
@@ -195,7 +199,7 @@ async function compareAndSync() {
           .insert([{
             name: displayName,
             slug: slug,
-            folder_path: categoryFolder.filePath,
+            folder_path: categoryFolder.folderPath || categoryFolder.filePath,
             sort_order: dbCategories.length + syncReport.categoriesAdded
           }])
           .select()
