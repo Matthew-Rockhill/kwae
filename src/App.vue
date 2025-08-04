@@ -37,13 +37,13 @@ useMeta({
     { property: 'og:description', content: 'Professional Cape Town photographer specializing in weddings, portraits, lifestyle & event photography. Capturing authentic moments with artistic storytelling.' },
     { property: 'og:type', content: 'website' },
     { property: 'og:url', content: 'https://www.kristinmathilde.com' },
-    { property: 'og:image', content: 'https://www.kristinmathilde.com/src/assets/images/kristin_mathilde_social.jpg' },
+    { property: 'og:image', content: 'https://www.kristinmathilde.com/src/assets/images/kristin_mathilde_social.png' },
     { property: 'og:locale', content: 'en_ZA' },
     { property: 'og:site_name', content: 'Kristin Mathilde Photography' },
     { name: 'twitter:card', content: 'summary_large_image' },
     { name: 'twitter:title', content: 'Kristin Mathilde - Cape Town Photographer' },
     { name: 'twitter:description', content: 'Professional Cape Town photographer specializing in weddings, portraits, lifestyle & event photography.' },
-    { name: 'twitter:image', content: 'https://www.kristinmathilde.com/src/assets/images/kristin_mathilde_social.jpg' },
+    { name: 'twitter:image', content: 'https://www.kristinmathilde.com/src/assets/images/kristin_mathilde_social.png' },
   ]
 })
 </script>
