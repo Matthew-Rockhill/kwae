@@ -86,7 +86,7 @@ async function getCategoryItems(categorySlug, subcategory = null, limit = 50, of
   }
   
   // First, check if this category has any subfolders
-  const { data: subfoldersCheck } = await supabase
+  const { data: subfoldersCheck, error: subfolderCheckError } = await supabase
     .from('portfolio_items_with_category')
     .select('subcategory')
     .eq('category_slug', categorySlug)
@@ -94,7 +94,12 @@ async function getCategoryItems(categorySlug, subcategory = null, limit = 50, of
     .not('subcategory', 'is', null)
     .limit(1);
   
+  if (subfolderCheckError) {
+    console.error(`❌ Error checking subfolders for ${categorySlug}:`, subfolderCheckError);
+  }
+  
   const hasSubfolders = subfoldersCheck && subfoldersCheck.length > 0;
+  console.log(`📁 Category ${categorySlug} has subfolders: ${hasSubfolders}`);
   
   let query = supabase
     .from('portfolio_items_with_category')
@@ -104,12 +109,16 @@ async function getCategoryItems(categorySlug, subcategory = null, limit = 50, of
   
   if (subcategory) {
     // If specific subcategory requested, filter to that subcategory
+    console.log(`🔍 Filtering to subcategory: "${subcategory}"`);
     query = query.eq('subcategory', subcategory);
   } else if (!hasSubfolders) {
     // If no subfolders exist, only show items without subcategory
+    console.log(`📁 No subfolders exist, showing root-level items only`);
     query = query.is('subcategory', null);
+  } else {
+    // If no subcategory specified but subfolders exist, show all images (mixed view)
+    console.log(`📁 Subfolders exist, showing all images (mixed view)`);
   }
-  // If no subcategory specified but subfolders exist, show all images (no additional filter)
   
   const { data: items, error } = await query
     .order('sort_order', { ascending: true })
@@ -154,10 +163,11 @@ async function getCategoryItems(categorySlug, subcategory = null, limit = 50, of
       // Only include if it looks like a folder name, not a filename
       return subcatName && !subcatName.match(/\.(jpg|jpeg|png|gif|webp)$/i);
     })
+    .sort() // Sort alphabetically for consistency
     .map(subcatName => ({
       id: subcatName, // Use original name as ID for API filtering
       name: subcatName,
-      path: `/${categorySlug}/${subcatName}`
+      path: `/${categorySlug}/${encodeURIComponent(subcatName)}`
     }));
   
   const result = {
