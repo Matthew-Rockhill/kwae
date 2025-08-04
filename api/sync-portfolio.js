@@ -151,44 +151,38 @@ async function compareAndSync() {
       .from('portfolio_items')
       .select('*');
     
-    // Get ImageKit state
-    const ikFolders = await fetchFromImageKit(
-      `https://api.imagekit.io/v1/files?path=/${PORTFOLIO_ROOT}&type=folder`
+    // Get ALL ImageKit files and folders in one call using proper API
+    console.log('🔍 Fetching all portfolio items from ImageKit...');
+    const allImageKitItems = await fetchFromImageKit(
+      `https://api.imagekit.io/v1/files?limit=1000&searchQuery=path:"/portfolio/"`
     );
     
     console.log(`📊 Database: ${dbCategories?.length || 0} categories, ${dbItems?.length || 0} items`);
-    console.log(`📊 ImageKit: ${ikFolders.length} folders`);
-    console.log(`📁 ImageKit folders found:`, ikFolders.map(f => ({ name: f.name, path: f.filePath, type: f.type })));
-    console.log(`📂 Database categories:`, dbCategories?.map(c => ({ name: c.name, slug: c.slug, folder_path: c.folder_path })));
+    console.log(`📊 ImageKit: ${allImageKitItems.length} total items`);
     
-    // Debug: List all items in /portfolio to see what's actually there
-    console.log(`🔍 Listing ALL items in /portfolio...`);
-    try {
-      const allPortfolioItems = await fetchFromImageKit(
-        `https://api.imagekit.io/v1/files?path=/portfolio`
-      );
-      console.log(`📄 Found ${allPortfolioItems.length} total items in /portfolio:`);
-      allPortfolioItems.forEach(item => {
-        console.log(`  - ${item.type}: ${item.name} (path: ${item.filePath})`);
-      });
-    } catch (error) {
-      console.log(`❌ Failed to list /portfolio contents: ${error.message}`);
-    }
+    // Separate folders and files
+    const ikFolders = allImageKitItems.filter(item => item.type === 'folder');
+    const ikFiles = allImageKitItems.filter(item => item.type === 'file');
     
-    // Get the current max sort_order to add new categories at the end
-    const maxSortOrder = Math.max(...(dbCategories || []).map(cat => cat.sort_order || 0), -1);
+    console.log(`📁 Found ${ikFolders.length} folders, ${ikFiles.length} files`);
     
-    // Process each ImageKit folder
-    for (const folder of ikFolders) {
-      if (folder.type !== 'folder') continue;
-      
-      const folderName = folder.name;
+    // Group items by category folders (direct children of /portfolio/)
+    const categoryFolders = ikFolders.filter(folder => {
+      const pathParts = folder.filePath.split('/').filter(Boolean);
+      return pathParts.length === 2 && pathParts[0] === 'portfolio';
+    });
+    
+    console.log(`📂 Found ${categoryFolders.length} category folders:`, categoryFolders.map(f => f.name));
+    
+    // Process each category folder from ImageKit
+    for (const categoryFolder of categoryFolders) {
+      const folderName = categoryFolder.name;
       const slug = generateSlug(folderName);
       const displayName = generateDisplayName(folderName);
       
-      console.log(`🔍 Processing folder: "${folderName}" -> slug: "${slug}"`);
+      console.log(`🔍 Processing category: "${folderName}" -> slug: "${slug}"`);
       
-      // Check if category exists in database (case-insensitive)
+      // Check if category exists in database
       let dbCategory = dbCategories?.find(cat => 
         cat.slug.toLowerCase() === slug.toLowerCase()
       );
@@ -201,8 +195,8 @@ async function compareAndSync() {
           .insert([{
             name: displayName,
             slug: slug,
-            folder_path: folder.filePath || `/${PORTFOLIO_ROOT}/${folderName}`,
-            sort_order: maxSortOrder + 1 + syncReport.categoriesAdded
+            folder_path: categoryFolder.filePath,
+            sort_order: dbCategories.length + syncReport.categoriesAdded
           }])
           .select()
           .single();
@@ -216,184 +210,37 @@ async function compareAndSync() {
         syncReport.categoriesAdded++;
       }
       
-      // Get folder contents from ImageKit
-      // Try multiple path variations to handle different ImageKit path formats
-      const pathVariations = [
-        dbCategory.folder_path,
-        `/${PORTFOLIO_ROOT}/${folderName}`,
-        `/portfolio/${folderName}`,
-        `portfolio/${folderName}`,
-        folderName
-      ];
+      // Get all files for this category from our ImageKit data
+      const categoryFiles = ikFiles.filter(file => {
+        const pathParts = file.filePath.split('/').filter(Boolean);
+        // Check if file is in this category folder (at least 3 parts: portfolio/category/file)
+        return pathParts.length >= 3 && 
+               pathParts[0] === 'portfolio' && 
+               pathParts[1] === folderName;
+      });
       
-      let folderContents = [];
-      let successfulPath = null;
+      console.log(`📸 Found ${categoryFiles.length} files in category ${folderName}`);
       
-      // First, try to get folder contents normally
-      for (const pathVariation of pathVariations) {
-        try {
-          console.log(`🔎 Trying path variation: ${pathVariation}`);
-          const contents = await fetchFromImageKit(
-            `https://api.imagekit.io/v1/files?path=${pathVariation}`
-          );
-          if (contents.length > 0) {
-            folderContents = contents;
-            successfulPath = pathVariation;
-            console.log(`✅ Found ${contents.length} items using path: ${pathVariation}`);
-            break;
-          } else {
-            console.log(`❌ Path ${pathVariation} returned 0 items`);
-          }
-        } catch (error) {
-          console.log(`❌ Path ${pathVariation} failed: ${error.message}`);
-        }
-      }
-      
-      // If no contents found, try with includeFolder parameter to get subfolders
-      if (!successfulPath || folderContents.length === 0) {
-        console.log(`🔍 No items found, trying with includeFolder=true...`);
-        
-        for (const pathVariation of pathVariations) {
-          try {
-            const contentsWithFolders = await fetchFromImageKit(
-              `https://api.imagekit.io/v1/files?path=${pathVariation}&includeFolder=true`
-            );
-            if (contentsWithFolders.length > 0) {
-              folderContents = contentsWithFolders;
-              successfulPath = pathVariation;
-              console.log(`✅ Found ${contentsWithFolders.length} items with includeFolder=true using path: ${pathVariation}`);
-              break;
-            }
-          } catch (error) {
-            console.log(`❌ includeFolder attempt failed for ${pathVariation}: ${error.message}`);
-          }
-        }
-      }
-      
-      // Special handling for folders with no direct contents - check for subfolders
-      if (!successfulPath || folderContents.length === 0) {
-        console.log(`🔍 No direct contents found for ${folderName}, checking for subfolders...`);
-        
-        // Try to list all items recursively to find subfolders
-        try {
-          // Use search parameter to find all items under this folder
-          const searchPath = `/${PORTFOLIO_ROOT}/${folderName}`;
-          console.log(`🔎 Searching recursively in: ${searchPath}`);
-          
-          // First, try to get folder listing with includeFolder=true
-          const foldersResponse = await fetchFromImageKit(
-            `https://api.imagekit.io/v1/files?path=${searchPath}&type=folder`
-          );
-          
-          if (foldersResponse.length > 0) {
-            folderContents = foldersResponse;
-            successfulPath = searchPath;
-            console.log(`✅ Found ${foldersResponse.length} subfolders using type=folder`);
-          } else {
-            // If that doesn't work, try getting all files and detecting subfolder patterns
-            const allFiles = await fetchFromImageKit(
-              `https://api.imagekit.io/v1/files?searchQuery=path:"${searchPath}"&limit=1000`
-            );
-            
-            console.log(`📄 Found ${allFiles.length} total files under ${searchPath}`);
-            
-            // Extract unique subfolder paths from file paths
-            const subfolderPaths = new Set();
-            allFiles.forEach(file => {
-              // Extract subfolder from file path
-              const relativePath = file.filePath.replace(searchPath + '/', '');
-              const pathParts = relativePath.split('/');
-              if (pathParts.length > 1) {
-                // This file is in a subfolder
-                const subfolderName = pathParts[0];
-                subfolderPaths.add(subfolderName);
-              }
-            });
-            
-            if (subfolderPaths.size > 0) {
-              // Create folder objects for detected subfolders
-              folderContents = Array.from(subfolderPaths).map(subfolderName => ({
-                type: 'folder',
-                name: subfolderName,
-                filePath: `${searchPath}/${subfolderName}`,
-                folderPath: `${searchPath}/${subfolderName}`
-              }));
-              
-              // Also add any direct files
-              const directFiles = allFiles.filter(file => {
-                const relativePath = file.filePath.replace(searchPath + '/', '');
-                return !relativePath.includes('/');
-              });
-              
-              folderContents.push(...directFiles);
-              successfulPath = searchPath;
-              console.log(`✅ Detected ${subfolderPaths.size} subfolders from file paths`);
-            }
-          }
-        } catch (error) {
-          console.log(`❌ Recursive search failed: ${error.message}`);
-        }
-      }
-      
-      if (!successfulPath && folderContents.length === 0) {
-        console.log(`⚠️ No valid path found for ${dbCategory.name}, skipping`);
-        continue;
-      }
-      
-      // Update database with correct path if different
-      if (successfulPath !== dbCategory.folder_path) {
-        console.log(`📝 Updating folder_path for ${dbCategory.name}: "${dbCategory.folder_path}" → "${successfulPath}"`);
-        await supabase
-          .from('portfolio_categories')
-          .update({ folder_path: successfulPath })
-          .eq('id', dbCategory.id);
-        dbCategory.folder_path = successfulPath; // Update local object
-      }
-      
-      const ikFiles = folderContents.filter(item => item.type === 'file');
-      const ikSubfolders = folderContents.filter(item => item.type === 'folder');
-      // Get ALL items for this category (active and inactive)
+      // Get database items for this category
       const categoryDbItems = dbItems?.filter(item => item.category_id === dbCategory.id) || [];
       
-      // Process files directly in the main category folder (no subcategory)
-      for (const file of ikFiles) {
-        await processFile(file, dbCategory, categoryDbItems, syncReport, null);
-      }
-      
-      // Process subfolders and their files
-      console.log(`📁 Found ${ikSubfolders.length} subfolders in ${dbCategory.name}:`, ikSubfolders.map(sf => sf.name));
-      
-      for (const subfolder of ikSubfolders) {
-        console.log(`📁 Processing subfolder: ${subfolder.name} at ${subfolder.filePath}`);
+      // Process each file
+      for (const file of categoryFiles) {
+        const pathParts = file.filePath.split('/').filter(Boolean);
         
-        const subfolderContents = await fetchFromImageKit(
-          `https://api.imagekit.io/v1/files?path=${subfolder.filePath}`
-        );
-        
-        const subfolderFiles = subfolderContents.filter(item => item.type === 'file');
-        const subcategoryName = subfolder.name;
-        
-        console.log(`📸 Found ${subfolderFiles.length} files in subfolder ${subcategoryName}:`, subfolderFiles.map(f => f.name));
-        
-        // Process files in this subfolder
-        for (const file of subfolderFiles) {
-          await processFile(file, dbCategory, categoryDbItems, syncReport, subcategoryName);
+        // Determine subcategory: if file path has more than 3 parts, it's in a subfolder
+        let subcategory = null;
+        if (pathParts.length > 3) {
+          // File is in subfolder: /portfolio/Category/Subfolder/file.jpg
+          subcategory = pathParts[2];
         }
+        
+        console.log(`📄 Processing file: ${file.name} (subcategory: ${subcategory || 'none'})`);
+        await processFile(file, dbCategory, categoryDbItems, syncReport, subcategory);
       }
       
-      // Check for items in database that no longer exist in ImageKit
-      // Collect all file IDs from main folder and subfolders
-      const allIkFiles = [...ikFiles];
-      for (const subfolder of ikSubfolders) {
-        const subfolderContents = await fetchFromImageKit(
-          `https://api.imagekit.io/v1/files?path=${subfolder.filePath}`
-        );
-        const subfolderFiles = subfolderContents.filter(item => item.type === 'file');
-        allIkFiles.push(...subfolderFiles);
-      }
-      
-      const ikFileIds = new Set(allIkFiles.map(f => f.fileId));
-      // Only check active items for orphaned status
+      // Check for orphaned items in database
+      const ikFileIds = new Set(categoryFiles.map(f => f.fileId));
       const orphanedItems = categoryDbItems.filter(item => 
         item.is_active && !ikFileIds.has(item.imagekit_file_id)
       );
