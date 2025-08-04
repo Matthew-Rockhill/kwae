@@ -225,6 +225,15 @@ async function compareAndSync() {
       
       console.log(`📸 Found ${categoryFiles.length} files in category ${folderName}`);
       
+      // Debug: show first few files found for this category
+      if (categoryFiles.length > 0) {
+        console.log(`   First few files:`, categoryFiles.slice(0, 3).map(f => f.filePath));
+      } else {
+        console.log(`   ⚠️ No files found for category ${folderName}!`);
+        console.log(`   Expected folder name: "${folderName}"`);
+        console.log(`   Sample file paths in ikFiles:`, ikFiles.slice(0, 5).map(f => `${f.filePath} (parts: [${f.filePath.split('/').filter(Boolean).join(', ')}])`));
+      }
+      
       // Get database items for this category
       const categoryDbItems = dbItems?.filter(item => item.category_id === dbCategory.id) || [];
       
