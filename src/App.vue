@@ -25,18 +25,25 @@ useScrollAnimation()
 
 // Set global metadata
 useMeta({
-  title: 'Kristin With An Eye - Capturing Beauty in Humble Places',
+  title: 'Kristin Mathilde - Cape Town Photographer | Professional Photography Services',
   htmlAttrs: { lang: 'en' },
   meta: [
     { charset: 'utf-8' },
     { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-    { name: 'description', content: 'Kristin With An Eye - Photographer and storyteller capturing authentic moments, finding beauty in humble places, and sharing stories that connect us all.' },
-    { property: 'og:title', content: 'Kristin With An Eye - Capturing Beauty in Humble Places' },
-    { property: 'og:description', content: 'Authentic photography and visual storytelling for families, individuals, and purpose-driven organizations.' },
+    { name: 'description', content: 'Professional Cape Town photographer specializing in weddings, portraits, lifestyle & event photography. Kristin Mathilde captures authentic moments with artistic storytelling throughout Cape Town.' },
+    { name: 'keywords', content: 'Cape Town photographer, Cape Town photography, wedding photographer Cape Town, portrait photography Cape Town, lifestyle photographer, event photography Cape Town, professional photographer Cape Town, Kristin Mathilde' },
+    { name: 'author', content: 'Kristin Mathilde Photography' },
+    { property: 'og:title', content: 'Kristin Mathilde - Cape Town Photographer | Professional Photography Services' },
+    { property: 'og:description', content: 'Professional Cape Town photographer specializing in weddings, portraits, lifestyle & event photography. Capturing authentic moments with artistic storytelling.' },
     { property: 'og:type', content: 'website' },
-    { property: 'og:url', content: 'https://kristinwithaneyephotography.com' },
-    { property: 'og:image', content: '/images/og-image.jpg' },
+    { property: 'og:url', content: 'https://www.kristinmathilde.com' },
+    { property: 'og:image', content: 'https://www.kristinmathilde.com/src/assets/images/kristin_mathilde_social.jpg' },
+    { property: 'og:locale', content: 'en_ZA' },
+    { property: 'og:site_name', content: 'Kristin Mathilde Photography' },
     { name: 'twitter:card', content: 'summary_large_image' },
+    { name: 'twitter:title', content: 'Kristin Mathilde - Cape Town Photographer' },
+    { name: 'twitter:description', content: 'Professional Cape Town photographer specializing in weddings, portraits, lifestyle & event photography.' },
+    { name: 'twitter:image', content: 'https://www.kristinmathilde.com/src/assets/images/kristin_mathilde_social.jpg' },
   ]
 })
 </script>
