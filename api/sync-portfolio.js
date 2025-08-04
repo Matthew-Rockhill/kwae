@@ -127,7 +127,7 @@ async function processFile(file, dbCategory, allDbItems, syncReport, subcategory
 
 // Compare ImageKit with database and find differences
 async function compareAndSync() {
-  console.log('🔄 Starting sync comparison...');
+  console.log('🔄 Starting simple sync...');
   
   const syncReport = {
     categoriesAdded: 0,
@@ -151,56 +151,49 @@ async function compareAndSync() {
       .from('portfolio_items')
       .select('*');
     
-    // Get ALL ImageKit files and folders in one call using proper API
-    console.log('🔍 Fetching all portfolio items from ImageKit...');
+    // Get ALL portfolio files from ImageKit
+    console.log('🔍 Fetching all portfolio files from ImageKit...');
     const allImageKitItems = await fetchFromImageKit(
       `https://api.imagekit.io/v1/files?limit=1000&searchQuery=path:"/portfolio/"`
     );
     
-    console.log(`📊 Database: ${dbCategories?.length || 0} categories, ${dbItems?.length || 0} items`);
-    console.log(`📊 ImageKit: ${allImageKitItems.length} total items`);
-    
-    // Separate folders and files
-    const ikFolders = allImageKitItems.filter(item => item.type === 'folder');
+    // Only process files, ignore folders
     const ikFiles = allImageKitItems.filter(item => item.type === 'file');
     
-    console.log(`📁 Found ${ikFolders.length} folders, ${ikFiles.length} files`);
+    console.log(`📊 Database: ${dbCategories?.length || 0} categories, ${dbItems?.length || 0} items`);
+    console.log(`📊 ImageKit: ${ikFiles.length} files to process`);
     
-    // Group items by category folders (direct children of /portfolio/)
-    // Use folderPath since filePath might be undefined for folders
-    const categoryFolders = ikFolders.filter(folder => {
-      const folderPath = folder.folderPath || folder.filePath;
-      if (!folderPath) return false;
-      
-      const pathParts = folderPath.split('/').filter(Boolean);
-      return pathParts.length === 2 && pathParts[0] === 'portfolio';
-    });
+    // Track which files we've processed
+    const processedFileIds = new Set();
     
-    console.log(`📂 Found ${categoryFolders.length} category folders:`, categoryFolders.map(f => f.name));
-    
-    // Process each category folder from ImageKit
-    for (const categoryFolder of categoryFolders) {
-      const folderName = categoryFolder.name;
-      const slug = generateSlug(folderName);
-      const displayName = generateDisplayName(folderName);
+    // Process each file individually
+    for (const file of ikFiles) {
+      const pathParts = file.filePath.split('/').filter(Boolean);
       
-      console.log(`🔍 Processing category: "${folderName}" -> slug: "${slug}"`);
+      // Skip if not in portfolio or malformed path
+      if (pathParts.length < 3 || pathParts[0] !== 'portfolio') {
+        console.log(`⚠️ Skipping malformed path: ${file.filePath}`);
+        continue;
+      }
       
-      // Check if category exists in database
+      const categoryName = pathParts[1]; // e.g., "Lifestyle", "NGO Storytelling"
+      const subcategory = pathParts.length > 3 ? pathParts[2] : null; // e.g., "Events" or null
+      
+      // Find or create category
+      const slug = generateSlug(categoryName);
       let dbCategory = dbCategories?.find(cat => 
         cat.slug.toLowerCase() === slug.toLowerCase()
       );
       
       if (!dbCategory) {
-        // Create missing category
-        console.log(`➕ Creating missing category: ${slug}`);
+        console.log(`➕ Creating category: ${categoryName} (${slug})`);
         const { data: newCategory, error } = await supabase
           .from('portfolio_categories')
           .insert([{
-            name: displayName,
+            name: generateDisplayName(categoryName),
             slug: slug,
-            folder_path: categoryFolder.folderPath || categoryFolder.filePath,
-            sort_order: dbCategories.length + syncReport.categoriesAdded
+            folder_path: `/portfolio/${categoryName}`,
+            sort_order: (dbCategories?.length || 0) + syncReport.categoriesAdded
           }])
           .select()
           .single();
@@ -211,66 +204,33 @@ async function compareAndSync() {
         }
         
         dbCategory = newCategory;
+        dbCategories.push(dbCategory); // Add to local array
         syncReport.categoriesAdded++;
       }
       
-      // Get all files for this category from our ImageKit data
-      const categoryFiles = ikFiles.filter(file => {
-        const pathParts = file.filePath.split('/').filter(Boolean);
-        // Check if file is in this category folder (at least 3 parts: portfolio/category/file)
-        return pathParts.length >= 3 && 
-               pathParts[0] === 'portfolio' && 
-               pathParts[1] === folderName;
-      });
+      // Process this file
+      console.log(`📄 ${file.name} → category: ${categoryName}, subcategory: ${subcategory || 'none'}`);
+      await processFile(file, dbCategory, dbItems, syncReport, subcategory);
+      processedFileIds.add(file.fileId);
+    }
+    
+    // Mark orphaned items as inactive
+    const orphanedItems = dbItems.filter(item => 
+      item.is_active && !processedFileIds.has(item.imagekit_file_id)
+    );
+    
+    for (const orphanedItem of orphanedItems) {
+      console.log(`🗑️ Deactivating orphaned item: ${orphanedItem.filename}`);
       
-      console.log(`📸 Found ${categoryFiles.length} files in category ${folderName}`);
+      const { error } = await supabase
+        .from('portfolio_items')
+        .update({ is_active: false })
+        .eq('id', orphanedItem.id);
       
-      // Debug: show first few files found for this category
-      if (categoryFiles.length > 0) {
-        console.log(`   First few files:`, categoryFiles.slice(0, 3).map(f => f.filePath));
+      if (error) {
+        syncReport.errors.push(`Failed to deactivate item ${orphanedItem.filename}: ${error.message}`);
       } else {
-        console.log(`   ⚠️ No files found for category ${folderName}!`);
-        console.log(`   Expected folder name: "${folderName}"`);
-        console.log(`   Sample file paths in ikFiles:`, ikFiles.slice(0, 5).map(f => `${f.filePath} (parts: [${f.filePath.split('/').filter(Boolean).join(', ')}])`));
-      }
-      
-      // Get database items for this category
-      const categoryDbItems = dbItems?.filter(item => item.category_id === dbCategory.id) || [];
-      
-      // Process each file
-      for (const file of categoryFiles) {
-        const pathParts = file.filePath.split('/').filter(Boolean);
-        
-        // Determine subcategory: if file path has more than 3 parts, it's in a subfolder
-        let subcategory = null;
-        if (pathParts.length > 3) {
-          // File is in subfolder: /portfolio/Category/Subfolder/file.jpg
-          subcategory = pathParts[2];
-        }
-        
-        console.log(`📄 Processing file: ${file.name} (subcategory: ${subcategory || 'none'})`);
-        await processFile(file, dbCategory, categoryDbItems, syncReport, subcategory);
-      }
-      
-      // Check for orphaned items in database
-      const ikFileIds = new Set(categoryFiles.map(f => f.fileId));
-      const orphanedItems = categoryDbItems.filter(item => 
-        item.is_active && !ikFileIds.has(item.imagekit_file_id)
-      );
-      
-      for (const orphanedItem of orphanedItems) {
-        console.log(`🗑️ Deactivating orphaned item: ${orphanedItem.filename}`);
-        
-        const { error } = await supabase
-          .from('portfolio_items')
-          .update({ is_active: false })
-          .eq('id', orphanedItem.id);
-        
-        if (error) {
-          syncReport.errors.push(`Failed to deactivate item ${orphanedItem.filename}: ${error.message}`);
-        } else {
-          syncReport.itemsRemoved++;
-        }
+        syncReport.itemsRemoved++;
       }
     }
     
