@@ -344,12 +344,6 @@ const hasMoreItems = computed(() => {
   return visibleCount.value < images.value.length;
 });
 
-const currentCategoryName = computed(() => {
-  const category = categories.value.find(cat => cat.id === activeCategory.value);
-  return category?.name || '';
-});
-
-
 const hasSubfolders = computed(() => {
   return subfolders.value && subfolders.value.length > 0;
 });
