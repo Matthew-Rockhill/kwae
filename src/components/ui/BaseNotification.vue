@@ -128,7 +128,7 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits(['close'])
 
 const progress = ref(100)
-let progressInterval: NodeJS.Timeout | null = null
+let progressInterval: number | null = null
 
 const borderClass = computed(() => {
   switch (props.type) {
@@ -161,12 +161,15 @@ watch(() => props.show, (newVal) => {
     progressInterval = setInterval(() => {
       progress.value -= decrementAmount
       if (progress.value <= 0) {
-        clearInterval(progressInterval!)
+        if (progressInterval !== null) {
+          clearInterval(progressInterval)
+          progressInterval = null
+        }
         emit('close')
       }
     }, updateInterval)
   } else {
-    if (progressInterval) {
+    if (progressInterval !== null) {
       clearInterval(progressInterval)
       progressInterval = null
     }
