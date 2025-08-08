@@ -44,6 +44,7 @@
                 <DialogTitle as="template">
                   <BaseHeading :level="3" align="center" class="mb-6">
                     <span v-if="selectedVoucherType === 'sponsorship'">Support an <span class="font-cormorant italic font-normal text-[var(--color-secondary)]">Organisation</span></span>
+                    <span v-else-if="selectedVoucherType">Choose Your <span class="font-cormorant italic font-normal text-[var(--color-secondary)]">Voucher Type</span></span>
                     <span v-else>Choose Your <span class="font-cormorant italic font-normal text-[var(--color-secondary)]">Voucher Type</span></span>
                   </BaseHeading>
                 </DialogTitle>
@@ -198,7 +199,7 @@
                 <div>
                   <h4 class="text-lg font-medium text-[var(--color-text)] mb-4">
                     <span v-if="selectedVoucherType === 'sponsorship'">Your Details (Sponsor)</span>
-                    <span v-else">Your Details (Purchaser)</span>
+                    <span v-else-if="selectedVoucherType === 'gift'">Your Details (Purchaser)</span>
                   </h4>
                   
                   <!-- Purchaser Name Row -->
@@ -276,14 +277,14 @@
                 <div>
                   <h4 class="text-lg font-medium text-[var(--color-text)] mb-4">
                     <span v-if="selectedVoucherType === 'sponsorship'">Organisation Details</span>
-                    <span v-else">Gift Recipient Details</span>
+                    <span v-else-if="selectedVoucherType === 'gift'">Gift Recipient Details</span>
                   </h4>
                   
                   <!-- Recipient Name -->
                   <div class="mb-6">
                     <label for="recipientName" class="block text-sm font-medium text-[var(--color-text)] mb-2">
                       <span v-if="selectedVoucherType === 'sponsorship'">Organisation Name *</span>
-                      <span v-else">Recipient Name *</span>
+                      <span v-else-if="selectedVoucherType === 'gift'">Recipient Name *</span>
                     </label>
                     <input 
                       type="text" 
@@ -302,7 +303,7 @@
                     <div>
                       <label for="recipientEmail" class="block text-sm font-medium text-[var(--color-text)] mb-2">
                         <span v-if="selectedVoucherType === 'sponsorship'">Contact Email (Optional)</span>
-                        <span v-else">Recipient Email (Optional)</span>
+                        <span v-else-if="selectedVoucherType === 'gift'">Recipient Email (Optional)</span>
                       </label>
                       <input 
                         type="email" 
@@ -316,7 +317,7 @@
                     <div>
                       <label for="recipientPhone" class="block text-sm font-medium text-[var(--color-text)] mb-2">
                         <span v-if="selectedVoucherType === 'sponsorship'">Contact Number (Optional)</span>
-                        <span v-else">Recipient Phone (Optional)</span>
+                        <span v-else-if="selectedVoucherType === 'gift'">Recipient Phone (Optional)</span>
                       </label>
                       <input 
                         type="tel" 
@@ -333,7 +334,7 @@
                 <div>
                   <label for="message" class="block text-sm font-medium text-[var(--color-text)] mb-2">
                     <span v-if="selectedVoucherType === 'sponsorship'">Sponsorship Message (Optional)</span>
-                    <span v-else">Gift Message (Optional)</span>
+                    <span v-else-if="selectedVoucherType === 'gift'">Gift Message (Optional)</span>
                   </label>
                   <textarea 
                     id="message"
@@ -361,7 +362,7 @@
                     </span>
                     <span v-else>
                       <span v-if="selectedVoucherType === 'sponsorship'">Submit Sponsorship Request</span>
-                      <span v-else">Create Gift Voucher</span>
+                      <span v-else-if="selectedVoucherType === 'gift'">Create Gift Voucher</span>
                     </span>
                   </BaseButton>
                   

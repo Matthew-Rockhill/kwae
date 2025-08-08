@@ -7,7 +7,7 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 // Initialize Supabase client with service role key for admin operations
 const supabase = createClient(
   process.env.VITE_SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY
+  process.env.VITE_SUPABASE_SERVICE_KEY
 );
 
 export default async function handler(req, res) {
