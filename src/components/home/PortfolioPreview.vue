@@ -26,7 +26,7 @@
           
           <!-- Portfolio Container -->
           <div 
-            class="flex gap-2 sm:gap-4 mobile-reel desktop-ticker"
+            class="flex gap-0 sm:gap-4 mobile-reel desktop-ticker"
             :class="{ 'animate-scroll': !isMobile }"
             ref="portfolioContainer"
             @touchstart="handleTouchStart"
@@ -301,7 +301,7 @@
   const scrollToSlide = () => {
     if (!isMobile.value || !portfolioContainer.value) return
     
-    const cardWidth = window.innerWidth * 0.9 + 8 // 90% width + gap
+    const cardWidth = window.innerWidth // Full width cards, no gaps
     const scrollPosition = currentSlide.value * cardWidth
     
     portfolioContainer.value.scrollTo({
@@ -364,8 +364,8 @@
 
   /* Portfolio card responsive sizing */
   .portfolio-card {
-    /* Mobile: 90% width, full height */
-    width: 90vw;
+    /* Mobile: 100% width, full height - complete cards only */
+    width: 100vw;
     height: 70vh;
     min-height: 500px;
     scroll-snap-align: center;

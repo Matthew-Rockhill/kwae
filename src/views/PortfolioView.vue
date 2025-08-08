@@ -57,8 +57,8 @@
     <!-- Portfolio Gallery -->
     <BaseSection background="light" padding="none" spacing="tight" class="pt-0">
       <!-- Loading State -->
-      <div v-if="loading" class="text-center py-12 px-4 sm:px-6 lg:px-8">
-        <BaseText size="lg" :opacity="70">Loading {{ currentCategoryName }}...</BaseText>
+      <div v-if="loading" class="flex justify-center items-center py-12 px-4 sm:px-6 lg:px-8">
+        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--color-secondary)]"></div>
       </div>
       
       <!-- Error State -->
