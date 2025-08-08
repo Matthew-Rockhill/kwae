@@ -1,8 +1,8 @@
 import { createClient } from '@supabase/supabase-js';
-import sgMail from '@sendgrid/mail';
+import { Resend } from 'resend';
 
-// Configure SendGrid
-sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+// Configure Resend
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 // Initialize Supabase client
 const supabase = createClient(
@@ -10,7 +10,7 @@ const supabase = createClient(
   process.env.VITE_SUPABASE_SERVICE_KEY
 );
 
-async function sendBookingEmails(bookingData) {
+async function sendBookingEmails(bookingData, resendClient) {
   const { bookingId, selectedPackage, firstName, lastName, email, phone, eventDate, additionalNotes } = bookingData;
   
   const adminEmail = {
@@ -83,9 +83,23 @@ async function sendBookingEmails(bookingData) {
   };
   
   try {
-    await sgMail.send(adminEmail);
-    await sgMail.send(customerEmail);
-    console.log(`✅ Emails sent successfully for booking #${bookingId}`);
+    // Send admin notification
+    await resendClient.emails.send({
+      from: process.env.FROM_EMAIL || 'Kristin With An Eye <hello@kristinmathilde.com>',
+      to: process.env.ADMIN_EMAIL || 'rockhill.kristin@gmail.com',
+      subject: adminEmail.subject,
+      html: adminEmail.html
+    });
+    
+    // Send customer confirmation
+    await resendClient.emails.send({
+      from: process.env.FROM_EMAIL || 'Kristin With An Eye <hello@kristinmathilde.com>',
+      to: email,
+      subject: customerEmail.subject,
+      html: customerEmail.html
+    });
+    
+    console.log(`✅ Emails sent successfully via Resend for booking #${bookingId}`);
   } catch (error) {
     console.error('❌ Email sending failed:', error);
   }
@@ -105,7 +119,7 @@ const handler = async (req, res) => {
     console.log('🔍 Environment check:', {
       VITE_SUPABASE_URL: !!process.env.VITE_SUPABASE_URL,
       VITE_SUPABASE_SERVICE_KEY: !!process.env.VITE_SUPABASE_SERVICE_KEY,
-      SENDGRID_API_KEY: !!process.env.SENDGRID_API_KEY,
+      RESEND_API_KEY: !!process.env.RESEND_API_KEY,
       FROM_EMAIL: !!process.env.FROM_EMAIL,
       ADMIN_EMAIL: !!process.env.ADMIN_EMAIL
     });
@@ -210,7 +224,7 @@ const handler = async (req, res) => {
       phone,
       eventDate,
       additionalNotes
-    }).catch(err => console.error('Email error:', err));
+    }, resend).catch(err => console.error('Email error:', err));
 
     res.status(201).json({
       success: true,

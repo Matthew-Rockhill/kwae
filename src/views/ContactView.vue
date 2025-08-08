@@ -339,6 +339,15 @@
         </div>
       </div>
     </BaseSection>
+    
+    <!-- Notification -->
+    <BaseNotification
+      :show="notification.show"
+      :type="notification.type"
+      :title="notification.title"
+      :message="notification.message"
+      @close="notification.show = false"
+    />
   </div>
 </template>
 
@@ -347,6 +356,7 @@ import { ref, reactive } from 'vue'
 import BaseSection from '@/components/ui/BaseSection.vue'
 import BaseHeading from '@/components/ui/BaseHeading.vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
+import BaseNotification from '@/components/ui/BaseNotification.vue'
 
 // Form data
 const form = reactive({
@@ -359,6 +369,21 @@ const form = reactive({
 })
 
 const isSubmitting = ref(false)
+
+// Notification state
+const notification = reactive({
+  show: false,
+  type: 'info' as 'success' | 'error' | 'info',
+  title: '',
+  message: ''
+})
+
+const showNotification = (type: 'success' | 'error' | 'info', title: string, message: string) => {
+  notification.type = type
+  notification.title = title
+  notification.message = message
+  notification.show = true
+}
 
 // FAQ data
 const faqs = ref([
@@ -423,10 +448,17 @@ const submitForm = async () => {
       message: ''
     })
     
-    alert(data.message || 'Thank you for your message! I\'ll get back to you within 24-48 hours.')
+    // Show success notification
+    if (data.dataSaved && data.emailSent) {
+      showNotification('success', 'Message Sent!', 'Thank you for your message! I\'ll get back to you within 24-48 hours.')
+    } else if (data.dataSaved && !data.emailSent) {
+      showNotification('success', 'Message Received!', 'Your inquiry has been saved and I\'ll get back to you soon.')
+    } else {
+      showNotification('success', 'Thank You!', data.message || 'Your message has been received.')
+    }
   } catch (error) {
     console.error('Contact form error:', error)
-    alert('There was an error sending your message. Please try again or contact me directly.')
+    showNotification('error', 'Oops!', 'There was an error sending your message. Please try again or contact me directly via WhatsApp or email.')
   } finally {
     isSubmitting.value = false
   }

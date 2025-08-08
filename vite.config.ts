@@ -23,43 +23,73 @@ function apiDevPlugin() {
             query[key] = value
           }
           
+          // Parse request body for POST requests
+          let body = null
+          if (req.method === 'POST' || req.method === 'PUT' || req.method === 'PATCH') {
+            const chunks = []
+            for await (const chunk of req) {
+              chunks.push(chunk)
+            }
+            const rawBody = Buffer.concat(chunks).toString()
+            try {
+              body = JSON.parse(rawBody)
+            } catch (e) {
+              body = rawBody
+            }
+          }
+          
           // Mock req/res objects to match Vercel API format
           const mockReq = {
             query,
             method: req.method,
             headers: req.headers,
-            body: req.body
+            body: body
           }
           
           // Ensure environment variables are available
-          if (!process.env.IMAGEKIT_PRIVATE_KEY) {
+          if (!process.env.RESEND_API_KEY) {
             const fs = await import('fs')
             const path = await import('path')
             try {
               const envContent = fs.readFileSync(path.resolve('.env'), 'utf8')
-              const envVars = envContent.split('\n').reduce((acc, line) => {
-                const [key, value] = line.split('=')
-                if (key && value) acc[key.trim()] = value.trim()
-                return acc
-              }, {})
-              Object.assign(process.env, envVars)
-              console.log('Loaded IMAGEKIT_PRIVATE_KEY:', process.env.IMAGEKIT_PRIVATE_KEY ? 'YES' : 'NO')
+              const lines = envContent.split('\n')
+              for (const line of lines) {
+                if (line.trim() && !line.startsWith('#')) {
+                  const equalIndex = line.indexOf('=')
+                  if (equalIndex > 0) {
+                    const key = line.substring(0, equalIndex).trim()
+                    const value = line.substring(equalIndex + 1).trim()
+                    process.env[key] = value
+                  }
+                }
+              }
+              console.log('✅ Environment variables loaded')
             } catch (e) {
               console.warn('Could not load .env file:', e.message)
             }
-          } else {
-            console.log('IMAGEKIT_PRIVATE_KEY already available:', process.env.IMAGEKIT_PRIVATE_KEY ? 'YES' : 'NO')
           }
           
           const mockRes = {
-            status: (code) => ({ json: (data) => {
-              res.statusCode = code
-              res.setHeader('Content-Type', 'application/json')
-              res.end(JSON.stringify(data))
-            }}),
+            status: (code) => ({ 
+              json: (data) => {
+                res.statusCode = code
+                res.setHeader('Content-Type', 'application/json')
+                res.end(JSON.stringify(data))
+              },
+              end: () => {
+                res.statusCode = code
+                res.end()
+              }
+            }),
             json: (data) => {
               res.setHeader('Content-Type', 'application/json')
               res.end(JSON.stringify(data))
+            },
+            setHeader: (name, value) => {
+              res.setHeader(name, value)
+            },
+            end: (data) => {
+              res.end(data)
             }
           }
           
