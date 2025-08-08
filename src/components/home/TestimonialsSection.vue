@@ -1,5 +1,5 @@
 <template>
-  <section class="bg-white overflow-hidden">
+  <section class="bg-white overflow-hidden py-8 sm:py-12 lg:py-16">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <!-- Header -->
       <div class="text-center mb-8 sm:mb-12 lg:mb-16">
@@ -98,9 +98,12 @@
         </div>
         
         <!-- Background Decorative Elements -->
-        <div class="absolute -top-20 -right-20 w-40 h-40 bg-[var(--color-secondary)]/5 rounded-full blur-3xl"></div>
-        <div class="absolute -bottom-20 -left-20 w-60 h-60 bg-[var(--color-accent)]/30 rounded-full blur-3xl"></div>
+        <div class="absolute -top-10 sm:-top-20 -right-10 sm:-right-20 w-32 h-32 sm:w-40 sm:h-40 bg-[var(--color-secondary)]/5 rounded-full blur-3xl"></div>
+        <div class="absolute -bottom-10 sm:-bottom-20 -left-10 sm:-left-20 w-48 h-48 sm:w-60 sm:h-60 bg-[var(--color-accent)]/30 rounded-full blur-3xl opacity-60 sm:opacity-100"></div>
       </div>
+      
+      <!-- Extra padding to prevent cutoff -->
+      <div class="h-4 sm:h-8"></div>
     </div>
   </section>
 </template>

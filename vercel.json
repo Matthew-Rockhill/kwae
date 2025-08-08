@@ -31,5 +31,9 @@
       "source": "/((?!api/).*)",
       "destination": "/index.html"
     }
-  ]
+  ],
+  "crons": [{
+    "path": "/api/sync-portfolio?action=sync",
+    "schedule": "0 5 * * *"
+  }]
 } 
