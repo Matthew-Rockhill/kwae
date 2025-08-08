@@ -82,14 +82,15 @@
           ref="imageRef"
           :src="currentImage.src" 
           :alt="currentImage.alt || 'Gallery image'"
-          class="w-full h-full mx-auto block object-contain select-none pointer-events-none transition-all duration-500 ease-out"
+          class="w-full h-full mx-auto block object-contain select-none pointer-events-none"
           :class="{ 
             'opacity-0 scale-95': !imageLoaded, 
-            'opacity-100 scale-100': imageLoaded 
+            'opacity-100 scale-100 image-fade-in': imageLoaded 
           }"
           :style="{
             transform: `scale(${zoomLevel}) translate(${panX}px, ${panY}px)`,
-            cursor: zoomLevel > 1 ? 'grab' : 'default'
+            cursor: zoomLevel > 1 ? 'grab' : 'default',
+            transition: imageLoaded ? 'transform 0.3s ease-out' : 'none'
           }"
           @load="handleImageLoad"
           @contextmenu.prevent
@@ -100,12 +101,32 @@
         <!-- Protection overlay for lightbox -->
         <div class="absolute inset-0 select-none" style="background: transparent;"></div>
         
-        <!-- Loading indicator -->
+        <!-- Enhanced Loading indicator -->
         <div 
           v-if="!imageLoaded" 
-          class="absolute inset-0 flex items-center justify-center"
+          class="absolute inset-0 flex items-center justify-center bg-black/20 backdrop-blur-sm loading-overlay animate-fade-in"
         >
-          <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+          <div class="flex flex-col items-center space-y-4">
+            <!-- Elegant loading spinner -->
+            <div class="relative">
+              <div class="w-12 h-12 border-4 border-white/20 rounded-full"></div>
+              <div class="absolute inset-0 w-12 h-12 border-4 border-transparent border-t-white rounded-full animate-spin"></div>
+              <div class="absolute inset-2 w-8 h-8 border-2 border-transparent border-r-white/60 rounded-full animate-spin" style="animation-direction: reverse; animation-duration: 0.8s;"></div>
+            </div>
+            <!-- Loading text with typewriter effect -->
+            <div class="text-white/80 text-sm font-light tracking-wide">
+              <span class="inline-block animate-pulse">Loading</span>
+              <span class="loading-dots">
+                <span class="dot-1">.</span>
+                <span class="dot-2">.</span>
+                <span class="dot-3">.</span>
+              </span>
+            </div>
+            <!-- Progress hint -->
+            <div class="text-white/50 text-xs">
+              {{ currentIndex + 1 }} of {{ totalImages }}
+            </div>
+          </div>
         </div>
         
         <!-- Image Counter -->
@@ -525,5 +546,66 @@ button:hover {
 
 .thumbnail-strip button:hover {
   transform: scale(1.05);
+}
+
+/* Enhanced loading animations */
+.loading-dots {
+  display: inline-block;
+}
+
+.loading-dots span {
+  animation: loading-dots 1.4s infinite both;
+  display: inline-block;
+}
+
+.loading-dots .dot-1 {
+  animation-delay: 0s;
+}
+
+.loading-dots .dot-2 {
+  animation-delay: 0.2s;
+}
+
+.loading-dots .dot-3 {
+  animation-delay: 0.4s;
+}
+
+@keyframes loading-dots {
+  0%, 80%, 100% {
+    opacity: 0.3;
+    transform: scale(0.8);
+  }
+  40% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+/* Enhanced image fade-in animation */
+.image-fade-in {
+  animation: image-fade-in 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes image-fade-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.98) translateY(10px);
+    filter: blur(4px);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(0.99) translateY(5px);
+    filter: blur(2px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    filter: blur(0);
+  }
+}
+
+/* Smooth loading overlay transition */
+.loading-overlay {
+  transition: opacity 0.3s ease-out, backdrop-filter 0.3s ease-out;
 }
 </style>

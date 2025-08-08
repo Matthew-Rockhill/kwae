@@ -33,27 +33,24 @@ DROP VIEW IF EXISTS portfolio_items_with_category CASCADE;
 CREATE VIEW portfolio_items_with_category AS
 SELECT 
     pi.id,
-    pi.title,
-    pi.description,
-    pi.image_url,
-    pi.thumbnail_url,
-    pi.file_id,
-    pi.file_name,
-    pi.file_path,
-    pi.width,
-    pi.height,
-    pi.size,
     pi.category_id,
-    pi.tags,
+    pi.subcategory,
+    pi.filename,
+    pi.imagekit_file_id,
+    pi.imagekit_url,
+    pi.thumbnail_url,
+    pi.full_url,
+    pi.alt_text,
+    pi.sort_order,
     pi.metadata,
-    pi.display_order,
-    pi.is_featured,
     pi.is_active,
     pi.created_at,
     pi.updated_at,
     pc.name as category_name,
     pc.slug as category_slug,
-    pc.folder_path as category_folder_path
+    pc.folder_path as category_folder_path,
+    pc.description as category_description,
+    pc.featured_image_url as category_featured_image
 FROM portfolio_items pi
 JOIN portfolio_categories pc ON pi.category_id = pc.id
 WHERE pi.is_active = true AND pc.is_active = true;
